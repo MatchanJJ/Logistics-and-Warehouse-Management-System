@@ -2,5 +2,3 @@ Mark Jade Palma : Head Programmer / Project Manager
 Eduard Anthony Pechayco : Lead Programmer / Documentation
 Jay Mark Agsoy : Quality Tester / Requirements Gathering
 Robroineo Dingal : Quality Tester / Designer (User Interface)
-
-
