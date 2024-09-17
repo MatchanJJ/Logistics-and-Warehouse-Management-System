@@ -16,6 +16,7 @@ CREATE TABLE warehouse_management (
     id VARCHAR(10) PRIMARY,
     FOREIGN KEY (employee_id) REFERENCES employee(id),
     FOREIGN KEY (role_id) REFERENCES job_roles(id)
+    FOREIGN KEY (warehouse_id) REFERENCES warehouses(id)
 )
 
 CREATE TABLE employee (
