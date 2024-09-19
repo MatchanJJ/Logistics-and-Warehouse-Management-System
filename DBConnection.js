@@ -10,6 +10,7 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 //Query testing
+
 async function runQuery() {
     try {
         const [rows, fields] = await pool.query("SELECT * FROM package");
