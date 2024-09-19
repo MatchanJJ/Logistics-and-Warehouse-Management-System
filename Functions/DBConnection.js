@@ -11,13 +11,4 @@ const pool = mysql.createPool({
 }).promise();
 //Query testing
 
-async function runQuery() {
-    try {
-        const [rows, fields] = await pool.query("SELECT * FROM package");
-        console.log(rows);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-runQuery();
+export default pool;
