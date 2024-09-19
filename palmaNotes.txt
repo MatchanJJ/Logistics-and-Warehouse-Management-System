@@ -1,0 +1,1 @@
+mysql -h [put ip here] -u your_user -p your_database
