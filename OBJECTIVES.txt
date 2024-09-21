@@ -26,3 +26,10 @@ ensuring a unified approach to managing supply chain operations.
 
 Scalability: To provide a flexible and scalable solution that can grow with the business, accommodating increased volumes, 
 new locations, or additional functionality as needed.
+
+
+Other installation required:
+npm i express
+npm i nodemon
+npm i -D nodemon // go back to the video 11:00 to see other installation and configs before running this on the terminal
+npm i ejs //Embedded JavaScript-  used to generate HTML markup with plain JavaScript 

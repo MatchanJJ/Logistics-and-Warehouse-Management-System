@@ -1,6 +1,6 @@
 import pool from './DBConnection.js';  // Use 'import' to get the connection pool
 
-async function runQuery() {
+async function showAllPackages() {
     try {
         const [rows, fields] = await pool.query("SELECT * FROM package");
         console.log(rows);
@@ -10,7 +10,7 @@ async function runQuery() {
 }
 
 
-runQuery();
+showAllPackages();
 
 async function findPackage(id) {
     try {
