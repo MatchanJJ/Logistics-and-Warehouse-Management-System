@@ -10,9 +10,9 @@ async function showAllPackages() {
 }
 
 
-showAllPackages();
+//showAllPackages();
 
-async function findPackage(id) {
+async function findPackage(id) {                    
     try {
         const [rows, fields] = await pool.query("SELECT * FROM package WHERE id = ?",[id]);
         console.log(rows);
@@ -22,3 +22,14 @@ async function findPackage(id) {
 }
 //findPackage('PKG001')
 
+//Query Entity function
+async function queryForEntity(entity) {                    
+    try {
+        const [rows, fields] = await pool.query('SELECT * FROM ??',[entity]); // double ?? to escape table names
+        console.log(rows);
+    } catch (error) {
+        console.error(error);
+    }
+}
+let entity = 'pickup';
+queryForEntity(entity);
