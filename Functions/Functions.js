@@ -1,16 +1,18 @@
-import pool from './DBConnection.js';  // Use 'import' to get the connection pool
+import pool from "./DBConnection.js"
+import express from 'express';
+import path from 'path';  // Import the path module
+import { fileURLToPath } from 'url';
 
-//async function showAllPackages() {
-//    try {
-//        const [rows, fields] = await pool.query("SELECT * FROM package");
-//        console.log(rows);
-//    } catch (error) {
-//        console.error(error);
-//    }
-//}
+const app = express();
+const port = 3000;
 
+// Get __filename and __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-//showAllPackages();
+// Set the views directory (adjust the path as necessary)
+app.set('views', path.join(__dirname, '../views')); 
+app.set('view engine', 'ejs');
 
 async function findPackage(id) {                    
     try {
@@ -20,16 +22,35 @@ async function findPackage(id) {
         console.error(error);
     }
 }
-//findPackage('PKG001')
+
 
 //Query Entity function
 async function queryForEntity(entity) {                    
     try {
-        const [rows, fields] = await pool.query('SELECT * FROM ??',[entity]); // double ? to escape table names
-        console.log(rows);
+        const [rows, fields] = await pool.query('SELECT * FROM ??', [entity]); // Query all rows and columns
+        return rows;  // Return the rows (data) to be passed to the route
     } catch (error) {
         console.error(error);
+        return [];  // Return an empty array if there's an error
     }
 }
-let entity = 'pickup';
-queryForEntity(entity);
+
+app.set('view engine', 'ejs');
+
+app.get('/', async (req, res) => {
+    let entity = 'deliveries';  // Replace with your actual table name
+    try {
+        const test = await queryForEntity(entity);  // Await the query result
+        console.log(test); // Log the result
+        res.render('index.ejs', { test: test });  // Pass the data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error querying the database');
+    }
+});
+
+
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
