@@ -14,17 +14,8 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views')); 
 app.set('view engine', 'ejs');
 
-async function findPackage(id) {                    
-    try {
-        const [rows, fields] = await pool.query("SELECT * FROM package WHERE id = ?",[id]);
-        console.log(rows);
-    } catch (error) {
-        console.error(error);
-    }
-}
 
-
-//Query Entity function
+//QUERY AN ENTITY
 async function queryForEntity(entity) {                    
     try {
         const [rows, fields] = await pool.query('SELECT * FROM ??', [entity]); // Query all rows and columns
@@ -35,7 +26,6 @@ async function queryForEntity(entity) {
     }
 }
 
-app.set('view engine', 'ejs');
 
 app.get('/', async (req, res) => {
     let entity = 'deliveries';  // Replace with your actual table name
