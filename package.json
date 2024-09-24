@@ -1,12 +1,12 @@
 {
   "name": "logistics-and-warehouse-management-system",
   "version": "1.0.0",
-  "main": "DBConnection.js",
+  "main": "./Functions/Functions.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node TestFunction.js",
-    "dev": "npx nodemon TestFunction.js"
+    "start": "node Functions.js",
+    "dev": "npx nodemon ./Functions/Functionsjs"
   },
   "keywords": [],
   "author": "",

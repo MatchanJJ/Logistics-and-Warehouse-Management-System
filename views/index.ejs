@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Page</title>
+    <title>Basta test ni</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,9 +36,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Test Page</h1>
-        <h2><%= Date()%></h2> <!-- USING JAVASCRIPT IN HTML USING EJS (WOW)-->
-        <h1><%= greetUser(user) %></h1>
+        <h1>BORDS BIOT</h1>
+        <h2><%= new Date() %></h2> <!-- Corrected usage of Date -->
+        
+        <h2>Query Results:</h2>
+        <table>
+            <% const results = test || []; %> <!-- Default to an empty array if test is undefined -->
+            <thead>
+                <tr>
+                    <% if (results.length > 0) { %>
+                        <% Object.keys(results[0]).forEach(column => { %>
+                            <th><%= column %></th>
+                        <% }) %>
+                    <% } else { %>
+                        <th>No data found</th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% results.forEach(row => { %>
+                    <tr>
+                        <% Object.values(row).forEach(value => { %>
+                            <td><%= value %></td>
+                        <% }) %>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
 
         <p>This is a simple HTML file for testing purposes.</p>
         <a href="https://www.example.com" target="_blank">Visit Example</a>
