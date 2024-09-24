@@ -1,0 +1,46 @@
+ 1.   Warehouse Management  
+       Add Warehouse:   Function to add a new warehouse to the system.
+       Update Warehouse Capacity:   Update the capacity when packages are added or removed from the warehouse.
+       Check Available Capacity:   Function to view available capacity in a warehouse.
+       View Warehouse Inventory:   List all packages stored in a specific warehouse.
+
+ 2.   Package Management  
+       Register New Package:   Insert a new package into the system and assign it to a warehouse.
+       Track Package:   View the status, origin, destination, tracking number, and description of a package.
+       Update Package Details:   Modify package information, such as weight, dimensions, and status.
+
+3.   Employee Management  
+       Add New Employee:   Insert a new employee into the system.
+       Assign Job Role:   Assign roles (e.g., manager, delivery personnel) to employees.
+       Manage Employee Details:   View and update employee information, such as contact details and address.
+
+4.   Logistics Partner Management  
+       Add Logistics Partner:   Function to add a new logistics partner (e.g., courier service) to the system.
+       View Partner Information:   View logistics partner details like service area and contact information.
+       Assign Partner to Delivery or Pickup:   Assign logistics partners for specific delivery or pickup operations.
+
+5.   Deliveries and Pickup Management  
+       Schedule Delivery:   Schedule a delivery, assigning the package to a logistics partner and warehouse.
+       Schedule Pickup:   Plan when a logistics partner will pick up a package from the warehouse.
+       Update Delivery Status:   Modify the delivery status (e.g., "in transit", "delivered").
+       Track Pickup and Delivery:   View the status and history of pickups and deliveries.
+
+6.   Shipment Management  
+       Create Shipment Record:   Register a new shipment with its associated pickup, delivery, and package details.
+       Track Shipment Status:   Track the status of shipments, linking them to both delivery and pickup records.
+
+7.   Weight Class Management  
+       Define Weight Class:   Insert or update weight categories for packages (e.g., light, heavy).
+       Classify Packages by Weight:   Automatically classify packages into categories based on weight.
+
+8.   Warehouse Inventory Management  
+       Update Inventory:   Add or remove packages from the warehouse inventory as they are received or dispatched.
+       Track Inventory Status:   Monitor package movements in and out of the warehouse and check for discrepancies.
+9.   Reporting and Analytics  
+       Generate Delivery Reports:   Create reports showing the number of packages delivered over a certain time frame.
+       Warehouse Utilization Report:   View reports on warehouse capacity utilization, helping to optimize space.
+       Employee Activity Report:   Track the roles and activity of employees (e.g., how many packages processed).
+
+10.   Role Based Access Control  
+       Assign Roles to Employees:   Ensure that only authorized personnel can perform specific tasks, like managing inventory or scheduling deliveries.
+       Restrict Access by Role:   Employees can access only the parts of the system that correspond to their role (e.g., warehouse manager vs. delivery personnel).
