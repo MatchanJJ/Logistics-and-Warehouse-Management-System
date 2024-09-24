@@ -13,6 +13,8 @@ const __dirname = path.dirname(__filename);
 // Set the views directory (adjust the path as necessary)
 app.set('views', path.join(__dirname, '../views')); 
 app.set('view engine', 'ejs');
+app.use(express.static('views')); // Adjust 'public' to your directory
+
 
 
 //QUERY AN ENTITY
