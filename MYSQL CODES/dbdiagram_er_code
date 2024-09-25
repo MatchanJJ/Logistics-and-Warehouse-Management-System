@@ -1,0 +1,288 @@
+Table warehouse_types {
+    warehouse_type_id varchar(10) [pk]
+    warehouse_type_name varchar(75) [not null] // e.g., 'postal', 'e-commerce'
+}
+
+Table order_statuses {
+    order_status_id varchar(10) [pk]
+    order_status_name varchar(75) [not null] // 'pending', 'picked', 'shipped', etc.
+}
+
+Table shipment_statuses {
+    shipment_status_id varchar(10) [pk]
+    shipment_status_name varchar(75) [not null] // 'pending', 'in-transit', 'delivered'
+}
+
+Table order_types {
+    order_type_id varchar(10) [pk]
+    order_type_name varchar(75) [not null] // 'postal', 'e-commerce'
+}
+
+Table return_statuses {
+    return_status_id varchar(10) [pk]
+    return_status_name varchar(75) [not null] // 'pending', 'processed', 'returned'
+}
+
+Table employee_roles {
+    employee_role_id varchar(10) [pk]
+    role_name varchar(75) [not null] // 'picker', 'packaging', 'security', 'management', etc.
+}
+
+Table warehouses {
+    warehouse_id varchar(10) [pk]
+    warehouse_address varchar(250) [not null]
+    capacity float(6, 2) [not null]
+    warehouse_type_id varchar(10)
+}
+
+Ref: warehouses.warehouse_type_id > warehouse_types.warehouse_type_id
+
+Table warehouse_locations {
+    warehouse_location_id varchar(10) [pk]
+    warehouse_id varchar(10)
+    section varchar(75)
+    aisle varchar(75)
+    rack varchar(75)
+    shelf varchar(75)
+    bin varchar(75)
+}
+
+Ref: warehouse_locations.warehouse_id > warehouses.warehouse_id
+
+Table product_categories {
+    product_category_id varchar(10) [pk]
+    product_category_name varchar(75) [not null]
+}
+
+Table parcel_categories {
+    parcel_category_id varchar(10) [pk]
+    parcel_category_name varchar(75) [not null]
+}
+
+Table products {
+    product_id varchar(10) [pk]
+    product_category_id varchar(10)
+    product_name varchar(75) [not null]
+    product_brand varchar(75)
+    product_supplier varchar(75)
+    product_description text
+    product_unit_price decimal(10, 2) [not null]
+    product_weight float(6, 2) [not null]
+    product_length float(6, 2) [not null]
+    product_width float(6, 2) [not null]
+    product_height float(6, 2) [not null]
+    is_fragile boolean [default: false]
+    is_perishable boolean [default: false]
+    is_hazardous boolean [default: false]
+    is_oversized boolean [default: false]
+    is_returnable boolean [default: true]
+    is_temperature_sensitive boolean [default: false]
+}
+
+Ref: products.product_category_id > product_categories.product_category_id
+
+Table parcels {
+    parcel_id varchar(10) [pk]
+    parcel_category_id varchar(10)
+    parcel_description text
+    parcel_unit_price decimal(10, 2) [not null]
+    parcel_weight float(6, 2) [not null]
+    parcel_length float(6, 2) [not null]
+    parcel_width float(6, 2) [not null]
+    parcel_height float(6, 2) [not null]
+    is_fragile boolean [default: false]
+    is_perishable boolean [default: false]
+    is_hazardous boolean [default: false]
+    is_oversized boolean [default: false]
+    is_returnable boolean [default: true]
+    is_temperature_sensitive boolean [default: false]
+}
+
+Ref: parcels.parcel_category_id > parcel_categories.parcel_category_id
+
+Table product_inventories {
+    product_inventory_id varchar(10) [pk]
+    warehouse_id varchar(10)
+    warehouse_location_id varchar(10)
+    product_id varchar(10)
+    quantity int(6) [not null]
+    total_volume float(6, 2) [not null]
+}
+
+Ref: product_inventories.warehouse_id > warehouses.warehouse_id
+Ref: product_inventories.warehouse_location_id > warehouse_locations.warehouse_location_id
+Ref: product_inventories.product_id > products.product_id
+
+Table parcel_inventories {
+    parcel_inventory_id varchar(10) [pk]
+    warehouse_id varchar(10)
+    warehouse_location_id varchar(10)
+    parcel_id varchar(10)
+    quantity int(6) [not null]
+    total_volume float(6, 2) [not null]
+}
+
+Ref: parcel_inventories.warehouse_id > warehouses.warehouse_id
+Ref: parcel_inventories.warehouse_location_id > warehouse_locations.warehouse_location_id
+Ref: parcel_inventories.parcel_id > parcels.parcel_id
+
+Table customers {
+    customer_id varchar(10) [pk]
+    customer_first_name varchar(75) [not null]
+    customer_last_name varchar(75)
+    customer_email varchar(255)
+    customer_address text
+}
+
+Table shipping_services {
+    shipping_service_id varchar(10) [pk]
+    shipping_service_name varchar(75) [not null]
+}
+
+Table orders {
+    order_id varchar(10) [pk]
+    customer_id varchar(10)
+    order_date_time timestamp [not null]
+    order_status_id varchar(10)
+    shipping_service_id varchar(10)
+    shipping_address text [not null]
+    shipping_receiver varchar(255)
+    order_type_id varchar(10)
+    order_total_amount decimal(10, 2) [not null]
+}
+
+Ref: orders.customer_id > customers.customer_id
+Ref: orders.order_status_id > order_statuses.order_status_id
+Ref: orders.shipping_service_id > shipping_services.shipping_service_id
+Ref: orders.order_type_id > order_types.order_type_id
+
+Table product_orders {
+    product_order_id varchar(10) [pk]
+    order_id varchar(10)
+    product_id varchar(10)
+    product_quantity int(6) [not null]
+    product_unit_price decimal(10, 2) [not null]
+    total_price decimal(10, 2) [not null]
+}
+
+Ref: product_orders.order_id > orders.order_id
+Ref: product_orders.product_id > products.product_id
+
+Table postal_orders {
+    postal_order_id varchar(10) [pk]
+    order_id varchar(10)
+    parcel_id varchar(10)
+    total_price decimal(10, 2) [not null]
+}
+
+Ref: postal_orders.order_id > orders.order_id
+Ref: postal_orders.parcel_id > parcels.parcel_id
+
+Table carriers {
+    carrier_id varchar(10) [pk]
+    carrier_name varchar(75) [not null]
+    shipping_service_id varchar(10)
+    carrier_contact_info text
+}
+
+Ref: carriers.shipping_service_id > shipping_services.shipping_service_id
+
+Table shipments {
+    shipment_id varchar(10) [pk]
+    order_id varchar(10)
+    carrier_id varchar(10)
+    shipping_service_id varchar(10)
+    shipping_address text
+    shipment_date timestamp
+    estimated_delivery_date date
+    shipment_status_id varchar(10)
+}
+
+Ref: shipments.order_id > orders.order_id
+Ref: shipments.carrier_id > carriers.carrier_id
+Ref: shipments.shipping_service_id > shipping_services.shipping_service_id
+Ref: shipments.shipment_status_id > shipment_statuses.shipment_status_id
+
+Table returns {
+    return_id varchar(10) [pk]
+    order_id varchar(10)
+    return_reason text [not null]
+    return_date date
+    return_status_id varchar(10)
+}
+
+Ref: returns.return_status_id > return_statuses.return_status_id
+Ref: returns.order_id > orders.order_id
+
+Table employees {
+    employee_id varchar(10) [pk]
+    employee_first_name varchar(75) [not null]
+    employee_last_name varchar(75) [not null]
+    contact_info varchar(75) [not null]
+    employee_role_id varchar(10)
+    employee_salary decimal(10, 2) [not null]
+}
+
+Ref: employees.employee_role_id > employee_roles.employee_role_id
+
+// LOGS
+
+Table order_logs {
+    order_log_id varchar(10) [pk]
+    date_time timestamp
+    order_id varchar(10)
+    order_status_id varchar(10)
+    order_log_description text
+}
+
+Ref: order_logs.order_id > orders.order_id
+Ref: order_logs.order_status_id > order_statuses.order_status_id
+
+Table shipment_logs {
+    shipment_log_id varchar(10) [pk]
+    date_time timestamp
+    shipment_id varchar(10)
+    shipment_log_description text
+}
+
+Ref: shipment_logs.shipment_id > shipments.shipment_id
+
+Table return_logs {
+    return_log_id varchar(10) [pk]
+    date_time timestamp
+    return_id varchar(10)
+    return_log_description text
+}
+
+Ref: return_logs.return_id > returns.return_id
+
+Table product_inventory_logs {
+    product_inventory_log_id varchar(10) [pk]
+    date_time timestamp
+    product_inventory_id varchar(10)
+    warehouse_id varchar(10)
+    product_inventory_log_description text
+}
+
+Ref: product_inventory_logs.product_inventory_id > product_inventories.product_inventory_id
+Ref: product_inventory_logs.warehouse_id > warehouses.warehouse_id
+
+Table parcel_inventory_logs {
+    parcel_inventory_log_id varchar(10) [pk]
+    date_time timestamp
+    parcel_inventory_id varchar(10)
+    warehouse_id varchar(10)
+    parcel_inventory_log_description text
+}
+
+Ref: parcel_inventory_logs.parcel_inventory_id > parcel_inventories.parcel_inventory_id
+Ref: parcel_inventory_logs.warehouse_id > warehouses.warehouse_id
+
+Table employee_logs {
+    employee_log_id varchar(10) [pk]
+    date_time timestamp
+    employee_id varchar(10)
+    employee_log_description text
+}
+
+Ref: employee_logs.employee_id > employees.employee_id
