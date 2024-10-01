@@ -1,4 +1,4 @@
-import pool from "./DBConnection.js"
+import pool from "./DBConnection.js";
 import express from 'express';
 import path from 'path';  // Import the path module
 import { fileURLToPath } from 'url';
@@ -6,25 +6,126 @@ import { fileURLToPath } from 'url';
 const app = express();
 const port = 3000;
 
+// Middleware to parse request bodies (for POST requests)
+app.use(express.urlencoded({ extended: true }));
+
 // Get __filename and __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Set the views directory (adjust the path as necessary)
-app.set('views', path.join(__dirname, '../views')); 
+app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
-//FINDING A SPECIFIC PACKAGE
-async function findProduct(product_id) {                    
+// EJS ROUTINGS
+
+// Home route (Display all products)
+app.get('/', async (req, res) => {
     try {
-        const [rows, fields] = await pool.query("SELECT * FROM products WHERE product_id = ?",[product_id]);
+        const [rows] = await pool.query("SELECT * FROM products");
+        res.render('index', { products: rows });
+    } catch (error) {
+        res.status(500).send('Error retrieving products');
+    }
+});
+
+// Route for displaying a single product by ID
+app.get('/product/:id', async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const [rows] = await pool.query("SELECT * FROM products WHERE product_id = ?", [productId]);
+        if (rows.length > 0) {
+            res.render('product', { product: rows[0] });
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error retrieving product');
+    }
+});
+
+// Route for adding a new product (form rendering)
+app.get('/add-product', (req, res) => {
+    res.render('add-product');
+});
+
+// Handle the form submission for adding a new product
+app.post('/add-product', async (req, res) => {
+    const {
+        product_id, product_category_id, product_name, product_brand, product_supplier,
+        product_description, product_unit_price, product_weight, product_length,
+        product_width, product_height, is_fragile, is_perishable, is_hazardous,
+        is_oversized, is_returnable, is_temperature_sensitive
+    } = req.body;
+
+    try {
+        await insertProduct(product_id, product_category_id, product_name, product_brand, product_supplier,
+            product_description, product_unit_price, product_weight, product_length, product_width,
+            product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive);
+
+        res.redirect('/');
+    } catch (error) {
+        res.status(500).send('Error inserting product');
+    }
+});
+
+// Route for updating a product (render form with existing data)
+app.get('/edit-product/:id', async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const [rows] = await pool.query("SELECT * FROM products WHERE product_id = ?", [productId]);
+        if (rows.length > 0) {
+            res.render('edit-product', { product: rows[0] });
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error retrieving product for update');
+    }
+});
+
+// Handle the form submission for updating a product
+app.post('/edit-product/:id', async (req, res) => {
+    const productId = req.params.id;
+    const {
+        product_category_id, product_name, product_brand, product_supplier,
+        product_description, product_unit_price, product_weight, product_length,
+        product_width, product_height, is_fragile, is_perishable, is_hazardous,
+        is_oversized, is_returnable, is_temperature_sensitive
+    } = req.body;
+
+    try {
+        await updateProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, productId);
+        res.redirect('/');
+    } catch (error) {
+        res.status(500).send('Error updating product');
+    }
+});
+
+// Route for deleting a product
+app.post('/delete-product/:id', async (req, res) => {
+    const productId = req.params.id;
+    try {
+        await deleteProduct(productId);
+        res.redirect('/');
+    } catch (error) {
+        res.status(500).send('Error deleting product');
+    }
+});
+
+// DATABASE FUNCTIONS (unchanged from your original code)
+
+// FINDING A SPECIFIC PRODUCT
+async function findProduct(product_id) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM products WHERE product_id = ?", [product_id]);
         console.log(rows);
     } catch (error) {
         console.error(error);
     }
 }
 
-//REGISTER NEW PACKAGE
+// REGISTER NEW PRODUCT
 async function insertProduct(product_id, product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive) {
     try {
         const [result] = await pool.query(
@@ -37,11 +138,11 @@ async function insertProduct(product_id, product_category_id, product_name, prod
     }
 }
 
-// FOR UPDATING A PACKAGE
+// FOR UPDATING A PRODUCT
 async function updateProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id) {
     try {
         const [result] = await pool.query(
-            "UPDATE products SET product_category_id = ?, product_name = ?, product_brand = ?, product_supplier = ?, product_description = ?, product_unit_price = ?, product_weight = ?, product_length = ?, product_width = ?, product_height =?, is_fragile = ?, is_perishable = ?, is_hazardous = ?, is_oversized = ?, is_returnable = ?, is_temperature_sensitive = ? WHERE product_id = ?", 
+            "UPDATE products SET product_category_id = ?, product_name = ?, product_brand = ?, product_supplier = ?, product_description = ?, product_unit_price = ?, product_weight = ?, product_length = ?, product_width = ?, product_height =?, is_fragile = ?, is_perishable = ?, is_hazardous = ?, is_oversized = ?, is_returnable = ?, is_temperature_sensitive = ? WHERE product_id = ?",
             [product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id]
         );
         if (result.affectedRows > 0) {
@@ -53,28 +154,12 @@ async function updateProduct(product_category_id, product_name, product_brand, p
         console.error('Error updating product:', error);
     }
 }
-//FOR TRACKING A PACKAGE (NOT SO SURE BOUT THIS - WILL MODIFY SOON)
-//async function trackPackage(trackingNumber) {
-//    try {
-//        const [rows] = await pool.query(
-//            "SELECT * FROM package WHERE tracking_number = ?", 
-//            [trackingNumber]
-//        );
-//        if (rows.length > 0) {
-//            console.log('Package details:', rows[0]);
-//        } else {
-//            console.log('No package found with the given tracking number.');
-//        }
-//    } catch (error) {
-//        console.error('Error tracking package:', error);
-//    }
-//}
 
-// REMOVING A PACKAGE
+// DELETING A PRODUCT
 async function deleteProduct(product_id) {
     try {
         const [result] = await pool.query(
-            "DELETE FROM products WHERE product_id = ?", 
+            "DELETE FROM products WHERE product_id = ?",
             [product_id]
         );
         if (result.affectedRows > 0) {
@@ -86,7 +171,8 @@ async function deleteProduct(product_id) {
         console.error('Error deleting product:', error);
     }
 }
-//LISTING ALL PACKAGES LIKE LITERALLY ALL
+
+// LISTING ALL PRODUCTS
 async function listAllProduct() {
     try {
         const [rows] = await pool.query("SELECT * FROM products");
@@ -96,11 +182,7 @@ async function listAllProduct() {
     }
 }
 
-
-
-
-
-
+// Starting the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
