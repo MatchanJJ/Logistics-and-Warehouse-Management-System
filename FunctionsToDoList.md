@@ -34,7 +34,7 @@ FUNCTION CLASSES:
        Create Shipment Record: Register a new shipment with its order details.
        Track Shipment Status: Track the status of shipments.
 
-[8] Status and Categories Management  
+[8] Status and Categories Management  -DONE/PARTIAL
        Define Categories and Status: Insert, update or define status and categories.
        
 [9] Logging - DONE

@@ -1,10 +1,6 @@
 CREATE TABLE warehouse_types (
     warehouse_type_id VARCHAR(10) PRIMARY KEY,
-<<<<<<< HEAD
     warehouse_type_name VARCHAR(75) NOT NULL  -- e.g., 'postal', 'e-commerce', 'both'
-=======
-    warehouse_type_name VARCHAR(75) NOT NULL  -- e.g., 'postal', 'e-commerce'
->>>>>>> 9a441cc9d8116df457fa40831e2f55013557af6b
 );
 
 CREATE TABLE order_status (
