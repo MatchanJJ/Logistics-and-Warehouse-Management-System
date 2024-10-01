@@ -15,24 +15,33 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
 // ADDING NEW EMPLOYEE
-async function addEmployee(id, firstName, lastName, contactInfo, address) {
+async function addEmployee(employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) {
     try {
         const [result] = await pool.query(
-            "INSERT INTO employee (id, first_name, last_name, contact_info, address) VALUES (?, ?, ?, ?, ?)", 
-            [id, firstName, lastName, contactInfo, address]
+            "INSERT INTO employees (employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) VALUES (?, ?, ?, ?, ?, ?)", 
+            [employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary]
         );
         console.log('Employee added with ID:', result.insertId);
     } catch (error) {
         console.error('Error adding employee:', error);
     }
 }
-
+async function assignJobRole(employee_role_id,employee_id) {
+    try {
+        const [result] =await pool.query(
+            "UPDATE employees SET employee_role_id = ? WHERE employee_id = ?",[employee_role_id,employee_id]
+        );
+    } catch (error) {
+        console.error('Error updating roles')
+    }
+    
+}
 //UPDATING EMPLOYEE DETAILS
-async function updateEmployee(id, firstName, lastName, contactInfo, address) {
+async function updateEmployee(employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, employee_id) {
     try {
         const [result] = await pool.query(
-            "UPDATE employee SET first_name = ?, last_name = ?, contact_info = ?, address = ? WHERE id = ?", 
-            [firstName, lastName, contactInfo, address, id]
+            "UPDATE employees SET employee_first_name = ?, employee_last_name = ?, contact_info = ?, employee_role_id = ?, employee_salary = ? WHERE employee_id = ?", 
+            [employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, employee_id]
         );
         if (result.affectedRows > 0) {
             console.log('Employee details updated.');
@@ -45,11 +54,11 @@ async function updateEmployee(id, firstName, lastName, contactInfo, address) {
 }
 
 //VIEWING EMPLOYEE DETAILS
-async function viewEmployee(id) {
+async function viewEmployee(employee_id) {
     try {
         const [rows] = await pool.query(
-            "SELECT * FROM employee WHERE id = ?", 
-            [id]
+            "SELECT * FROM employees WHERE id = ?", 
+            [employee_id]
         );
         if (rows.length > 0) {
             console.log('Employee details:', rows[0]);
@@ -62,11 +71,11 @@ async function viewEmployee(id) {
 }
 
 //REMOVING AN EMPLOYEE
-async function deleteEmployee(id) {
+async function deleteEmployee(employee_id) {
     try {
         const [result] = await pool.query(
-            "DELETE FROM employee WHERE id = ?", 
-            [id]
+            "DELETE FROM employees WHERE id = ?", 
+            [employee_id]
         );
         if (result.affectedRows > 0) {
             console.log('Employee deleted.');
@@ -78,23 +87,32 @@ async function deleteEmployee(id) {
     }
 }
 
-//ASSIGNING JOB ROLES
-async function assignJobRole(employeeId, roleId, warehouseId) {
+//ADD JOB ROLE
+async function addJobRole(employee_role_id, role_name) {
     try {
-        const [result] = await pool.query(
-            "INSERT INTO warehouse_management (id, employee_id, role_id, warehouse_id) VALUES (UUID(), ?, ?, ?)", 
-            [employeeId, roleId, warehouseId]
-        );
-        console.log('Job role assigned to employee.');
+        consts[result] = await pool.query(
+            "INSERT INTO employee_roles (employee_role_id, role_name) VALUES (?, ?)", [employee_role_id, role_name]
+        )
     } catch (error) {
-        console.error('Error assigning job role:', error);
+        console.error("mali")
+    }
+}
+
+// REMOVING JOB ROLE
+async function removeJobRole(employee_role_id) {
+    try {
+        consts[result] = await pool.query(
+            "DELETE FROM employee_roles WHERE employee_role_id = ? ", [employee_role_id]
+        )
+    } catch (error) {
+        console.error("mali")
     }
 }
 
 //LISITNG ALL EMPLOYEE
 async function listAllEmployees() {
     try {
-        const [rows] = await pool.query("SELECT * FROM employee");
+        const [rows] = await pool.query("SELECT * FROM employees");
         console.log('All Employees:', rows);
     } catch (error) {
         console.error('Error listing employees:', error);
