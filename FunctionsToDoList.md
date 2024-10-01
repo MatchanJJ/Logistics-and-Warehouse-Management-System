@@ -37,7 +37,7 @@ FUNCTION CLASSES:
 [8] Status and Categories Management  
        Define Categories and Status: Insert, update or define status and categories.
        
-[9] Logging
+[9] Logging - DONE
        Log Functions: Logs every action for every function action.
        - PENDING -
        ADD THE LOG FUNCTION TO EVERY ACTION IN THE EJS ROUTINGS OF THAT PARTICULAR FUNCTIONS
