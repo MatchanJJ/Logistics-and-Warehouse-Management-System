@@ -30,7 +30,7 @@ FUNCTION CLASSES:
        Generate Orders: Function to add new orders [ e-commerce or postal ].
        Update Order Information: Ability to update orders like order status.
 
-[7] Shipment Management  
+[7] Shipment Management  -DONE
        Create Shipment Record: Register a new shipment with its order details.
        Track Shipment Status: Track the status of shipments.
 
@@ -38,8 +38,4 @@ FUNCTION CLASSES:
        Define Categories and Status: Insert, update or define status and categories.
        
 [9] Logging
-<<<<<<< HEAD
        Log Functions: Logs every action for every function action.
-=======
-       Log Functions: Logs every action for every function action.
->>>>>>> 9a441cc9d8116df457fa40831e2f55013557af6b
