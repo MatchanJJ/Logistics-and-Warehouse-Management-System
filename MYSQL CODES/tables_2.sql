@@ -1,14 +1,18 @@
 CREATE TABLE warehouse_types (
     warehouse_type_id VARCHAR(10) PRIMARY KEY,
+<<<<<<< HEAD
+    warehouse_type_name VARCHAR(75) NOT NULL  -- e.g., 'postal', 'e-commerce', 'both'
+=======
     warehouse_type_name VARCHAR(75) NOT NULL  -- e.g., 'postal', 'e-commerce'
+>>>>>>> 9a441cc9d8116df457fa40831e2f55013557af6b
 );
 
-CREATE TABLE order_statuses (
+CREATE TABLE order_status (
     order_status_id VARCHAR(10) PRIMARY KEY,
     order_status_name VARCHAR(75) NOT NULL  -- 'pending', 'picked', 'shipped', etc.
 );
 
-CREATE TABLE shipment_statuses (
+CREATE TABLE shipment_status (
     shipment_status_id VARCHAR(10) PRIMARY KEY,
     shipment_status_name VARCHAR(75) NOT NULL  -- 'pending', 'in-transit', 'delivered'
 );
@@ -18,7 +22,7 @@ CREATE TABLE order_types (
     order_type_name VARCHAR(75) NOT NULL  -- 'postal', 'e-commerce'
 );
 
-CREATE TABLE return_statuses (
+CREATE TABLE return_status (
     return_status_id VARCHAR(10) PRIMARY KEY,
     return_status_name VARCHAR(75) NOT NULL  -- 'pending', 'processed', 'returned'
 );
@@ -49,12 +53,12 @@ CREATE TABLE warehouse_locations (
 
 CREATE TABLE product_categories (
     product_category_id VARCHAR(10) PRIMARY KEY,
-    product_category_name VARCHAR(75) NOT NULL
+    product_category_name VARCHAR(75) NOT NULL -- e-commerce product categories like 'electronics', 'apparel', 'home goods', 'books', 'office supplies', etc.
 );
 
 CREATE TABLE parcel_categories (
     parcel_category_id VARCHAR(10) PRIMARY KEY,
-    parcel_category_name VARCHAR(75) NOT NULL
+    parcel_category_name VARCHAR(75) NOT NULL -- 'letters', 'documents', 'small parcel', 'medium parcel', 'large parcel', 'registered mail', 'oversized parcel', etc.
 );
 
 CREATE TABLE products (
@@ -130,7 +134,7 @@ CREATE TABLE customers (
 
 CREATE TABLE shipping_services (
     shipping_service_id VARCHAR(10) PRIMARY KEY,
-    shipping_service_name VARCHAR(75) NOT NULL
+    shipping_service_name VARCHAR(75) NOT NULL -- 'standard', 'express', 
 );
 
 CREATE TABLE orders (
@@ -144,7 +148,7 @@ CREATE TABLE orders (
     order_type_id VARCHAR(10),
     order_total_amount DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
-    FOREIGN KEY (order_status_id) REFERENCES order_statuses(order_status_id),
+    FOREIGN KEY (order_status_id) REFERENCES order_status(order_status_id),
     FOREIGN KEY (shipping_service_id) REFERENCES shipping_services(shipping_service_id),
     FOREIGN KEY (order_type_id) REFERENCES order_types(order_type_id)
 );
@@ -189,7 +193,7 @@ CREATE TABLE shipments (
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (carrier_id) REFERENCES carriers(carrier_id),
     FOREIGN KEY (shipping_service_id) REFERENCES shipping_services(shipping_service_id),
-    FOREIGN KEY (shipment_status_id) REFERENCES shipment_statuses(shipment_status_id)
+    FOREIGN KEY (shipment_status_id) REFERENCES shipment_status(shipment_status_id)
 );
 
 CREATE TABLE returns (
@@ -198,7 +202,7 @@ CREATE TABLE returns (
     return_reason TEXT NOT NULL,
     return_date DATE,
     return_status_id VARCHAR(10),
-    FOREIGN KEY (return_status_id) REFERENCES return_statuses(return_status_id),
+    FOREIGN KEY (return_status_id) REFERENCES return_status(return_status_id),
     FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
@@ -221,7 +225,7 @@ CREATE TABLE order_logs (
     order_status_id VARCHAR(10),
     order_log_description TEXT,
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (order_status_id) REFERENCES order_statuses(order_status_id)
+    FOREIGN KEY (order_status_id) REFERENCES order_status(order_status_id)
 );
 
 CREATE TABLE shipment_logs (

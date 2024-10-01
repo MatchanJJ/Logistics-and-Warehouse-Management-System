@@ -38,4 +38,8 @@ FUNCTION CLASSES:
        Define Categories and Status: Insert, update or define status and categories.
        
 [9] Logging
+<<<<<<< HEAD
        Log Functions: Logs every action for every function action.
+=======
+       Log Functions: Logs every action for every function action.
+>>>>>>> 9a441cc9d8116df457fa40831e2f55013557af6b
