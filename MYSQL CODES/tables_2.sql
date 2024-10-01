@@ -1,6 +1,6 @@
 CREATE TABLE warehouse_types (
     warehouse_type_id VARCHAR(10) PRIMARY KEY,
-    warehouse_type_name VARCHAR(75) NOT NULL  ---> e.g., 'postal', 'e-commerce'
+    warehouse_type_name VARCHAR(75) NOT NULL  -- e.g., 'postal', 'e-commerce'
 );
 
 CREATE TABLE order_statuses (
@@ -21,7 +21,7 @@ CREATE TABLE order_types (
 CREATE TABLE return_statuses (
     return_status_id VARCHAR(10) PRIMARY KEY,
     return_status_name VARCHAR(75) NOT NULL  -- 'pending', 'processed', 'returned'
-)
+);
 
 CREATE TABLE employee_roles (
     employee_role_id VARCHAR(10) PRIMARY KEY,
@@ -268,4 +268,4 @@ CREATE TABLE employee_logs (
     employee_id VARCHAR(10),
     employee_log_description TEXT,
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
-)
+);
