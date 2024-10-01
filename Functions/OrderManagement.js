@@ -111,19 +111,34 @@ app.post('/add-postal-order', async (req, res) => {
 });
 
 // Add product order form
-app.get('/add-product-order', (req, res) => {
-    res.render('add-product-order');
-});
-
 app.post('/add-product-order', async (req, res) => {
     const { product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price } = req.body;
+    
     try {
+        // Call the function to add the product order
         await addProductOrders(product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price);
+        
+        // Log the order action after adding the product order
+        const description = `Added product order with ID: ${product_order_id} for order: ${order_id}`;
+        const orderStatusId = 1;  // we should probably automate it 
+        const logSuccess = await logOrderAction(order_id, orderStatusId, description);
+        
+        if (logSuccess) {
+            console.log('Order action logged successfully.');
+        } else {
+            console.log('Failed to log order action.');
+        }
+
+        // Redirect or send response after the action
         res.redirect('/');
+        
     } catch (error) {
+        // Handle any errors and send an error response
+        console.error('Error adding product order or logging action:', error);
         res.status(500).send('Error adding product order.');
     }
 });
+
 
 // Update postal order form
 app.get('/update-postal-order/:id', async (req, res) => {

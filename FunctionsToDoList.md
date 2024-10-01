@@ -39,3 +39,6 @@ FUNCTION CLASSES:
        
 [9] Logging
        Log Functions: Logs every action for every function action.
+       - PENDING -
+       ADD THE LOG FUNCTION TO EVERY ACTION IN THE EJS ROUTINGS OF THAT PARTICULAR FUNCTIONS
+       - SEE OrderManagement.js line 113 :))))
