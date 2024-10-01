@@ -36,6 +36,15 @@ async function getTables () {
         console.error(error);
     }
 }
+async function getInventory () {
+    try {
+        const [result] = await pool.query (
+            "SELECT * "
+        )
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 async function addEmployee(id, firstName, lastName, contactInfo, address) {
     try {
