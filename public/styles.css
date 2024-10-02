@@ -3,68 +3,125 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4; /* Light gray background */
 }
 
 header {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    text-align: center;
+    background: #4a4c4f; /* Blue background for the header */
+    color: #fff; /* White text color */
+    padding: 15px 0; /* Padding for header */
+    text-align: center; /* Centered text */
+}
+
+header h1 {
+    margin: 0; /* Remove margin */
+}
+
+nav {
+    margin: 10px 0; /* Margin for navigation */
 }
 
 nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
 }
 
 nav ul li {
-    float: left;
+    display: inline; /* Display list items in a row */
+    margin: 0 15px; /* Margin between items */
 }
 
-nav ul li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+nav a {
+    color: #fff; /* White text color for links */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold text */
 }
 
-nav ul li a:hover {
-    background-color: #111;
+nav a:hover {
+    text-decoration: underline; /* Underline on hover */
 }
 
+/* Main content area */
 main {
-    padding: 20px;
+    padding: 20px; /* Padding for main content */
 }
 
 /* Table Styles */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+    width: 100%; /* Full width */
+    border-collapse: collapse; /* Merge borders */
+    margin: 20px 0; /* Margin around the table */
+    background: #fff; /* White background for the table */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
 }
 
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+table th,
+table td {
+    border: 1px solid #ddd; /* Light gray borders */
+    padding: 10px; /* Padding for cells */
+    text-align: left; /* Align text to the left */
 }
 
+/* Header Styles */
 table th {
-    background-color: #007bff;
-    color: white;
+    background: #494b4d; /* Blue background for header */
+    color: #fff; /* White text color */
 }
 
+/* Row Styles */
+table tr:nth-child(even) {
+    background: #f2f2f2; /* Light gray for even rows */
+}
+
+table tr:hover {
+    background: #e0e0e0; /* Light gray for hovered rows */
+}
+
+/* Button Styles */
+button {
+    background: #007bff; /* Blue background for buttons */
+    color: #fff; /* White text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background: #0056b3; /* Darker blue on hover */
+}
+
+/* Form Styles */
+form {
+    display: inline; /* Inline display for form buttons */
+}
+
+/* Error Messages */
+div.error {
+    color: red; /* Red text for error messages */
+    margin: 15px 0; /* Margin for error messages */
+    font-weight: bold; /* Bold text */
+}
+
+/* Footer Styles */
 footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    text-align: center; /* Centered text */
+    padding: 10px 0; /* Padding for footer */
+    background: #007bff; /* Blue background */
+    color: #fff; /* White text color */
+    position: relative; /* Position relative for footer */
+    bottom: 0; /* Stick to the bottom */
+    width: 100%; /* Full width */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    nav ul li {
+        display: block; /* Stack navigation items vertically on small screens */
+        margin: 5px 0; /* Margin for vertical spacing */
+    }
+    
+    table {
+        font-size: 14px; /* Smaller font size for tables */
+    }
 }

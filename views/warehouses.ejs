@@ -1,22 +1,27 @@
 <h2>Warehouse List</h2>
-
+<div>
+    <a href="/add-warehouse" class="btn">Add Warehouse</a>
+</div>
 <% if (warehouses && warehouses.length > 0) { %>
     <table border="1">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
                 <th>Location</th>
                 <th>Capacity</th>
+                <th>Warehouse Type ID</th>
             </tr>
         </thead>
         <tbody>
             <% warehouses.forEach(warehouse => { %>
             <tr>
                 <td><%= warehouse.warehouse_id %></td>
-                <td><%= warehouse.warehouse_name %></td>
-                <td><%= warehouse.location %></td>
+                <td><%= warehouse.warehouse_address %></td>
                 <td><%= warehouse.capacity %></td>
+                <td><%= warehouse.warehouse_type_id %></td>
+                <td>
+                    <a href="/update-warehouse/<%= warehouse.warehouse_id %>" class="btn">Update</a> |
+                </td>
             </tr>
             <% }) %>
         </tbody>

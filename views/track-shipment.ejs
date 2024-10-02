@@ -1,0 +1,38 @@
+<h2>Track Shipment</h2>
+<form action="/track-shipment" method="POST">
+    <label for="shipment_status_id">Shipment Status ID:</label>
+    <input type="text" id="shipment_status_id" name="shipment_status_id" required>
+    <button type="submit">Track</button>
+</form>
+
+<% if (shipment) { %>
+<h3>Shipment Details</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Shipment ID</th>
+            <th>Order ID</th>
+            <th>Carrier ID</th>
+            <th>Shipping Service ID</th>
+            <th>Shipping Address</th>
+            <th>Shipment Date</th>
+            <th>Estimated Delivery Date</th>
+            <th>Status ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><%= shipment.shipment_id %></td>
+            <td><%= shipment.order_id %></td>
+            <td><%= shipment.carrier_id %></td>
+            <td><%= shipment.shipping_service_id %></td>
+            <td><%= shipment.shipping_address %></td>
+            <td><%= shipment.shipment_date %></td>
+            <td><%= shipment.estimated_delivery_date %></td>
+            <td><%= shipment.shipment_status_id %></td>
+        </tr>
+    </tbody>
+</table>
+<% } else if (message) { %>
+<p><%= message %></p>
+<% } %>

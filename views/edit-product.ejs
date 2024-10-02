@@ -1,0 +1,52 @@
+<h2>Edit Product</h2>
+<form action="/edit-product/<%= product.product_id %>" method="POST">
+    <label for="product_category_id">Category ID:</label>
+    <input type="text" name="product_category_id" value="<%= product.product_category_id %>" required>
+
+    <label for="product_name">Product Name:</label>
+    <input type="text" name="product_name" value="<%= product.product_name %>" required>
+
+    <label for="product_brand">Brand:</label>
+    <input type="text" name="product_brand" value="<%= product.product_brand %>">
+
+    <label for="product_supplier">Supplier:</label>
+    <input type="text" name="product_supplier" value="<%= product.product_supplier %>">
+
+    <label for="product_description">Description:</label>
+    <textarea name="product_description"><%= product.product_description %></textarea>
+
+    <label for="product_unit_price">Unit Price:</label>
+    <input type="number" name="product_unit_price" value="<%= product.product_unit_price %>" required>
+
+    <label for="product_weight">Weight:</label>
+    <input type="number" name="product_weight" value="<%= product.product_weight %>" required>
+
+    <label for="product_length">Length:</label>
+    <input type="number" name="product_length" value="<%= product.product_length %>" required>
+
+    <label for="product_width">Width:</label>
+    <input type="number" name="product_width" value="<%= product.product_width %>" required>
+
+    <label for="product_height">Height:</label>
+    <input type="number" name="product_height" value="<%= product.product_height %>" required>
+
+    <label for="is_fragile">Fragile:</label>
+    <input type="checkbox" name="is_fragile" <%= product.is_fragile ? 'checked' : '' %>> 
+
+    <label for="is_perishable">Perishable:</label>
+    <input type="checkbox" name="is_perishable" <%= product.is_perishable ? 'checked' : '' %>>
+
+    <label for="is_hazardous">Hazardous:</label>
+    <input type="checkbox" name="is_hazardous" <%= product.is_hazardous ? 'checked' : '' %>>
+
+    <label for="is_oversized">Oversized:</label>
+    <input type="checkbox" name="is_oversized" <%= product.is_oversized ? 'checked' : '' %>>
+
+    <label for="is_returnable">Returnable:</label>
+    <input type="checkbox" name="is_returnable" <%= product.is_returnable ? 'checked' : '' %>>
+
+    <label for="is_temperature_sensitive">Temperature Sensitive:</label>
+    <input type="checkbox" name="is_temperature_sensitive" <%= product.is_temperature_sensitive ? 'checked' : '' %>>
+
+    <button type="submit">Update Product</button>
+</form>

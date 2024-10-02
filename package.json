@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node Functions.js",
-    "dev": "npx nodemon ./Functions/Main.js"
+    "start": "node Main.js",
+    "dev": "npx nodemon Main.js"
   },
   "keywords": [],
   "author": "",

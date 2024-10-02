@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= employee.employee_first_name %> <%= employee.employee_last_name %> - Employee Details</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Employee Details</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/employees">Employee List</a></li>
+                <li><a href="/warehouses">Warehouses</a></li>
+                <li><a href="/inventories">Inventories</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/parcels">Parcels</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Details of <%= employee.employee_first_name %> <%= employee.employee_last_name %></h2>
+        <table>
+            <tr>
+                <th>ID:</th>
+                <td><%= employee.employee_id %></td>
+            </tr>
+            <tr>
+                <th>First Name:</th>
+                <td><%= employee.employee_first_name %></td>
+            </tr>
+            <tr>
+                <th>Last Name:</th>
+                <td><%= employee.employee_last_name %></td>
+            </tr>
+            <tr>
+                <th>Contact Info:</th>
+                <td><%= employee.contact_info %></td>
+            </tr>
+            <tr>
+                <th>Role ID:</th>
+                <td><%= employee.employee_role_id %></td>
+            </tr>
+            <tr>
+                <th>Salary:</th>
+                <td><%= employee.employee_salary %></td>
+            </tr>
+        </table>
+
+        <div>
+            <a href="/update-employee/<%= employee.employee_id %>">Edit Employee</a> | 
+            <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
+                <button type="submit">Delete Employee</button>
+            </form>
+        </div>
+        
+        <a href="/employees">Back to Employee List</a>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Logistics and Warehouse Management System</p>
+    </footer>
+</body>
+</html>

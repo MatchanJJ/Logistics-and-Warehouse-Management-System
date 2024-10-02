@@ -1,0 +1,40 @@
+<h2>Edit Parcel</h2>
+<form action="/edit-parcel/<%= parcel.parcel_id %>" method="POST">
+    <label for="parcel_category_id">Parcel Category ID:</label>
+    <input type="text" name="parcel_category_id" value="<%= parcel.parcel_category_id %>" required>
+    
+    <label for="parcel_description">Description:</label>
+    <input type="text" name="parcel_description" value="<%= parcel.parcel_description %>" required>
+    
+    <label for="parcel_unit_price">Unit Price:</label>
+    <input type="number" step="0.01" name="parcel_unit_price" value="<%= parcel.parcel_unit_price %>" required>
+    
+    <label for="parcel_weight">Weight:</label>
+    <input type="number" step="0.01" name="parcel_weight" value="<%= parcel.parcel_weight %>" required>
+    
+    <label for="parcel_length">Length:</label>
+    <input type="number" step="0.01" name="parcel_length" value="<%= parcel.parcel_length %>" required>
+    
+    <label for="parcel_width">Width:</label>
+    <input type="number" step="0.01" name="parcel_width" value="<%= parcel.parcel_width %>" required>
+    
+    <label for="parcel_height">Height:</label>
+    <input type="number" step="0.01" name="parcel_height" value="<%= parcel.parcel_height %>" required>
+    
+    <label for="is_fragile">Fragile:</label>
+    <input type="checkbox" name="is_fragile" <%= parcel.is_fragile ? 'checked' : '' %> >
+
+    <label for="is_perishable">Perishable:</label>
+    <input type="checkbox" name="is_perishable" <%= parcel.is_perishable ? 'checked' : '' %> >
+
+    <label for="is_hazardous">Hazardous:</label>
+    <input type="checkbox" name="is_hazardous" <%= parcel.is_hazardous ? 'checked' : '' %> >
+
+    <label for="is_returnable">Returnable:</label>
+    <input type="checkbox" name="is_returnable" <%= parcel.is_returnable ? 'checked' : '' %> >
+
+    <label for="is_temperature_sensitive">Temperature Sensitive:</label>
+    <input type="checkbox" name="is_temperature_sensitive" <%= parcel.is_temperature_sensitive ? 'checked' : '' %> >
+
+    <button type="submit">Update Parcel</button>
+</form>
