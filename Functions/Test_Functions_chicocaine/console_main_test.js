@@ -7,7 +7,8 @@ const port = 3000;
 var tables = test_functions.getTables();
 console.log(test_functions.helloWorld());
 console.log(tables);
-for (x in tables) {
-    console.log(x);
-}
+console.log(test_functions.getCustomers());
+console.log(test_functions.getInventory());
+console.log(test_functions.getOrders());
+console.log(test_functions.getEmployees());
 
