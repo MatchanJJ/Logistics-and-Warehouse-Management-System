@@ -29,18 +29,20 @@ async function updateCustomer(customer_id, customer_first_name, customer_last_na
 }
 
 // Function to delete a customer
-async function deleteCustomer(customer_id) {
+async function deleteCustomer(customerId) {
     try {
-        const [result] = await pool.query(
-            "DELETE FROM customers WHERE customer_id = ?",
-            [customer_id]
-        );
-        return result.affectedRows > 0; // Return true if the deletion was successful
+        // Delete related orders first
+        await pool.query("DELETE FROM orders WHERE customer_id = ?", [customerId]);
+        
+        // Now delete the customer
+        const [result] = await pool.query("DELETE FROM customers WHERE customer_id = ?", [customerId]);
+        return result.affectedRows > 0; // Return true if deletion was successful
     } catch (error) {
         console.error('Error deleting customer:', error);
-        throw error; // Propagate error for handling in routes
+        throw error; // Rethrow the error for handling in the calling context
     }
 }
+
 
 // Function to view all customers
 async function listAllCustomers() {

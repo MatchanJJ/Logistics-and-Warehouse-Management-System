@@ -84,6 +84,29 @@ app.get('/update-employee/:id', async (req, res) => {
         res.status(500).send('Error fetching employee.');
     }
 });
+// Route to handle form submission for updating an employee
+app.post('/update-employee/:id', async (req, res) => {
+    const { id } = req.params; // Extract employee ID from the route parameters
+    const { employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body; // Extract form fields
+
+    // Log the values being updated for debugging
+    console.log('Updating employee:', { id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary });
+
+    try {
+        // Call your management token to update employee details
+        const updated = await employeeManagementToken.updateEmployee(employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, id);
+        
+        if (updated) {
+            res.redirect(`/employee/${id}`); // Redirect to the employee details page after updating
+        } else {
+            res.status(404).send('Employee not found or no changes made.');
+        }
+    } catch (error) {
+        console.error('Error updating employee:', error);
+        res.status(500).send('Error updating employee.');
+    }
+});
+
 
 
     app.post('/delete-employee/:id', async (req, res) => {
@@ -116,17 +139,22 @@ app.get('/update-employee/:id', async (req, res) => {
         res.render('add-warehouse'); // Render the form for adding a new warehouse
     });
     
-    // Handle form submission for adding a new warehouse
-    app.post('/add-warehouse', async (req, res) => {
-        const { id, location, capacity } = req.body;
-        try {
-            await warehouseManagementToken.addWarehouse(id, location, capacity);
-            res.redirect('/warehouses'); // Redirect to the warehouse list after adding
-        } catch (error) {
-            console.error('Error adding warehouse:', error);
-            res.status(500).send('Error adding warehouse.');
-        }
-    });
+
+ // Handle form submission for adding a new warehouse
+app.post('/add-warehouse', async (req, res) => {
+    const { warehouse_id, warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
+    try {
+        // Log the inputs to debug
+        console.log('Adding warehouse:', { warehouse_id, warehouse_address, capacity, warehouse_type_id });
+
+        await warehouseManagementToken.addWarehouse(warehouse_id, warehouse_address, capacity, warehouse_type_id);
+        res.redirect('/warehouses'); // Redirect to the warehouse list after adding
+    } catch (error) {
+        console.error('Error adding warehouse:', error);
+        res.status(500).send('Error adding warehouse.');
+    }
+});
+
     
     // Route to render form for updating a warehouse
 app.get('/update-warehouse/:id', async (req, res) => {
@@ -416,6 +444,7 @@ app.post('/delete-customer/:id', async (req, res) => {
         res.status(500).send('Error deleting customer.');
     }
 });
+
 
 
 app.get('/shipments', async (req, res) => {
