@@ -18,6 +18,9 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 // ADDING NEW EMPLOYEE
 async function addEmployee(employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) {
     try {
@@ -114,16 +117,25 @@ async function listAllEmployees() {
 app.get('/', async (req, res) => {
     try {
         const employees = await listAllEmployees();
-        res.render('index', { employees });  // Renders the main page with a list of all employees
+        res.render('layout', {
+            title: 'Employee List',
+            content: 'index',  // Points to index.ejs as the content to include
+            employees: employees  // Pass employees data to index.ejs
+        });
     } catch (error) {
         res.status(500).send('Error fetching employees.');
     }
 });
 
+
 // FORM TO ADD NEW EMPLOYEE
 app.get('/add-employee', (req, res) => {
-    res.render('add-employee');
+    res.render('layout', {
+        title: 'Add New Employee',
+        content: 'add-employee'  // Points to add-employee.ejs
+    });
 });
+
 
 app.post('/add-employee', async (req, res) => {
     const { employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body;
@@ -136,30 +148,49 @@ app.post('/add-employee', async (req, res) => {
 });
 
 // VIEW EMPLOYEE DETAILS
+//app.get('/employee/:id', async (req, res) => {
+//    try {
+//        const employee = await viewEmployee(req.params.id);
+//        if (employee) {
+//            res.render('employee', { employee });
+//        } else {
+//            res.status(404).send('Employee not found.');
+//        }
+//    } catch (error) {
+//        res.status(500).send('Error fetching employee details.');
+//    }
+//});
+
+// FORM TO UPDATE EMPLOYEE
 app.get('/employee/:id', async (req, res) => {
     try {
-        const employee = await viewEmployee(req.params.id);
+        const employee = await viewEmployee(req.params.id); // Fetch employee details
         if (employee) {
-            res.render('employee', { employee });
+            res.render('layout', {
+                title: 'Employee Details',
+                content: 'employee',  // Points to employee.ejs
+                employee  // Pass employee data to the view
+            });
         } else {
-            res.status(404).send('Employee not found.');
+            res.status(404).send('Employee not found.');  // Handle case where employee is not found
         }
     } catch (error) {
+        console.error('Error fetching employee details:', error);
         res.status(500).send('Error fetching employee details.');
     }
 });
 
-// FORM TO UPDATE EMPLOYEE
 app.get('/update-employee/:id', async (req, res) => {
     try {
-        const employee = await viewEmployee(req.params.id);
+        const employee = await viewEmployee(req.params.id); // Fetch employee details
         if (employee) {
-            res.render('update-employee', { employee });
+            res.render('update-employee', { employee }); // Render the update form with employee data
         } else {
-            res.status(404).send('Employee not found.');
+            res.status(404).send('Employee not found.'); // Handle case where employee is not found
         }
     } catch (error) {
-        res.status(500).send('Error fetching employee details.');
+        console.error('Error fetching employee details:', error);
+        res.status(500).send('Error fetching employee details.'); // Handle errors
     }
 });
 
@@ -167,12 +198,15 @@ app.post('/update-employee/:id', async (req, res) => {
     const { employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body;
     const { id } = req.params;
     try {
+        // Call the update function to update employee details
         await updateEmployee(employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, id);
-        res.redirect(`/employee/${id}`);
+        res.redirect(`/employee/${id}`);  // Redirect to the employee's detail page after update
     } catch (error) {
-        res.status(500).send('Error updating employee.');
-    }
+        console.error('Error updating employee:', error);  // Log the error
+        res.status(500).send('Error updating employee.');  // Send an error response
+    }   
 });
+
 
 // DELETE EMPLOYEE
 app.post('/delete-employee/:id', async (req, res) => {
@@ -186,7 +220,10 @@ app.post('/delete-employee/:id', async (req, res) => {
 
 // ADD JOB ROLE
 app.get('/add-job-role', (req, res) => {
-    res.render('add-job-role');
+    res.render('layout', {
+        title: 'Add Job Role',
+        content: 'add-job-role'  // Points to add-job-role.ejs
+    });
 });
 
 app.post('/add-job-role', async (req, res) => {
