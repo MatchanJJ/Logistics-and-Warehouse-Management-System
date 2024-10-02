@@ -1,12 +1,33 @@
-<h2>Employee Details</h2>
-<p>ID: <%= employee.employee_id %></p>
-<p>First Name: <%= employee.employee_first_name %></p>
-<p>Last Name: <%= employee.employee_last_name %></p>
-<p>Contact Info: <%= employee.contact_info %></p>
-<p>Role ID: <%= employee.employee_role_id %></p>
-<p>Salary: <%= employee.employee_salary %></p>
-
-<a href="/update-employee/<%= employee.employee_id %>">Update</a>
-<form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
-    <button type="submit">Delete</button>
-</form>
+<h2>Employee List</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Contact Info</th>
+            <th>Role ID</th>
+            <th>Salary</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% employees.forEach(employee => { %>
+        <tr>
+            <td><%= employee.employee_id %></td>
+            <td><%= employee.employee_first_name %></td>
+            <td><%= employee.employee_last_name %></td>
+            <td><%= employee.contact_info %></td>
+            <td><%= employee.employee_role_id %></td>
+            <td><%= employee.employee_salary %></td>
+            <td>
+                <a href="/employee/<%= employee.employee_id %>">View</a> | 
+                <a href="/update-employee/<%= employee.employee_id %>">Update</a> | 
+                <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>

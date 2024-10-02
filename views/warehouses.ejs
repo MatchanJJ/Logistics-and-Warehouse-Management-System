@@ -1,0 +1,26 @@
+<h2>Warehouse List</h2>
+
+<% if (warehouses && warehouses.length > 0) { %>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% warehouses.forEach(warehouse => { %>
+            <tr>
+                <td><%= warehouse.warehouse_id %></td>
+                <td><%= warehouse.warehouse_name %></td>
+                <td><%= warehouse.location %></td>
+                <td><%= warehouse.capacity %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<% } else { %>
+    <p>No warehouses found.</p>
+<% } %>

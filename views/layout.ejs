@@ -8,16 +8,27 @@
 </head>
 <body>
     <header>
-        <h1>Employees</h1>
+        <h1>Logistics and Warehouse Management System</h1>
         <nav>
-            <a href="/">Home</a>
-            <a href="/add-employee">Add Employee</a>
-            <a href="/add-job-role">Add Job Role</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/warehouses">Warehouses</a></li>
+                <li><a href="/inventories">Inventories</a></li>
+                <li><a href="/employees">Employees</a></li>
+                <li><a href="/customers">Customers</a></li>
+                <li><a href="/orders">Orders</a></li>
+                <li><a href="/shipments">Shipments</a></li>
+            </ul>
         </nav>
     </header>
+
     <main>
-        <!-- Content will be injected here from the included views -->
-        <%- include(content) %>  <!-- Use the content variable correctly -->
+        <!-- Content will be injected here -->
+        <%- include(content) %>  <!-- Correctly include content based on route -->
     </main>
+
+    <footer>
+        <p>&copy; 2024 Logistics and Warehouse Management System</p>
+    </footer>
 </body>
 </html>
