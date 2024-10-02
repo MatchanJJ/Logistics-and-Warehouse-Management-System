@@ -1,0 +1,20 @@
+<h2>Update Employee</h2>
+
+<form action="/update-employee/<%= employee.employee_id %>" method="POST">
+    <label for="employee_first_name">First Name:</label>
+    <input type="text" id="employee_first_name" name="employee_first_name" value="<%= employee.employee_first_name %>" required><br>
+
+    <label for="employee_last_name">Last Name:</label>
+    <input type="text" id="employee_last_name" name="employee_last_name" value="<%= employee.employee_last_name %>"><br>
+
+    <label for="contact_info">Contact Info:</label>
+    <input type="text" id="contact_info" name="contact_info" value="<%= employee.contact_info %>"><br>
+
+    <label for="employee_role_id">Role ID:</label>
+    <input type="text" id="employee_role_id" name="employee_role_id" value="<%= employee.employee_role_id %>"><br>
+
+    <label for="employee_salary">Salary:</label>
+    <input type="text" id="employee_salary" name="employee_salary" value="<%= employee.employee_salary %>"><br>
+
+    <button type="submit">Update Employee</button>
+</form>

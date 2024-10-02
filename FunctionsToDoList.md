@@ -30,16 +30,15 @@ FUNCTION CLASSES:
        Generate Orders: Function to add new orders [ e-commerce or postal ].
        Update Order Information: Ability to update orders like order status.
 
-[7] Shipment Management  
+[7] Shipment Management  -DONE
        Create Shipment Record: Register a new shipment with its order details.
        Track Shipment Status: Track the status of shipments.
 
-[8] Status and Categories Management  
+[8] Status and Categories Management  -DONE/PARTIAL
        Define Categories and Status: Insert, update or define status and categories.
        
-[9] Logging
-<<<<<<< HEAD
+[9] Logging - DONE
        Log Functions: Logs every action for every function action.
-=======
-       Log Functions: Logs every action for every function action.
->>>>>>> 9a441cc9d8116df457fa40831e2f55013557af6b
+       - PENDING -
+       ADD THE LOG FUNCTION TO EVERY ACTION IN THE EJS ROUTINGS OF THAT PARTICULAR FUNCTIONS
+       - SEE OrderManagement.js line 113 :))))

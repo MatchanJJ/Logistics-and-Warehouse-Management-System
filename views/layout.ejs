@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Employees</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/add-employee">Add Employee</a>
+            <a href="/add-job-role">Add Job Role</a>
+        </nav>
+    </header>
+    <main>
+        <!-- Content will be injected here from the included views -->
+        <%- include(content) %>  <!-- Use the content variable correctly -->
+    </main>
+</body>
+</html>

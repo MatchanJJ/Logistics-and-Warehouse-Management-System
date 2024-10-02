@@ -1,43 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basta test ni</title>
-    <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-    <div class="container"> 
-        <h1>BORDS BIOT</h1>
-        <h2><%= new Date() %></h2> <!-- Corrected usage of Date -->
-        
-        <h2>Query Results:</h2>
-        <table>
-            <% const results = test || []; %> <!-- Default to an empty array if test is undefined -->
-            <thead>
-                <tr>
-                    <% if (results.length > 0) { %>
-                        <% Object.keys(results[0]).forEach(column => { %>
-                            <th><%= column %></th>
-                        <% }) %>
-                    <% } else { %>
-                        <th>No data found</th>
-                    <% } %>
-                </tr>
-            </thead>
-            <tbody>
-                <% results.forEach(row => { %>
-                    <tr>
-                        <% Object.values(row).forEach(value => { %>
-                            <td><%= value %></td>
-                        <% }) %>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
-
-        <p>This is a simple HTML file for testing purposes.</p>
-        <a href="https://www.example.com" target="_blank">Visit Example</a>
-    </div>
-</body>
-</html>
+<h2>Employees</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Contact Info</th>
+            <th>Role ID</th>
+            <th>Salary</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% employees.forEach(employee => { %>
+        <tr>
+            <td><%= employee.employee_id %></td>
+            <td><%= employee.employee_first_name %></td>
+            <td><%= employee.employee_last_name %></td>
+            <td><%= employee.contact_info %></td>
+            <td><%= employee.employee_role_id %></td>
+            <td><%= employee.employee_salary %></td>
+            <td>
+                <a href="/employee/<%= employee.employee_id %>">View</a> | 
+                <a href="/update-employee/<%= employee.employee_id %>">Update</a> | 
+                <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
