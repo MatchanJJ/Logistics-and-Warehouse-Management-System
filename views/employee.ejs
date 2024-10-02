@@ -1,0 +1,12 @@
+<h2>Employee Details</h2>
+<p>ID: <%= employee.employee_id %></p>
+<p>First Name: <%= employee.employee_first_name %></p>
+<p>Last Name: <%= employee.employee_last_name %></p>
+<p>Contact Info: <%= employee.contact_info %></p>
+<p>Role ID: <%= employee.employee_role_id %></p>
+<p>Salary: <%= employee.employee_salary %></p>
+
+<a href="/update-employee/<%= employee.employee_id %>">Update</a>
+<form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
+    <button type="submit">Delete</button>
+</form>
