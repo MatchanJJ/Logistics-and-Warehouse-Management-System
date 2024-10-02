@@ -1,27 +1,58 @@
 <h2>Update Shipment</h2>
-<form action="/update-shipment/<%= shipment.shipment_id %>" method="POST">
-    <label for="order_id">Order ID:</label>
-    <input type="text" id="order_id" name="order_id" value="<%= shipment.order_id %>" required><br>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
-    <label for="carrier_id">Carrier ID:</label>
-    <input type="text" id="carrier_id" name="carrier_id" value="<%= shipment.carrier_id %>" required><br>
+<div class="form-wrapper">
+    <form action="/update-shipment/<%= shipment.shipment_id %>" method="POST" class="form-container">
+        <!-- Order ID -->
+        <div class="form-group">
+            <label for="order_id">Order ID:</label>
+            <input type="text" id="order_id" name="order_id" value="<%= shipment.order_id %>" required>
+        </div>
 
-    <label for="shipping_service_id">Shipping Service ID:</label>
-    <input type="text" id="shipping_service_id" name="shipping_service_id" value="<%= shipment.shipping_service_id %>" required><br>
+        <!-- Carrier ID -->
+        <div class="form-group">
+            <label for="carrier_id">Carrier ID:</label>
+            <input type="text" id="carrier_id" name="carrier_id" value="<%= shipment.carrier_id %>" required>
+        </div>
 
-    <label for="shipping_address">Shipping Address:</label>
-    <textarea id="shipping_address" name="shipping_address" required><%= shipment.shipping_address %></textarea><br>
+        <!-- Shipping Service ID -->
+        <div class="form-group">
+            <label for="shipping_service_id">Shipping Service ID:</label>
+            <input type="text" id="shipping_service_id" name="shipping_service_id" value="<%= shipment.shipping_service_id %>" required>
+        </div>
 
-    <label for="shipment_date">Shipment Date:</label>
-    <input type="date" id="shipment_date" name="shipment_date" value="<%= shipment.shipment_date %>" required><br>
+        <!-- Shipping Address -->
+        <div class="form-group">
+            <label for="shipping_address">Shipping Address:</label>
+            <textarea id="shipping_address" name="shipping_address" required><%= shipment.shipping_address %></textarea>
+        </div>
 
-    <label for="estimated_delivery_date">Estimated Delivery Date:</label>
-    <input type="date" id="estimated_delivery_date" name="estimated_delivery_date" value="<%= shipment.estimated_delivery_date %>" required><br>
+        <!-- Shipment Date -->
+        <div class="form-group">
+            <label for="shipment_date">Shipment Date:</label>
+            <input type="date" id="shipment_date" name="shipment_date" value="<%= shipment.shipment_date %>" required class="date-input">
+        </div>
 
-    <label for="shipment_status_id">Shipment Status ID:</label>
-    <input type="text" id="shipment_status_id" name="shipment_status_id" value="<%= shipment.shipment_status_id %>" required><br>
+        <!-- Estimated Delivery Date -->
+        <div class="form-group">
+            <label for="estimated_delivery_date">Estimated Delivery Date:</label>
+            <input type="date" id="estimated_delivery_date" name="estimated_delivery_date" value="<%= shipment.estimated_delivery_date %>" required class="date-input">
+        </div>
 
-    <button type="submit">Update Shipment</button>
-</form>
+        <!-- Shipment Status ID -->
+        <div class="form-group">
+            <label for="shipment_status_id">Shipment Status ID:</label>
+            <input type="text" id="shipment_status_id" name="shipment_status_id" value="<%= shipment.shipment_status_id %>" required>
+        </div>
 
-<a href="/shipment/<%= shipment.shipment_id %>">Back to Shipment Details</a>
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn">Update Shipment</button>
+        </div>
+    </form>
+
+    <!-- Back Button -->
+    <div class="form-group">
+        <a href="/shipment/<%= shipment.shipment_id %>" class="btn">Back to Shipment Details</a>
+    </div>
+</div>

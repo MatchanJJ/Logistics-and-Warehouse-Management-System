@@ -15,7 +15,7 @@
 
     // Initialize Express
     const app = express();
-    const port = 8080;
+    const port = 3001;
 
     // Middleware to parse request bodies (for POST requests)
     app.use(express.urlencoded({ extended: true }));

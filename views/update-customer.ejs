@@ -1,17 +1,40 @@
 <h2>Update Customer</h2>
-<form action="/customers/<%= customer.customer_id %>" method="POST">
-    <label for="customer_first_name">First Name:</label>
-    <input type="text" id="customer_first_name" name="customer_first_name" value="<%= customer.customer_first_name %>" required><br>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
-    <label for="customer_last_name">Last Name:</label>
-    <input type="text" id="customer_last_name" name="customer_last_name" value="<%= customer.customer_last_name %>"><br>
+<div class="form-wrapper">
+    <form action="/customers/<%= customer.customer_id %>" method="POST" class="form-container">
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="customer_first_name">First Name:</label>
+            <input type="text" id="customer_first_name" name="customer_first_name" value="<%= customer.customer_first_name %>" required>
+        </div>
 
-    <label for="customer_email">Email:</label>
-    <input type="email" id="customer_email" name="customer_email" value="<%= customer.customer_email %>"><br>
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="customer_last_name">Last Name:</label>
+            <input type="text" id="customer_last_name" name="customer_last_name" value="<%= customer.customer_last_name %>">
+        </div>
 
-    <label for="customer_address">Address:</label>
-    <textarea id="customer_address" name="customer_address"><%= customer.customer_address %></textarea><br>
+        <!-- Email -->
+        <div class="form-group">
+            <label for="customer_email">Email:</label>
+            <input type="email" id="customer_email" name="customer_email" value="<%= customer.customer_email %>" required>
+        </div>
 
-    <button type="submit">Update Customer</button>
-</form>
-<a href="/customers">Back to Customer List</a>
+        <!-- Address -->
+        <div class="form-group">
+            <label for="customer_address">Address:</label>
+            <textarea id="customer_address" name="customer_address" required><%= customer.customer_address %></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn">Update Customer</button>
+        </div>
+    </form>
+
+    <!-- Back Button -->
+    <div class="form-group">
+        <a href="/customers" class="btn">Back to Customer List</a>
+    </div>
+</div>
