@@ -18,6 +18,14 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views')); 
 app.set('view engine', 'ejs');
 
+const parcelManagementToken = {
+    findParcel,
+    insertParcel,
+    updateParcel,
+    deleteParcel,
+    listAllParcel
+}
+
 // FINDING A SPECIFIC PARCEL
 async function findParcel(parcel_id) {                    
     try {
@@ -145,3 +153,5 @@ app.get('/delete-parcel/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default parcelManagementToken;

@@ -17,6 +17,13 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
+const productManagementToken = {
+    findProduct,
+    insertProduct,
+    updateProduct,
+    deleteProduct,
+    listAllProduct
+}
 // EJS ROUTINGS
 
 // Home route (Display all products)
@@ -186,3 +193,5 @@ async function listAllProduct() {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default productManagementToken;

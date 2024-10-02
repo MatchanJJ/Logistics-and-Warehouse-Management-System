@@ -17,6 +17,9 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
+const warehouseManagementToken = {
+    listAllWarehouse
+}
 // ROUTES
 
 // Home route (List all warehouses)
@@ -104,9 +107,31 @@ app.post('/remove-package', async (req, res) => {
         res.status(500).send('Error removing package from inventory');
     }
 });
+app.get('/warehouses', async (req, res) => {
+    try {
+        const warehouses = await listAllWarehouse();  // Fetch warehouse data
+        res.render('layout', {
+            title: 'Warehouse List',
+            content: 'warehouses',  // Render the warehouses.ejs view
+            warehouses              // Pass the warehouses data to the view
+        });
+    } catch (error) {
+        res.status(500).send('Error fetching warehouses.');
+    }
+});
 
 // DATABASE FUNCTIONS
 
+//LIST ALL WAREHOUSE
+async function listAllWarehouse() {
+    try {
+        const [result] = await pool.query(
+            "SELECT * FROM warehouses"
+        )
+    } catch (error) {
+        console.error("mali")
+    }
+}
 // ADD WAREHOUSE
 async function addWarehouse(id, location, capacity) {
     try {
@@ -184,3 +209,5 @@ async function removePackageFromInventory(warehouseId, packageId) {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default warehouseManagementToken;

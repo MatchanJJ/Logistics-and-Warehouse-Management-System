@@ -18,6 +18,14 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
+const carrierPartnerTokens = {
+    addCarrierPartner,
+    updateLogisticsPartner,
+    viewLogisticsPartner,
+    deleteLogisticsPartner,
+    listAllLogisticsPartners
+}
+
 // ADD NEW PARTNER
 async function addCarrierPartner(carrier_id, carrier_name, shipping_service_id, carrier_contact_info) {
     try {
@@ -150,3 +158,5 @@ app.post('/delete-partner/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default carrierPartnerTokens;

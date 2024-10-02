@@ -17,6 +17,38 @@ app.set('view engine', 'ejs');
 // Serve static files like CSS
 app.use(express.static(path.join(__dirname, '../public')));
 
+const statusAndCategoriesManagementToken = {
+    insertOrderStatus,
+    insertShipmentStatus,
+    insertReturnStatus,
+    insertWarehouseType,
+    insertOrderType,
+    insertProductCategory,
+    insertParcelCategory,
+    updateOrderStatus,
+    updateShipmentStatus,
+    updateReturnStatus,
+    updateWarehouseType,
+    updateOrderType,
+    updateProductCategory,
+    updateParcelCategory,
+    getOrderStatuses,
+    getShipmentStatuses,
+    getReturnStatuses,
+    getWarehouseTypes,
+    getOrderTypes,
+    getProductCategories,
+    getParcelCategories,
+    deleteOrderStatus,
+    deleteShipmentStatus,
+    deleteReturnStatus,
+    deleteWarehouseType,
+    deleteOrderType,
+    deleteProductCategory,
+    deleteParcelCategory
+
+}
+
 // ----------- EJS ROUTING FOR THIS FUNCTIONS IS NOT YET DEFINED -----------
 
 // Insert into order_status
@@ -335,3 +367,5 @@ async function deleteParcelCategory(parcelCategoryId) {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default statusAndCategoriesManagementToken;

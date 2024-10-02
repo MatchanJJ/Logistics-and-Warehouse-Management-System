@@ -17,6 +17,11 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
+const shipmentManagementToken = {
+    addShipment,
+    trackShipment,
+    listAllShipment
+}
 // EJS ROUTINGS
 
 // Home route (List all shipments)
@@ -106,3 +111,5 @@ async function listAllShipment() {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default shipmentManagementToken;

@@ -19,7 +19,18 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
+
+const employeeManagementToken = {
+    addEmployee,
+    assignJobRole,
+    updateEmployee,
+    viewEmployee,
+    deleteEmployee,
+    addJobRole,
+    removeJobRole,
+    listAllEmployees
+}
 
 // ADDING NEW EMPLOYEE
 async function addEmployee(employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) {
@@ -249,3 +260,5 @@ app.post('/delete-job-role/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default employeeManagementToken;
