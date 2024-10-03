@@ -1,4 +1,4 @@
-import pool from "./DBConnection.js";
+import pool from "../DBConnection.js";
 import readline from 'readline';
 
 // Function to prompt user for input

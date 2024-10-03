@@ -2,7 +2,6 @@ FUNCTION CLASSES:
 
 [1] Warehouse Management  - DONE
        Add Warehouse: Function to add a new warehouse to the system.
-       Update Warehouse Capacity: Update the capacity when packages are added or removed from the warehouse.
        Remove Warehouse: Functions to remove a warehouse if inventory level = 0.
        Check Available Capacity: Function to view available capacity in a warehouse.
 
@@ -41,4 +40,4 @@ FUNCTION CLASSES:
        Log Functions: Logs every action for every function action.
        - PENDING -
        ADD THE LOG FUNCTION TO EVERY ACTION IN THE EJS ROUTINGS OF THAT PARTICULAR FUNCTIONS
-       - SEE OrderManagement.js line 113 :))))
+       - SEE OrderManagement.js line 113 :

@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\Functions\\Test_Functions_chicocaine\\console_main_test.js"
+            "program": "${workspaceFolder}\\Functions\\app.js"
         }
     ]
 }

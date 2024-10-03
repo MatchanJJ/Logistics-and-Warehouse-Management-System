@@ -1,4 +1,4 @@
-import pool from "./DBConnection.js";
+import pool from "../DBConnection.js";
 import express from 'express';
 import path from 'path';  
 import { fileURLToPath } from 'url';

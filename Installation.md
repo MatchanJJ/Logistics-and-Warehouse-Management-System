@@ -10,3 +10,7 @@ npm install uuid
 
 Docs for ejs routing 
 - https://expressjs.com/en/guide/routing.html
+
+
+NanoId
+- npm install nanoid

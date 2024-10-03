@@ -212,32 +212,28 @@ CREATE TABLE employees (
     FOREIGN KEY (employee_role_id) REFERENCES employee_roles(employee_role_id)
 );
 
--- LOGS --
+-- LOGS
 
 CREATE TABLE order_logs (
     order_log_id VARCHAR(10) PRIMARY KEY,
     date_time TIMESTAMP,
     order_id VARCHAR(10),
     order_status_id VARCHAR(10),
-    order_log_description TEXT,
-    FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (order_status_id) REFERENCES order_status(order_status_id)
+    order_log_description TEXT
 );
 
 CREATE TABLE shipment_logs (
     shipment_log_id VARCHAR(10) PRIMARY KEY,
     date_time TIMESTAMP,
     shipment_id VARCHAR(10),
-    shipment_log_description TEXT,
-    FOREIGN KEY (shipment_id) REFERENCES shipments(shipment_id)
+    shipment_log_description TEXT
 );
 
 CREATE TABLE return_logs (
     return_log_id VARCHAR(10) PRIMARY KEY,
     date_time TIMESTAMP,
     return_id VARCHAR(10),
-    return_log_description TEXT,
-    FOREIGN KEY (return_id) REFERENCES returns(return_id)
+    return_log_description TEXT
 );
 
 CREATE TABLE product_inventory_logs (
@@ -245,10 +241,7 @@ CREATE TABLE product_inventory_logs (
     date_time TIMESTAMP,
     product_inventory_id VARCHAR(10),
     warehouse_id VARCHAR(10),
-    product_inventory_log_description TEXT,
-
-    FOREIGN KEY (product_inventory_id) REFERENCES product_inventories(product_inventory_id),
-    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id)
+    product_inventory_log_description TEXT
 );
 
 CREATE TABLE parcel_inventory_logs (
@@ -256,16 +249,23 @@ CREATE TABLE parcel_inventory_logs (
     date_time TIMESTAMP,
     parcel_inventory_id VARCHAR(10),
     warehouse_id VARCHAR(10),
-    parcel_inventory_log_description TEXT,
-
-    FOREIGN KEY (parcel_inventory_id) REFERENCES parcel_inventories(parcel_inventory_id),
-    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id)    
+    parcel_inventory_log_description TEXT   
 );
 
 CREATE TABLE employee_logs (
     employee_log_id VARCHAR(10) PRIMARY KEY,
     date_time TIMESTAMP,
     employee_id VARCHAR(10),
-    employee_log_description TEXT,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+    employee_log_description TEXT
 );
+
+CREATE TABLE warehouse_employees (
+    warehouse_id VARCHAR(10) NOT NULL,
+    employee_id VARCHAR(10) NOT NULL,
+    PRIMARY KEY (warehouse_id, employee_id),
+    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- add new tables for archives
