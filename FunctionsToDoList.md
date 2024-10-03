@@ -9,13 +9,13 @@ FUNCTION CLASSES:
 [2] Product Management  - DONE
        Register New Product: Insert a new product into the system and assign it to a warehouse. - PENDING
        Update Product Details: Modify product information, such as weight, dimensions, and status.
-       Remove Product: Function to remove a registered product. -PENDING 
+       Remove Product: Function to remove a registered product. -PENDING / needed complex func
 
 [3] Parcel Management -DONE
        Add New Parcel: Every postal order or every return, add a new parcel into the system amd assign it to a warehouse. -PENDING
        Update Parcel Details: Modify parcel information. 
        Remove Parcel: For every successful processing of parcel, it is removed from the warehouse the moment it is shipped.
-       -PENDING
+       -PENDING / needed complex func
 
 [4] Employee Management -DONE
        Add New Employee: Insert a new employee into the system. - PENDING 
