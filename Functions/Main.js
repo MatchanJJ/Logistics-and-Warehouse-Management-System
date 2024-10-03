@@ -7,7 +7,7 @@
     import parcelManagementToken from './ParcelManagement.js';
     import customerManagementToken from './CustomerManagement.js';
     import shipmentManagementToken from './ShipmentManagement.js';
-
+    import carrierPartnerTokens from './CarrierPartnerManagement.js';
 
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
@@ -15,7 +15,7 @@
 
     // Initialize Express
     const app = express();
-    const port = 3001;
+    const port = 3002;
 
     // Middleware to parse request bodies (for POST requests)
     app.use(express.urlencoded({ extended: true }));
@@ -532,6 +532,73 @@ app.post('/delete-shipment/:id', async (req, res) => {
     } catch (error) {
         console.error('Error deleting shipment:', error);
         res.status(500).send('Error deleting shipment.');
+    }
+});
+
+// Route to manage logistics partners
+app.get('/manage-partner', async (req, res) => {
+    try {
+        const partners = await carrierPartnerTokens.listAllLogisticsPartners(); // Fetch partners from the database
+        res.render('partner', { partners }); // Pass the fetched partners to the partner view
+    } catch (error) {
+        console.error('Error fetching logistics partners:', error);
+        res.status(500).send('Error fetching logistics partners.');
+    }
+});
+
+// Route to display the Add Partner form
+app.get('/add-partner', (req, res) => {
+    res.render('add-partner'); // Renders the add-partner.ejs form
+});
+
+// Route to handle form submission for adding a new partner
+app.post('/add-partner', async (req, res) => {
+    const { carrier_id, carrier_name, shipping_service_id, carrier_contact_info } = req.body; // Extract form fields
+    try {
+        await carrierPartnerTokens.addCarrierPartner(carrier_id, carrier_name, shipping_service_id, carrier_contact_info); // Add the new partner
+        res.redirect('/manage-partner'); // Redirect to partner management page after successful addition
+    } catch (error) {
+        console.error('Error adding new partner:', error);
+        res.status(500).send('Error adding new partner.');
+    }
+});
+
+// Route to display the Update Partner form
+app.get('/update-partner/:id', async (req, res) => {
+    try {
+        const partner = await carrierPartnerTokens.viewLogisticsPartner(req.params.id); // Fetch the partner by ID
+        if (partner) {
+            res.render('update-partner', { partner }); // Render the update form with the partner details
+        } else {
+            res.status(404).send('Partner not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching partner for update:', error);
+        res.status(500).send('Error fetching partner.');
+    }
+});
+
+// Route to handle form submission for updating the partner
+app.post('/update-partner/:id', async (req, res) => {
+    const { carrier_name, shipping_service_id, carrier_contact_info } = req.body; // Extract updated values
+    const { id } = req.params; // Get the partner ID from the route
+    try {
+        await carrierPartnerTokens.updateLogisticsPartner(carrier_name, shipping_service_id, carrier_contact_info, id); // Update the partner
+        res.redirect(`/manage-partner`); // Redirect to the partner details page after update
+    } catch (error) {
+        console.error('Error updating partner:', error);
+        res.status(500).send('Error updating partner.');
+    }
+});
+
+// DELETE A PARTNER
+app.post('/delete-partner/:id', async (req, res) => {
+    try {
+        await carrierPartnerTokens.deleteLogisticsPartner(req.params.id); // Delete the partner
+        res.redirect('/manage-partner'); // Redirect back to partner management page
+    } catch (error) {
+        console.error('Error deleting partner:', error);
+        res.status(500).send('Error deleting partner.');
     }
 });
 

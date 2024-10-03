@@ -21,9 +21,7 @@
             <td><%= customer.customer_address %></td>
             <td>
                 <a href="/customer/<%= customer.customer_id %>">View</a> |
-                <a href="/update-customer/<%= customer.customer_id %>">Update</a> |
-                <form action="/delete-customer/<%= customer.customer_id %>" method="POST" style="display:inline;">
-                    <button type="submit">Delete</button>
+                <a href="/update-customer/<%= customer.customer_id %>">Update</a>
                 </form>
             </td>
         </tr>

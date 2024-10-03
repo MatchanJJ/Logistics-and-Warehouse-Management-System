@@ -403,3 +403,214 @@ textarea {
     background-color: #fff; /* Change background on focus */
 }
 
+/* General table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+thead {
+    background-color: #007BFF;
+    color: white;
+}
+
+th, td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Change table headers and content to block on small screens */
+    th, td {
+        display: block;
+        padding: 10px;
+        text-align: right;
+        position: relative;
+    }
+
+    th::before, td::before {
+        content: attr(data-title);
+        position: absolute;
+        left: 10px;
+        width: 50%;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    /* Change the layout for table headers */
+    thead {
+        display: none;
+    }
+
+    td {
+        border: none;
+        border-bottom: 1px solid #ddd;
+    }
+}
+
+/* Button styles */
+.btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Optional: Add hover effect for table rows */
+tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Delete button color */
+button[type="submit"] {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button[type="submit"]:hover {
+    background-color: darkred;
+}
+
+/* General table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+    font-size: 16px; /* Larger font size for desktop */
+}
+
+thead {
+    background-color: #007BFF;
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        display: block;
+        padding: 10px;
+        text-align: left;
+        position: relative;
+    }
+
+    th::before, td::before {
+        content: attr(data-title);
+        position: absolute;
+        left: 10px;
+        width: 40%;
+        font-weight: bold;
+    }
+
+    /* Hide table headers for mobile view */
+    thead {
+        display: none;
+    }
+
+    /* Add border on bottom of each cell in mobile view */
+    td {
+        border: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Align buttons to be more compact on mobile */
+    td form, td a {
+        display: inline-block;
+        margin-bottom: 5px;
+    }
+}
+
+/* Styling for wider screens */
+@media (min-width: 769px) {
+    table {
+        font-size: 14px; /* Normal font size for larger screens */
+    }
+
+    th, td {
+        text-align: left;
+        padding: 10px 12px;
+    }
+}
+
+/* Button styles */
+.btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Red delete button */
+button[type="submit"] {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: darkred;
+}
+
+/* Optional: Add hover effect for table rows */
+tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Mobile responsive containers */
+.form-container, .table-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

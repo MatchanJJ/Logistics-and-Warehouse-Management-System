@@ -4,31 +4,32 @@ FUNCTION CLASSES:
        Add Warehouse: Function to add a new warehouse to the system.
        Update Warehouse Capacity: Update the capacity when packages are added or removed from the warehouse.
        Remove Warehouse: Functions to remove a warehouse if inventory level = 0.
-       Check Available Capacity: Function to view available capacity in a warehouse.
+       Check Available Capacity: Function to view available capacity in a warehouse. -PENDING
 
 [2] Product Management  - DONE
-       Register New Product: Insert a new product into the system and assign it to a warehouse.
+       Register New Product: Insert a new product into the system and assign it to a warehouse. - PENDING
        Update Product Details: Modify product information, such as weight, dimensions, and status.
-       Remove Product: Function to remove a registered product.
+       Remove Product: Function to remove a registered product. -PENDING 
 
 [3] Parcel Management -DONE
-       Add New Parcel: Every postal order or every return, add a new parcel into the system amd assign it to a warehouse.
+       Add New Parcel: Every postal order or every return, add a new parcel into the system amd assign it to a warehouse. -PENDING
        Update Parcel Details: Modify parcel information. 
        Remove Parcel: For every successful processing of parcel, it is removed from the warehouse the moment it is shipped.
+       -PENDING
 
 [4] Employee Management -DONE
-       Add New Employee: Insert a new employee into the system.
-       Assign Job Role: Assign roles (e.g., manager, delivery personnel) to employees.
+       Add New Employee: Insert a new employee into the system. - PENDING 
+       Assign Job Role: Assign roles (e.g., manager, delivery personnel) to employees. -PENDING
        Manage Employee Details: View and update employee information, such as contact details and address.
-       Add New Employee Roles: Ability to add or remove job roles.
+       Add New Employee Roles: Ability to add or remove job roles.- PENDING
 
 [5] Carrier Partner Management  - DONE
        Add Carrier Partner: Function to add a new logistics partner (e.g., courier service) to the system.
        Update Carrier Information: Ability to update logistics partner details like service area and contact information.
 
 [6] Order Management  -DONE
-       Generate Orders: Function to add new orders [ e-commerce or postal ].
-       Update Order Information: Ability to update orders like order status.
+       Generate Orders: Function to add new orders [ e-commerce or postal ]. -PENDING
+       Update Order Information: Ability to update orders like order status. -PENDING
 
 [7] Shipment Management  -DONE
        Create Shipment Record: Register a new shipment with its order details.

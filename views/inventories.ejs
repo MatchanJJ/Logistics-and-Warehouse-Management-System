@@ -1,5 +1,5 @@
 <h2>Parcel Inventory</h2>
-<table>
+<table class="responsive-table">
     <thead>
         <tr>
             <th>Parcel ID</th>
@@ -7,14 +7,14 @@
             <th>PARCEL DESCRIPTION</th>
             <th>Parcel Unit Price</th>
             <th>Parcel Weight</th>
-            <th>Parcel Lenght</th>
+            <th>Parcel Length</th>
             <th>Parcel Width</th>
             <th>Parcel Height</th>
             <th>Fragile</th>
             <th>Perishable</th>
             <th>Hazardous</th>
             <th>Oversized</th>
-            <th>Retuenable</th>
+            <th>Returnable</th>
             <th>Temperature Sensitive</th>
         </tr>
     </thead>
@@ -28,7 +28,7 @@
             <td><%= parcel.parcel_weight %></td>
             <td><%= parcel.parcel_length %></td>
             <td><%= parcel.parcel_width %></td>
-            <td><%= parcel.parcel_heigth %></td>
+            <td><%= parcel.parcel_height %></td>
             <td><%= parcel.is_fragile ? 'Yes' : 'No' %></td>
             <td><%= parcel.is_perishable ? 'Yes' : 'No' %></td>
             <td><%= parcel.is_hazardous ? 'Yes' : 'No' %></td>
@@ -47,7 +47,7 @@
 </table>
 
 <h2>Product Inventory</h2>
-<table>
+<table class="responsive-table">
     <thead>
         <tr>
             <th>Product ID</th>
@@ -79,7 +79,7 @@
             <td><%= product.product_brand %></td>
             <td><%= product.product_supplier %></td>
             <td><%= product.product_description %></td>
-            <td><%= product.product_unit_price %></td> <!-- Format price -->
+            <td><%= product.product_unit_price %></td>
             <td><%= product.product_weight %></td>
             <td><%= product.product_length %></td>
             <td><%= product.product_width %></td>

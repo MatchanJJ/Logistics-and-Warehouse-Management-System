@@ -1,0 +1,28 @@
+<h2>Update Logistics Partner</h2>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+<!-- Form Container -->
+<div class="form-wrapper">
+    <form action="/update-partner/<%= partner.carrier_id %>" method="POST" class="form-container">
+        <div class="form-group">
+            <label for="carrier_name">Carrier Name:</label>
+            <input type="text" id="carrier_name" name="carrier_name" value="<%= partner.carrier_name %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shipping_service_id">Shipping Service ID:</label>
+            <input type="text" id="shipping_service_id" name="shipping_service_id" value="<%= partner.shipping_service_id %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="carrier_contact_info">Contact Info:</label>
+            <input type="text" id="carrier_contact_info" name="carrier_contact_info" value="<%= partner.carrier_contact_info %>" required>
+        </div>
+
+        <!-- Button Group -->
+        <div class="form-group form-actions">
+            <button type="submit" class="btn btn-primary">Update Partner</button>
+            <a href="/manage-partner" class="btn btn-secondary">Back to Partner Details</a>
+        </div>
+    </form>
+</div>
