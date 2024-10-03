@@ -57,10 +57,11 @@ async function deleteParcel(parcel_id) {
 async function listAllParcel() {
     try {
         const [rows] = await pool.query("SELECT * FROM parcels");
-        return rows;  // return all parcels
+        //console.log('All Products:', rows);
+        return rows; // Return the list of products
     } catch (error) {
         console.error('Error listing parcels:', error);
-        throw error; // Rethrow the error for calling context handling
+        throw error; // Rethrow the error to handle it in the calling function
     }
 }
 

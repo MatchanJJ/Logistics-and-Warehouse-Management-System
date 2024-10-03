@@ -15,7 +15,7 @@
 
     // Initialize Express
     const app = express();
-    const port = 3002;
+    const port = 3003;
 
     // Middleware to parse request bodies (for POST requests)
     app.use(express.urlencoded({ extended: true }));
@@ -34,6 +34,110 @@
             content: 'home'  // Render the blank home page
         });
     });
+
+
+// Route to display the Add Employee form
+app.get('/add-employee', (req, res) => {
+    res.render('add-employee');  // Render the add-employee.ejs form
+});
+
+// Route to handle form submission for adding a new employee
+app.post('/add-employee', async (req, res) => {
+    const { employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body; // Extract form fields
+    try {
+        await employeeManagementToken.addEmployee(employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary); // Add the new employee
+        res.redirect('/employees'); // Redirect to employee list after successful addition
+    } catch (error) {
+        console.error('Error adding new employee:', error);
+        res.status(500).send('Error adding new employee.');
+    }
+});
+// GET: List all job roles
+app.get('/manage-job-roles', async (req, res) => {
+    try {
+        const jobRoles = await employeeManagementToken.listAllJobRoles(); // Fetch job roles from the database
+        res.render('manage-job-roles', { jobRoles }); // Render the view and pass job roles
+    } catch (error) {
+        console.error('Error fetching job roles:', error);
+        res.status(500).send('Error fetching job roles.');
+    }
+});
+
+// GET: Show form to add a new job role
+app.get('/add-job-role', (req, res) => {
+    res.render('add-job-role'); // Render the form to add a new job role
+});
+
+// POST: Add a new job role
+app.post('/add-job-role', async (req, res) => {
+    const { employee_role_id, role_name } = req.body; // Extract form fields
+    try {
+        await employeeManagementToken.addJobRole(employee_role_id, role_name); // Add the new job role
+        res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful addition
+    } catch (error) {
+        console.error('Error adding job role:', error);
+        res.status(500).send('Error adding job role.');
+    }
+});
+
+// GET: Show form to update a job role
+app.get('/update-job-role/:id', async (req, res) => {
+    const { id } = req.params; // Extract the job role ID from the URL
+    try {
+        const jobRole = await employeeManagementToken.viewJobRole(id); // Fetch the job role by ID
+        if (jobRole) {
+            res.render('update-job-role', { jobRole }); // Render the update form with the job role details
+        } else {
+            res.status(404).send('Job role not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching job role for update:', error);
+        res.status(500).send('Error fetching job role.');
+    }
+});
+
+// POST: Update a job role
+app.post('/update-job-role/:id', async (req, res) => {
+    const { id } = req.params; // Extract the job role ID from the URL
+    const { role_name } = req.body; // Extract the new role name from the request body
+    try {
+        await employeeManagementToken.updateJobRole(id, role_name); // Update the job role
+        res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful update
+    } catch (error) {
+        console.error('Error updating job role:', error);
+        res.status(500).send('Error updating job role.');
+    }
+});
+
+// POST: Delete a job role
+app.post('/delete-job-role/:id', async (req, res) => {
+    const { id } = req.params; // Extract the job role ID from the URL
+    try {
+        await employeeManagementToken.removeJobRole(id); // Remove the job role
+        res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful deletion
+    } catch (error) {
+        console.error('Error deleting job role:', error);
+        res.status(500).send('Error deleting job role.');
+    }
+});
+
+// Route to display the Add Job Role form
+app.get('/add-job-role', (req, res) => {
+    res.render('add-job-role'); // Render the add-job-role.ejs form
+});
+
+// Route to handle form submission for adding a new job role
+app.post('/add-job-role', async (req, res) => {
+    const { employee_role_id, role_name } = req.body; // Extract form fields
+    try {
+        await employeeManagementToken.addJobRole(employee_role_id, role_name); // Add the new job role
+        res.redirect('/employees'); // Redirect to employee list after successful addition
+    } catch (error) {
+        console.error('Error adding new job role:', error);
+        res.status(500).send('Error adding new job role.');
+    }
+});
+
 
     // Employee route
     app.get('/employees', async (req, res) => {
@@ -185,7 +289,69 @@ app.post('/update-warehouse/:id', async (req, res) => {
     }
 });
 
-    
+// Route to check warehouse availability
+app.get('/check-availability', async (req, res) => {
+    try {
+        const warehouses = await warehouseManagementToken.listAllWarehouse(); // Get the list of all warehouses
+        const warehouseAvailability = [];
+
+        // Check availability for each warehouse
+        for (const warehouse of warehouses) {
+            const isAvailable = await warehouseManagementToken.checkWarehouseAvailability(warehouse.warehouse_id);
+            warehouseAvailability.push({
+                ...warehouse,
+                isAvailable: isAvailable ? 'Available' : 'Full'
+            });
+        }
+
+        // Render the availability view
+        res.render('layout', { 
+            title: 'Warehouse Availability',
+            content: 'check-availability',  // The EJS file for specific content
+            warehouseAvailability  // Pass any data needed by the content page
+        });
+    } catch (error) {
+        console.error('Error checking warehouse availability:', error);
+        res.status(500).send('Error checking warehouse availability.');
+    }
+});
+
+
+app.get('/inventory', (req, res) => {
+    res.render('manage-inventory', {
+        title: 'Manage Inventory',
+        content: 'manage-inventory'
+    });
+});
+
+app.get('/parcel', async (req, res) => {
+    try {
+        const parcels = await parcelManagementToken.listAllParcel(); // Assuming this function exists
+        res.render('parcel', {
+            title: 'Parcel Inventory',
+            content: 'parcel',
+            parcels // Pass the parcels data to the view
+        });
+    } catch (error) {
+        console.error('Error fetching parcels:', error);
+        res.status(500).send('Error fetching parcels.');
+    }
+});
+
+app.get('/product', async (req, res) => {
+    try {
+        const products = await productManagementToken.listAllProduct(); // Assuming this function exists
+        res.render('product', {
+            title: 'Product Inventory',
+            content: 'product',
+            products // Pass the products data to the view
+        });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).send('Error fetching products.');
+    }
+});
+
 
     app.get('/inventories', async (req, res) => {
         try {
@@ -213,7 +379,7 @@ app.post('/update-warehouse/:id', async (req, res) => {
         const { parcel_id, parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive } = req.body;
         try {
             await parcelManagementToken.insertParcel(parcel_id, parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive);
-            res.redirect('/inventories'); // Redirect to the home page after adding
+            res.redirect('/parcel'); // Redirect to the home page after adding
         } catch (error) {
             res.status(500).send('Error adding parcel.');
         }
@@ -240,7 +406,7 @@ app.post('/update-warehouse/:id', async (req, res) => {
         const { parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive } = req.body;
         try {
             await parcelManagementToken.updateParcel(parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive, parcel_id);
-            res.redirect('/inventories'); // Redirect to the home page after updating
+            res.redirect('/parcel'); // Redirect to the home page after updating
         } catch (error) {
             res.status(500).send('Error updating parcel.');
         }
@@ -251,7 +417,7 @@ app.post('/update-warehouse/:id', async (req, res) => {
         const parcel_id = req.params.id; // Extract parcel ID from the route parameters
         try {
             await parcelManagementToken.deleteParcel(parcel_id); // Call the delete function
-            res.redirect('/inventories'); // Redirect to the home page after deletion
+            res.redirect('/parcel'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting parcel.');
         }
@@ -266,7 +432,7 @@ app.post('/update-warehouse/:id', async (req, res) => {
         const { product_id, product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive } = req.body;
         try {
             await productManagementToken.insertProduct(product_id, product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive);
-            res.redirect('/inventories'); // Redirect to the home page after adding
+            res.redirect('/product'); // Redirect to the home page after adding
         } catch (error) {
             res.status(500).send('Error adding product.');
         }
@@ -293,7 +459,7 @@ app.post('/update-warehouse/:id', async (req, res) => {
         const { product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive } = req.body;
         try {
             await productManagementToken.updateProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id);
-            res.redirect('/inventories'); // Redirect to the home page after updating
+            res.redirect('/product'); // Redirect to the home page after updating
         } catch (error) {
             res.status(500).send('Error updating product.');
         }
@@ -304,7 +470,7 @@ app.post('/update-warehouse/:id', async (req, res) => {
         const product_id = req.params.id; // Extract product ID from the route parameters
         try {
             await productManagementToken.deleteProduct(product_id); // Call the delete function
-            res.redirect('/inventories'); // Redirect to the home page after deletion
+            res.redirect('/product'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting product.');
         }
@@ -543,7 +709,7 @@ app.get('/manage-partner', async (req, res) => {
     } catch (error) {
         console.error('Error fetching logistics partners:', error);
         res.status(500).send('Error fetching logistics partners.');
-    }
+    }    
 });
 
 // Route to display the Add Partner form

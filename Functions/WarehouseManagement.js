@@ -70,7 +70,42 @@ const warehouseManagementToken = {
             console.error('Error fetching warehouse details:', error);
             throw error;
         }
+    },
+
+    // CHECK IF WAREHOUSE IS AVAILABLE (NOT FULL AND NOT EMPTY)
+    async checkWarehouseAvailability(id) {
+        const MAX_CAPACITY = 1000;  // Set the max capacity of the warehouse
+    
+        try {
+            const [rows] = await pool.query(
+                "SELECT capacity FROM warehouses WHERE warehouse_id = ?",
+                [id]
+            );
+    
+            if (rows.length === 0) {
+                throw new Error(`Warehouse with ID ${id} not found`);
+            }
+    
+            const { capacity } = rows[0];
+    
+            // Check if the warehouse is empty (capacity == 0)
+            if (capacity === 0) {
+                return true; // Warehouse is empty, not available for more packages
+            }
+    
+            // Check if the warehouse is full (capacity >= MAX_CAPACITY)
+            if (capacity >= MAX_CAPACITY) {
+                return false; // Warehouse is full, not available
+            }
+    
+            // If neither full nor empty, the warehouse is available
+            return true; // Warehouse is available
+        } catch (error) {
+            console.error('Error checking warehouse availability:', error);
+            throw error; // Rethrow the error for handling in the calling function
+        }
     }
+    
 };
 
 export default warehouseManagementToken; // Export the token for use in other files

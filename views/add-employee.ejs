@@ -1,22 +1,41 @@
 <h2>Add New Employee</h2>
-<form action="/add-employee" method="POST">
-    <label for="employee_id">Employee ID:</label>
-    <input type="text" id="employee_id" name="employee_id" required><br>
+<link rel="stylesheet" href="/styles.css"> 
+<div class="form-container">
+    <form action="/add-employee" method="POST">
+        <div class="form-group">
+            <label for="employee_id">Employee ID:</label>
+            <input type="text" id="employee_id" name="employee_id" required>
+        </div>
 
-    <label for="employee_first_name">First Name:</label>
-    <input type="text" id="employee_first_name" name="employee_first_name" required><br>
+        <div class="form-group">
+            <label for="employee_first_name">First Name:</label>
+            <input type="text" id="employee_first_name" name="employee_first_name" required>
+        </div>
 
-    <label for="employee_last_name">Last Name:</label>
-    <input type="text" id="employee_last_name" name="employee_last_name"><br>
+        <div class="form-group">
+            <label for="employee_last_name">Last Name:</label>
+            <input type="text" id="employee_last_name" name="employee_last_name">
+        </div>
 
-    <label for="contact_info">Contact Info:</label>
-    <input type="text" id="contact_info" name="contact_info"><br>
+        <div class="form-group">
+            <label for="contact_info">Contact Info:</label>
+            <input type="text" id="contact_info" name="contact_info">
+        </div>
 
-    <label for="employee_role_id">Role ID:</label>
-    <input type="text" id="employee_role_id" name="employee_role_id"><br>
+        <div class="form-group">
+            <label for="employee_role_id">Role ID:</label>
+            <input type="text" id="employee_role_id" name="employee_role_id">
+        </div>
 
-    <label for="employee_salary">Salary:</label>
-    <input type="text" id="employee_salary" name="employee_salary"><br>
+        <div class="form-group">
+            <label for="employee_salary">Salary:</label>
+            <input type="text" id="employee_salary" name="employee_salary">
+        </div>
 
-    <button type="submit">Add Employee</button>
-</form>
+        <div class="form-group">
+            <button type="submit" class="btn">Add Employee</button>
+        </div>
+    </form>
+</div>
+
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->

@@ -614,3 +614,13 @@ tbody tr:hover {
         margin-bottom: 10px;
     }
 }
+/* Additional styling for availability */
+.available {
+    color: green;
+    font-weight: bold;
+}
+
+.full {
+    color: red;
+    font-weight: bold;
+}

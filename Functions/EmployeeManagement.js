@@ -103,6 +103,41 @@ async function listAllEmployees() {
         throw error; // Rethrow the error for handling in the calling context
     }
 }
+// LISTING ALL JOB ROLES
+async function listAllJobRoles() {
+    try {
+        const [rows] = await pool.query("SELECT * FROM employee_roles");
+        return rows; // Return all job roles
+    } catch (error) {
+        console.error('Error listing job roles:', error);
+        throw error; // Rethrow the error for handling in the calling context
+    }
+}
+
+// VIEW A SPECIFIC JOB ROLE BY ID
+async function viewJobRole(employee_role_id) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM employee_roles WHERE employee_role_id = ?", [employee_role_id]);
+        return rows.length ? rows[0] : null; // Return the job role if found, otherwise null
+    } catch (error) {
+        console.error('Error fetching job role:', error);
+        throw error; // Rethrow to handle in the route
+    }
+}
+
+// UPDATE JOB ROLE
+async function updateJobRole(employee_role_id, role_name) {
+    try {
+        const [result] = await pool.query(
+            "UPDATE employee_roles SET role_name = ? WHERE employee_role_id = ?",
+            [role_name, employee_role_id]
+        );
+        return result.affectedRows > 0; // Return true if update was successful
+    } catch (error) {
+        console.error('Error updating job role:', error);
+        throw error; // Rethrow the error for handling in the calling context
+    }
+}
 
 // Exporting the employee management functions
 const employeeManagementToken = {
@@ -113,7 +148,10 @@ const employeeManagementToken = {
     deleteEmployee,
     addJobRole,
     removeJobRole,
-    listAllEmployees
+    listAllEmployees,
+    listAllJobRoles,     
+    viewJobRole,         
+    updateJobRole
 };
 
 export default employeeManagementToken;

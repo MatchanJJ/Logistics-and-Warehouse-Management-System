@@ -4,24 +4,24 @@ FUNCTION CLASSES:
        Add Warehouse: Function to add a new warehouse to the system.
        Update Warehouse Capacity: Update the capacity when packages are added or removed from the warehouse.
        Remove Warehouse: Functions to remove a warehouse if inventory level = 0.
-       Check Available Capacity: Function to view available capacity in a warehouse. -PENDING
+       Check Available Capacity: Function to view available capacity in a warehouse. 
 
 [2] Product Management  - DONE
-       Register New Product: Insert a new product into the system and assign it to a warehouse. - PENDING
+       Register New Product: Insert a new product into the system and assign it to a warehouse.
        Update Product Details: Modify product information, such as weight, dimensions, and status.
        Remove Product: Function to remove a registered product. -PENDING / needed complex func
 
 [3] Parcel Management -DONE
-       Add New Parcel: Every postal order or every return, add a new parcel into the system amd assign it to a warehouse. -PENDING
+       Add New Parcel: Every postal order or every return, add a new parcel into the system amd assign it to a warehouse.
        Update Parcel Details: Modify parcel information. 
        Remove Parcel: For every successful processing of parcel, it is removed from the warehouse the moment it is shipped.
        -PENDING / needed complex func
 
 [4] Employee Management -DONE
-       Add New Employee: Insert a new employee into the system. - PENDING 
-       Assign Job Role: Assign roles (e.g., manager, delivery personnel) to employees. -PENDING
+       Add New Employee: Insert a new employee into the system. 
+       Assign Job Role: Assign roles (e.g., manager, delivery personnel) to employees. 
        Manage Employee Details: View and update employee information, such as contact details and address.
-       Add New Employee Roles: Ability to add or remove job roles.- PENDING
+       Add New Employee Roles: Ability to add or remove job roles.
 
 [5] Carrier Partner Management  - DONE
        Add Carrier Partner: Function to add a new logistics partner (e.g., courier service) to the system.
