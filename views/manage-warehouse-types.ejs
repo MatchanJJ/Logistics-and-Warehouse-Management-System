@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/styles.css">
+<body>
+    <h2>Manage Warehouse Types</h2>
+    <a href="/add-warehouse-type" class="btn">Add New Warehouse Type</a>
+    <table class="responsive-table">
+        <thead>
+            <tr>
+                <th>Type ID</th>
+                <th>Type Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (warehouseTypes && warehouseTypes.length > 0) { %>
+                <% warehouseTypes.forEach(type => { %>
+                    <tr>
+                        <td><%= type.warehouse_type_id %></td>
+                        <td><%= type.warehouse_type_name %></td>
+                        <td>
+                            <a href="/update-warehouse-type/<%= type.warehouse_type_id %>">Update</a> |
+                            <form action="/delete-warehouse-type/<%= type.warehouse_type_id %>" method="POST" style="display:inline;">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3">No warehouse types found.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>

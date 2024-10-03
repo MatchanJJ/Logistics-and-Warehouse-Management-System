@@ -28,7 +28,7 @@ FUNCTION CLASSES:
        Update Carrier Information: Ability to update logistics partner details like service area and contact information.
 
 [6] Order Management  -DONE
-       Generate Orders: Function to add new orders [ e-commerce or postal ]. -PENDING
+       Generate Orders: Function to add new orders [ e-commerce or postal ].
        Update Order Information: Ability to update orders like order status. 
 
 [7] Shipment Management  -DONE

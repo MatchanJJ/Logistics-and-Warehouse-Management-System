@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="/styles.css">
+<body>
+    <h2>Update Order Status</h2>
+    <form action="/update-order-status/<%= orderStatus.order_status_id %>" method="POST">
+        <label for="order_status_id">Status ID:</label>
+        <input type="text" id="order_status_id" name="order_status_id" value="<%= orderStatus.order_status_id %>" readonly><br>
+
+        <label for="order_status_name">Status Name:</label>
+        <input type="text" id="order_status_name" name="order_status_name" value="<%= orderStatus.order_status_name %>" required><br>
+
+        <button type="submit">Update Status</button>
+    </form>
+</body>
+</html>

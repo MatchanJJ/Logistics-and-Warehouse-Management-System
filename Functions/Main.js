@@ -19,6 +19,12 @@
     // Initialize Express
     const app = express();
     const port = 3003;
+    app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    console.log(req.body); // Log incoming request body
+    next();
+});
 
     // Middleware to parse request bodies (for POST requests)
     app.use(express.urlencoded({ extended: true }));
@@ -378,15 +384,27 @@ app.get('/product', async (req, res) => {
     });
 
     // Handle the form submission for adding a new parcel
-    app.post('/add-parcel', async (req, res) => {
-        const { parcel_id, parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive } = req.body;
-        try {
-            await parcelManagementToken.insertParcel(parcel_id, parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive);
-            res.redirect('/parcel'); // Redirect to the home page after adding
-        } catch (error) {
-            res.status(500).send('Error adding parcel.');
+    // Example handler for adding a parcel category
+app.post('/add-parcel-category', async (req, res) => {
+    console.log(req.body);
+    const { parcel_category_id, parcel_category_name } = req.body; // Ensure these values are being captured
+
+    try {
+        // Log the values to see what's being passed
+        console.log('Adding Parcel Category:', parcel_category_id, parcel_category_name);
+        
+        const result = await statusAndCategoriesManagementToken.insertParcelCategory(parcel_category_id, parcel_category_name);
+        if (result) {
+            res.redirect('/manage-parcel-categories'); // Redirect after successful addition
+        } else {
+            res.status(400).send('Failed to add parcel category.');
         }
-    });
+    } catch (error) {
+        console.error('Error adding parcel category:', error);
+        res.status(500).send('Error adding parcel category.');
+    }
+});
+
 
     // Route for editing a parcel (render form with existing data)
     app.get('/edit-parcel/:id', async (req, res) => {
@@ -810,18 +828,6 @@ app.get('/product-orders', async (req, res) => {
     }
 });
 
-// Route to display the status and category management page
-app.get('/manage-status-and-category', async (req, res) => {
-    try {
-        const statuses = await orderTokens.listAllStatuses(); // Fetch statuses
-        const categories = await orderTokens.listAllCategories(); // Fetch categories
-        res.render('manage-status-and-category', { statuses, categories }); // Render the page with statuses and categories
-    } catch (error) {
-        console.error('Error fetching statuses and categories:', error);
-        res.status(500).send('Error fetching statuses and categories.');
-    }
-});
-
 
 // Fetch a specific postal order by ID
 app.get('/update-postal-order/:id', async (req, res) => {
@@ -941,6 +947,522 @@ app.post('/delete-product-order/:id', async (req, res) => {
     }
 });
 
+// Display the form for adding a new postal order
+app.get('/add-postal-order', (req, res) => {
+    res.render('add-postal-order');
+});
+
+// Handle form submission for adding a new postal order
+app.post('/add-postal-order', async (req, res) => {
+    const { postal_order_id, order_id, parcel_id, total_price } = req.body; // Extract form fields
+    try {
+        await orderTokens.addPostalOrders(postal_order_id, order_id, parcel_id, total_price); // Add the new postal order to the database
+        res.redirect('/postal-orders'); // Redirect back to postal orders list after successful addition
+    } catch (error) {
+        console.error('Error adding new postal order:', error);
+        res.status(500).send('Error adding new postal order.');
+    }
+});
+
+// Display the form for adding a new product order
+app.get('/add-product-order', (req, res) => {
+    res.render('add-product-order');
+});
+// Handle form submission for adding a new product order
+app.post('/add-product-order', async (req, res) => {
+    const { product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price } = req.body;
+    try {
+        await orderTokens.addProductOrders(product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price); // Add the new product order
+        res.redirect('/product-orders'); // Redirect to product orders management after successful addition
+    } catch (error) {
+        console.error('Error adding new product order:', error);
+        res.status(500).send('Error adding new product order.');
+    }
+});
+
+
+
+//// Routes for Warehouse Types
+//app.get('/warehouse-types', statusAndCategoriesManagementToken.listAllWarehouseTypes);
+//app.post('/add-warehouse-type', statusAndCategoriesManagementToken.insertWarehouseType);
+//app.post('/update-warehouse-type/:id', statusAndCategoriesManagementToken.updateWarehouseType);
+//app.post('/delete-warehouse-type/:id', statusAndCategoriesManagementToken.deleteWarehouseType);
+//
+//// Routes for Order Types
+//app.get('/order-types', statusAndCategoriesManagementToken.listAllOrderTypes);
+//app.post('/add-order-type', statusAndCategoriesManagementToken.insertOrderType);
+//app.post('/update-order-type/:id', statusAndCategoriesManagementToken.updateOrderType);
+//app.post('/delete-order-type/:id', statusAndCategoriesManagementToken.deleteOrderType);
+//
+//// Routes for Product Categories
+//app.get('/product-categories', statusAndCategoriesManagementToken.listAllProductCategories);
+//app.post('/add-product-category', statusAndCategoriesManagementToken.insertProductCategory);
+//app.post('/update-product-category/:id', statusAndCategoriesManagementToken.updateProductCategory);
+//app.post('/delete-product-category/:id', statusAndCategoriesManagementToken.deleteProductCategory);
+//
+//// Routes for Parcel Categories
+//app.get('/parcel-categories', statusAndCategoriesManagementToken.listAllParcelCategories);
+//app.post('/add-parcel-category', statusAndCategoriesManagementToken.insertParcelCategory);
+//app.post('/update-parcel-category/:id', statusAndCategoriesManagementToken.updateParcelCategory);
+//app.post('/delete-parcel-category/:id', statusAndCategoriesManagementToken.deleteParcelCategory);
+
+
+// Route to render the "Manage Status and Category" page
+app.get('/manage-status-and-category', (req, res) => {
+    res.render('manage-status-and-category');
+});
+
+
+// Order Status Management
+app.get('/manage-order-status', async (req, res) => {
+    try {
+        const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses();
+        res.render('manage-order-status', { orderStatuses });
+    } catch (error) {
+        console.error('Error fetching order statuses:', error);
+        res.status(500).send('Error fetching order statuses.');
+    }
+});
+
+// Shipment Status Management
+app.get('/manage-shipment-status', async (req, res) => {
+    try {
+        const shipmentStatuses = await statusAndCategoriesManagementToken.getShipmentStatuses();
+        res.render('manage-shipment-status', { shipmentStatuses });
+    } catch (error) {
+        console.error('Error fetching shipment statuses:', error);
+        res.status(500).send('Error fetching shipment statuses.');
+    }
+});
+
+// Return Status Management
+app.get('/manage-return-status', async (req, res) => {
+    try {
+        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses();
+        res.render('manage-return-status', { returnStatuses });
+    } catch (error) {
+        console.error('Error fetching return statuses:', error);
+        res.status(500).send('Error fetching return statuses.');
+    }
+});
+
+// Warehouse Types Management
+app.get('/manage-warehouse-types', async (req, res) => {
+    try {
+        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes();
+        res.render('manage-warehouse-types', { warehouseTypes });
+    } catch (error) {
+        console.error('Error fetching warehouse types:', error);
+        res.status(500).send('Error fetching warehouse types.');
+    }
+});
+
+// Order Types Management
+app.get('/manage-order-types', async (req, res) => {
+    try {
+        const orderTypes = await statusAndCategoriesManagementToken.getOrderTypes();
+        res.render('manage-order-types', { orderTypes });
+    } catch (error) {
+        console.error('Error fetching order types:', error);
+        res.status(500).send('Error fetching order types.');
+    }
+});
+
+// Product Categories Management
+app.get('/manage-product-categories', async (req, res) => {
+    try {
+        const productCategories = await statusAndCategoriesManagementToken.getProductCategories();
+        res.render('manage-product-categories', { productCategories });
+    } catch (error) {
+        console.error('Error fetching product categories:', error);
+        res.status(500).send('Error fetching product categories.');
+    }
+});
+
+// Parcel Categories Management
+app.get('/manage-parcel-categories', async (req, res) => {
+    try {
+        const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
+        res.render('manage-parcel-categories', { parcelCategories });
+    } catch (error) {
+        console.error('Error fetching parcel categories:', error);
+        res.status(500).send('Error fetching parcel categories.');
+    }
+});
+
+
+
+//ORDERS
+// Route to display the manage-order-status page
+app.get('/manage-order-status', async (req, res) => {
+    try {
+        const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses(); // Fetch statuses from DB
+        res.render('manage-order-status', { orderStatuses });
+    } catch (error) {
+        console.error('Error fetching order statuses:', error);
+        res.status(500).send('Error fetching order statuses.');
+    }
+});
+
+// Route to display the add-order-status form
+app.get('/add-order-status', (req, res) => {
+    res.render('add-order-status'); // Renders the form to add new status
+});
+
+// Route to handle the form submission for adding a new order status
+app.post('/add-order-status', async (req, res) => {
+    const { order_status_id, order_status_name } = req.body;
+    try {
+        await statusAndCategoriesManagementToken.insertOrderStatus(order_status_id, order_status_name);
+        res.redirect('/manage-order-status');
+    } catch (error) {
+        console.error('Error adding new order status:', error);
+        res.status(500).send('Error adding new order status.');
+    }
+});
+
+// Route to display the update-order-status form
+app.get('/update-order-status/:id', async (req, res) => {
+    const order_status_id = req.params.id;
+    try {
+        const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses(); // Fetch the specific status
+        const orderStatus = orderStatuses.find(status => status.order_status_id === order_status_id);
+        if (orderStatus) {
+            res.render('update-order-status', { orderStatus });
+        } else {
+            res.status(404).send('Order status not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching order status:', error);
+        res.status(500).send('Error fetching order status.');
+    }
+});
+
+// Route to handle the form submission for updating an existing order status
+app.post('/update-order-status/:id', async (req, res) => {
+    const { order_status_name } = req.body;
+    const order_status_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.updateOrderStatus(order_status_id, order_status_name);
+        res.redirect('/manage-order-status');
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        res.status(500).send('Error updating order status.');
+    }
+});
+
+// Route to handle the deletion of an order status
+app.post('/delete-order-status/:id', async (req, res) => {
+    const order_status_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.deleteOrderStatus(order_status_id);
+        res.redirect('/manage-order-status');
+    } catch (error) {
+        console.error('Error deleting order status:', error);
+        res.status(500).send('Error deleting order status.');
+    }
+});
+
+//RETURN STATUS
+// Route to display the manage-return-status page
+app.get('/manage-return-status', async (req, res) => {
+    try {
+        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses(); // Fetch return statuses from DB
+        res.render('manage-return-status', { returnStatuses });
+    } catch (error) {
+        console.error('Error fetching return statuses:', error);
+        res.status(500).send('Error fetching return statuses.');
+    }
+});
+
+// Route to display the add-return-status form
+app.get('/add-return-status', (req, res) => {
+    res.render('add-return-status'); // Renders the form to add a new return status
+});
+
+// Route to handle the form submission for adding a new return status
+app.post('/add-return-status', async (req, res) => {
+    const { return_status_id, return_status_name } = req.body;
+    try {
+        await statusAndCategoriesManagementToken.insertReturnStatus(return_status_id, return_status_name);
+        res.redirect('/manage-return-status');
+    } catch (error) {
+        console.error('Error adding new return status:', error);
+        res.status(500).send('Error adding new return status.');
+    }
+});
+
+// Route to display the update-return-status form
+app.get('/update-return-status/:id', async (req, res) => {
+    const return_status_id = req.params.id;
+    try {
+        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses(); // Fetch return statuses
+        const returnStatus = returnStatuses.find(status => status.return_status_id === return_status_id);
+        if (returnStatus) {
+            res.render('update-return-status', { returnStatus });
+        } else {
+            res.status(404).send('Return status not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching return status:', error);
+        res.status(500).send('Error fetching return status.');
+    }
+});
+
+// Route to handle the form submission for updating an existing return status
+app.post('/update-return-status/:id', async (req, res) => {
+    const { return_status_name } = req.body;
+    const return_status_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.updateReturnStatus(return_status_id, return_status_name);
+        res.redirect('/manage-return-status');
+    } catch (error) {
+        console.error('Error updating return status:', error);
+        res.status(500).send('Error updating return status.');
+    }
+});
+
+// Route to handle the deletion of a return status
+app.post('/delete-return-status/:id', async (req, res) => {
+    const return_status_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.deleteReturnStatus(return_status_id);
+        res.redirect('/manage-return-status');
+    } catch (error) {
+        console.error('Error deleting return status:', error);
+        res.status(500).send('Error deleting return status.');
+    }
+});
+
+//WAREHOUSE TYPES
+// Route to display the manage-warehouse-types page
+app.get('/manage-warehouse-types', async (req, res) => {
+    try {
+        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes(); // Fetch warehouse types
+        res.render('manage-warehouse-types', { warehouseTypes });
+    } catch (error) {
+        console.error('Error fetching warehouse types:', error);
+        res.status(500).send('Error fetching warehouse types.');
+    }
+});
+
+// Route to display the add-warehouse-type form
+app.get('/add-warehouse-type', (req, res) => {
+    res.render('add-warehouse-type'); // Render the form to add a new warehouse type
+});
+
+// Route to handle the form submission for adding a new warehouse type
+app.post('/add-warehouse-type', async (req, res) => {
+    const { warehouse_type_id, warehouse_type_name } = req.body;
+    try {
+        await statusAndCategoriesManagementToken.insertWarehouseType(warehouse_type_id, warehouse_type_name);
+        res.redirect('/manage-warehouse-types');
+    } catch (error) {
+        console.error('Error adding warehouse type:', error);
+        res.status(500).send('Error adding warehouse type.');
+    }
+});
+
+// Route to display the update-warehouse-type form
+app.get('/update-warehouse-type/:id', async (req, res) => {
+    const warehouse_type_id = req.params.id;
+    try {
+        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes();
+        const warehouseType = warehouseTypes.find(type => type.warehouse_type_id === warehouse_type_id);
+        if (warehouseType) {
+            res.render('update-warehouse-type', { warehouseType });
+        } else {
+            res.status(404).send('Warehouse type not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching warehouse type:', error);
+        res.status(500).send('Error fetching warehouse type.');
+    }
+});
+
+// Route to handle the form submission for updating a warehouse type
+app.post('/update-warehouse-type/:id', async (req, res) => {
+    const { warehouse_type_name } = req.body;
+    const warehouse_type_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.updateWarehouseType(warehouse_type_id, warehouse_type_name);
+        res.redirect('/manage-warehouse-types');
+    } catch (error) {
+        console.error('Error updating warehouse type:', error);
+        res.status(500).send('Error updating warehouse type.');
+    }
+});
+
+// Route to handle the deletion of a warehouse type
+app.post('/delete-warehouse-type/:id', async (req, res) => {
+    const warehouse_type_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.deleteWarehouseType(warehouse_type_id);
+        res.redirect('/manage-warehouse-types');
+    } catch (error) {
+        console.error('Error deleting warehouse type:', error);
+        res.status(500).send('Error deleting warehouse type.');
+    }
+});
+
+//PRODUCT CATEGORIES
+
+
+// Add routes to manage product categories
+
+// GET route to display all product categories
+app.get('/manage-product-categories', async (req, res) => {
+    try {
+        const productCategories = await statusAndCategoriesManagementToken.getProductCategories(); // Fetch product categories
+        res.render('manage-product-categories', { productCategories });
+    } catch (error) {
+        console.error('Error fetching product categories:', error);
+        res.status(500).send('Error fetching product categories.');
+    }
+});
+
+// Route to display the form to add a new product category
+app.get('/add-product-category', (req, res) => {
+    res.render('add-product-category'); // Render the EJS file for adding product categories
+});
+
+
+// POST route to add a new product category
+app.post('/add-product-category', async (req, res) => {
+    const { product_category_id, product_category_name } = req.body;
+    try {
+        await statusAndCategoriesManagementToken.insertProductCategory(product_category_id, product_category_name); // Insert product category
+        res.redirect('/manage-product-categories');
+    } catch (error) {
+        console.error('Error adding product category:', error);
+        res.status(500).send('Error adding product category.');
+    }
+});
+// Route to display the form to update a product category
+app.get('/update-product-category/:id', async (req, res) => {
+    const productCategoryId = req.params.id;
+    try {
+        // Fetch the existing product category using the provided ID
+        const [rows] = await pool.query("SELECT * FROM product_categories WHERE product_category_id = ?", [productCategoryId]);
+        if (rows.length > 0) {
+            res.render('update-product-category', { productCategory: rows[0] }); // Pass the current category details to the view
+        } else {
+            res.status(404).send('Product category not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching product category:', error);
+        res.status(500).send('Error fetching product category.');
+    }
+});
+
+
+// POST route to update an existing product category
+app.post('/update-product-category/:id', async (req, res) => {
+    const { product_category_name } = req.body;
+    const product_category_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.updateProductCategory(product_category_id, product_category_name); // Update product category
+        res.redirect('/manage-product-categories');
+    } catch (error) {
+        console.error('Error updating product category:', error);
+        res.status(500).send('Error updating product category.');
+    }
+});
+
+// POST route to delete a product category
+app.post('/delete-product-category/:id', async (req, res) => {
+    const product_category_id = req.params.id;
+    try {
+        await statusAndCategoriesManagementToken.deleteProductCategory(product_category_id); // Delete product category
+        res.redirect('/manage-product-categories');
+    } catch (error) {
+        console.error('Error deleting product category:', error);
+        res.status(500).send('Error deleting product category.');
+    }
+});
+
+
+//MANAGE PARCEL -----------------------------------
+// Display all parcel categories
+app.get('/manage-parcel-categories', async (req, res) => {
+    try {
+        const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
+        res.render('manage-parcel-categories', { parcelCategories });
+    } catch (error) {
+        console.error('Error fetching parcel categories:', error);
+        res.status(500).send('Error fetching parcel categories.');
+    }
+});
+
+// Display the form to add a new parcel category
+app.get('/add-parcel-category', (req, res) => {
+    res.render('add-parcel-category');
+});
+
+// Handle the form submission to add a new parcel category
+app.post('/add-parcel-category', async (req, res) => {
+    const { parcel_category_id, parcel_category_name } = req.body;
+    try {
+        const result = await statusAndCategoriesManagementToken.insertParcelCategory(parcel_category_id, parcel_category_name);
+        if (result) {
+            res.redirect('/manage-parcel-categories');
+        } else {
+            res.status(500).send('Error adding parcel category.');
+        }
+    } catch (error) {
+        console.error('Error adding parcel category:', error);
+        res.status(500).send('Error adding parcel category.');
+    }
+});
+
+// Display the form to update a parcel category
+app.get('/update-parcel-category/:id', async (req, res) => {
+    const parcelCategoryId = req.params.id;
+    try {
+        const [parcelCategory] = await statusAndCategoriesManagementToken.getParcelCategories(parcelCategoryId);
+        if (parcelCategory) {
+            res.render('update-parcel-category', { parcelCategory });
+        } else {
+            res.status(404).send('Parcel category not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching parcel category:', error);
+        res.status(500).send('Error fetching parcel category.');
+    }
+});
+
+// Handle the form submission to update a parcel category
+app.post('/update-parcel-category/:id', async (req, res) => {
+    const parcelCategoryId = req.params.id;
+    const { parcel_category_name } = req.body;
+    try {
+        const result = await statusAndCategoriesManagementToken.updateParcelCategory(parcelCategoryId, parcel_category_name);
+        if (result) {
+            res.redirect('/manage-parcel-categories');
+        } else {
+            res.status(404).send('Parcel category not found.');
+        }
+    } catch (error) {
+        console.error('Error updating parcel category:', error);
+        res.status(500).send('Error updating parcel category.');
+    }
+});
+
+// Handle the request to delete a parcel category
+app.post('/delete-parcel-category/:id', async (req, res) => {
+    const parcelCategoryId = req.params.id;
+    try {
+        const result = await statusAndCategoriesManagementToken.deleteParcelCategory(parcelCategoryId);
+        if (result) {
+            res.redirect('/manage-parcel-categories');
+        } else {
+            res.status(404).send('Parcel category not found.');
+        }
+    } catch (error) {
+        console.error('Error deleting parcel category:', error);
+        res.status(500).send('Error deleting parcel category.');
+    }
+});
 
 
     // Start the server

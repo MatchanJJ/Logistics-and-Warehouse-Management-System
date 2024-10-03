@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="/styles.css">
+<body>
+    <h2>Manage Parcel Categories</h2>
+    <a href="/add-parcel-category" class="btn">Add New Parcel Category</a>
+    <table class="responsive-table">
+        <thead>
+            <tr>
+                <th>Parcel Category ID</th>
+                <th>Parcel Category Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (parcelCategories && parcelCategories.length > 0) { %>
+                <% parcelCategories.forEach(category => { %>
+                    <tr>
+                        <td><%= category.parcel_category_id %></td>
+                        <td><%= category.parcel_category_name %></td>
+                        <td>
+                            <a href="/update-parcel-category/<%= category.parcel_category_id %>">Update</a> |
+                            <form action="/delete-parcel-category/<%= category.parcel_category_id %>" method="POST" style="display:inline;">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3">No parcel categories available.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>

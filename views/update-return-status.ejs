@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Return Status</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h2>Update Return Status</h2>
+    <form action="/update-return-status/<%= returnStatus.return_status_id %>" method="POST">
+        <label for="return_status_id">Status ID:</label>
+        <input type="text" id="return_status_id" name="return_status_id" value="<%= returnStatus.return_status_id %>" readonly><br>
+
+        <label for="return_status_name">Status Name:</label>
+        <input type="text" id="return_status_name" name="return_status_name" value="<%= returnStatus.return_status_name %>" required><br>
+
+        <button type="submit">Update Status</button>
+    </form>
+</body>
+</html>

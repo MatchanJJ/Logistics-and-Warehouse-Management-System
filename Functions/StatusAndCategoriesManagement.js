@@ -29,7 +29,14 @@ const statusAndCategoriesManagementToken = {
     deleteWarehouseType,
     deleteOrderType,
     deleteProductCategory,
-    deleteParcelCategory
+    deleteParcelCategory,
+    listAllOrderStatuses, 
+    listAllShipmentStatuses, 
+    listAllReturnStatuses, 
+    listAllWarehouseTypes, 
+    listAllOrderTypes, 
+    listAllProductCategories, 
+    listAllParcelCategories
 
 }
 
@@ -102,12 +109,15 @@ async function insertProductCategory(productCategoryId, productCategoryName) {
 }
 
 // Insert into parcel_categories
+// Insert into parcel_categories
 async function insertParcelCategory(parcelCategoryId, parcelCategoryName) {
+    console.log('Inserting Parcel Category:', parcelCategoryId, parcelCategoryName); // Log values
     const query = `INSERT INTO parcel_categories (parcel_category_id, parcel_category_name) VALUES (?, ?)`;
     try {
         const [result] = await pool.query(query, [parcelCategoryId, parcelCategoryName]);
         return result.affectedRows > 0;
     } catch (error) {
+        console.error('Error inserting parcel category:', error); // Log the error
         throw error;
     }
 }
@@ -346,6 +356,82 @@ async function deleteParcelCategory(parcelCategoryId) {
     }
 }
 
+// List all order statuses
+async function listAllOrderStatuses(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM order_status");
+        res.render('manage-order-status', { orderStatuses: rows });
+    } catch (error) {
+        console.error('Error fetching order statuses:', error);
+        res.status(500).send('Error fetching order statuses.');
+    }
+}
+
+// List all shipment statuses
+async function listAllShipmentStatuses(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM shipment_status");
+        res.render('manage-shipment-status', { shipmentStatuses: rows });
+    } catch (error) {
+        console.error('Error fetching shipment statuses:', error);
+        res.status(500).send('Error fetching shipment statuses.');
+    }
+}
+
+// List all return statuses
+async function listAllReturnStatuses(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM return_status");
+        res.render('manage-return-status', { returnStatuses: rows });
+    } catch (error) {
+        console.error('Error fetching return statuses:', error);
+        res.status(500).send('Error fetching return statuses.');
+    }
+}
+
+// List all warehouse types
+async function listAllWarehouseTypes(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM warehouse_types");
+        res.render('manage-warehouse-types', { warehouseTypes: rows });
+    } catch (error) {
+        console.error('Error fetching warehouse types:', error);
+        res.status(500).send('Error fetching warehouse types.');
+    }
+}
+
+// List all order types
+async function listAllOrderTypes(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM order_types");
+        res.render('manage-order-types', { orderTypes: rows });
+    } catch (error) {
+        console.error('Error fetching order types:', error);
+        res.status(500).send('Error fetching order types.');
+    }
+}
+
+// List all product categories
+async function listAllProductCategories(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM product_categories");
+        res.render('manage-product-categories', { productCategories: rows });
+    } catch (error) {
+        console.error('Error fetching product categories:', error);
+        res.status(500).send('Error fetching product categories.');
+    }
+}
+
+// List all parcel categories
+async function listAllParcelCategories(req, res) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM parcel_categories");
+        res.render('manage-parcel-categories', { parcelCategories: rows });
+    } catch (error) {
+        console.error('Error fetching parcel categories:', error);
+        res.status(500).send('Error fetching parcel categories.');
+    }
+}
 
 
 export default statusAndCategoriesManagementToken;

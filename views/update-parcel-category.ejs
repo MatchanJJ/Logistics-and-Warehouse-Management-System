@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="/styles.css">
+<body>
+    <h2>Update Parcel Category</h2>
+    <form action="/update-parcel-category/<%= parcelCategory.parcel_category_id %>" method="POST">
+        <label for="parcel_category_name">Category Name:</label>
+        <input type="text" id="parcel_category_name" name="parcel_category_name" value="<%= parcelCategory.parcel_category_name %>" required><br>
+
+        <button type="submit">Update Category</button>
+    </form>
+</body>

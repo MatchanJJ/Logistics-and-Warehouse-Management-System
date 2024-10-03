@@ -1,55 +1,16 @@
-<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+<link rel="stylesheet" href="/styles.css">
 <body>
-    <h2>Status and Category Management</h2>
-
-    <h3>Statuses</h3>
-    <table class="responsive-table">
-        <thead>
-            <tr>
-                <th>Status ID</th>
-                <th>Status Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% statuses.forEach(status => { %>
-            <tr>
-                <td><%= status.status_id %></td>
-                <td><%= status.status_name %></td>
-                <td>
-                    <a href="/edit-status/<%= status.status_id %>">Edit</a> |
-                    <form action="/delete-status/<%= status.status_id %>" method="POST" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
-
-    <h3>Categories</h3>
-    <table class="responsive-table">
-        <thead>
-            <tr>
-                <th>Category ID</th>
-                <th>Category Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% categories.forEach(category => { %>
-            <tr>
-                <td><%= category.category_id %></td>
-                <td><%= category.category_name %></td>
-                <td>
-                    <a href="/edit-category/<%= category.category_id %>">Edit</a> |
-                    <form action="/delete-category/<%= category.category_id %>" method="POST" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    <header>
+        <h1>Manage Status and Category</h1>
+        <nav>
+            <ul>
+                <li><a href="/manage-order-status">Manage Order Status</a></li>
+                <li><a href="/manage-return-status">Manage Return Status</a></li>
+                <li><a href="/manage-warehouse-types">Manage Warehouse Types</a></li>
+                <li><a href="/manage-product-categories">Manage Product Categories</a></li>
+                <li><a href="/manage-parcel-categories">Manage Parcel Categories</a></li>
+            </ul>
+        </nav>
+    </header>
 </body>
 </html>
