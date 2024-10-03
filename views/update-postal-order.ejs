@@ -1,0 +1,18 @@
+
+<h2>Update Postal Order</h2>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+<form action="/update-postal-order/<%= postalOrder.postal_order_id %>" method="POST">
+    <label for="order_id">Order ID:</label>
+    <input type="text" id="order_id" name="order_id" value="<%= postalOrder.order_id %>" required><br>
+
+    <label for="parcel_id">Parcel ID:</label>
+    <input type="text" id="parcel_id" name="parcel_id" value="<%= postalOrder.parcel_id %>" required><br>
+
+    <label for="total_price">Total Price:</label>
+    <input type="text" id="total_price" name="total_price" value="<%= postalOrder.total_price %>" required><br>
+
+    <button type="submit">Update Postal Order</button>
+</form>
+
+<a href="/postal-orders" class="btn">Back to Postal Orders</a>

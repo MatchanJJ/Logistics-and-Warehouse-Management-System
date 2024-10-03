@@ -1,28 +1,15 @@
 import pool from "./DBConnection.js";
-import express from 'express';
-import path from 'path';  
-import { fileURLToPath } from 'url';
 
-const app = express();
-const port = 3000;
-
-// Middleware to parse request bodies (for handling form submissions)
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Get __filename and __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Set the views directory and view engine
-app.set('views', path.join(__dirname, '../views')); 
-app.set('view engine', 'ejs');
 
 const orderTokens = {
     addPostalOrders,
     updatePostalOrders,
     addProductOrders,
     updateProductOrders,
+    listAllOrders,
+    listAllPostalOrders,
+    listAllProductOrders,
+    viewPostalOrder
 }
 // POSTAL ORDERS
 
@@ -88,93 +75,52 @@ async function updateProductOrders(order_id, product_id, product_quantity, produ
     }
 }
 
-// ROUTES
-
-// Home page listing postal and product orders
-app.get('/', async (req, res) => {
+// LIST ALL ORDERS
+async function listAllOrders() {
     try {
         const [postalOrders] = await pool.query("SELECT * FROM postal_orders");
         const [productOrders] = await pool.query("SELECT * FROM product_orders");
-        res.render('index', { postalOrders, productOrders });
+
+        return {
+            postalOrders,
+            productOrders,
+        };
     } catch (error) {
-        res.status(500).send('Error fetching orders.');
+        console.error('Error fetching all orders:', error);
+        throw error; // Rethrow the error for handling in the calling context
     }
-});
+}
 
-// Add postal order form
-app.get('/add-postal-order', (req, res) => {
-    res.render('add-postal-order');
-});
-
-app.post('/add-postal-order', async (req, res) => {
-    const { postal_order_id, order_id, parcel_id, total_price } = req.body;
+// LIST ALL PRODUCT ORDERS
+async function listAllProductOrders() {
     try {
-        await addPostalOrders(postal_order_id, order_id, parcel_id, total_price);
-        res.redirect('/');
+        const [productOrders] = await pool.query("SELECT * FROM product_orders");
+        return productOrders; // Return all product orders
     } catch (error) {
-        res.status(500).send('Error adding postal order.');
+        console.error('Error fetching product orders:', error);
+        throw error; // Rethrow the error for handling in the calling context
     }
-});
+}
 
-// Add product order form
-app.post('/add-product-order', async (req, res) => {
-    const { product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price } = req.body;
-    
+// LIST ALL PARCEL ORDERS
+async function listAllPostalOrders() {
     try {
-        // Call the function to add the product order
-        await addProductOrders(product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price);
-        
-        // Log the order action after adding the product order
-        const description = `Added product order with ID: ${product_order_id} for order: ${order_id}`;
-        const orderStatusId = 1;  // we should probably automate it 
-        const logSuccess = await logOrderAction(order_id, orderStatusId, description);
-        
-        if (logSuccess) {
-            console.log('Order action logged successfully.');
-        } else {
-            console.log('Failed to log order action.');
-        }
-
-        // Redirect or send response after the action
-        res.redirect('/');
-        
+        const [postalOrders] = await pool.query("SELECT * FROM postal_orders");
+        return postalOrders; // Return all parcel orders
     } catch (error) {
-        // Handle any errors and send an error response
-        console.error('Error adding product order or logging action:', error);
-        res.status(500).send('Error adding product order.');
+        console.error('Error fetching parcel orders:', error);
+        throw error; // Rethrow the error for handling in the calling context
     }
-});
-
-
-// Update postal order form
-app.get('/update-postal-order/:id', async (req, res) => {
-    const postal_order_id = req.params.id;
+}
+// Function to view a postal order by ID
+async function viewPostalOrder(postal_order_id) {
     try {
-        const [postalOrders] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
-        if (postalOrders.length > 0) {
-            res.render('update-postal-order', { postalOrder: postalOrders[0] });
-        } else {
-            res.status(404).send('Postal order not found.');
-        }
+        const [rows] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
+        return rows.length ? rows[0] : null; // Return the order if found, otherwise null
     } catch (error) {
-        res.status(500).send('Error fetching postal order.');
+        console.error('Error getting postal order by ID:', error);
+        throw error; // Rethrow to handle in the route
     }
-});
-
-app.post('/update-postal-order/:id', async (req, res) => {
-    const { order_id, parcel_id, total_price } = req.body;
-    const { id: postal_order_id } = req.params;
-    try {
-        await updatePostalOrders(order_id, parcel_id, total_price, postal_order_id);
-        res.redirect('/');
-    } catch (error) {
-        res.status(500).send('Error updating postal order.');
-    }
-});
-
-// Start server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+}
 
 export default orderTokens;

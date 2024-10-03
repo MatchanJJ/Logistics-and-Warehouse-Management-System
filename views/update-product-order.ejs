@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/styles.css">
+<h2>Update Product Order</h2>
+
+<form action="/update-product-order/<%= productOrder.product_order_id %>" method="POST" class="form-container">
+    <div class="form-group">
+        <label for="order_id">Order ID:</label>
+        <input type="text" id="order_id" name="order_id" value="<%= productOrder.order_id %>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="product_id">Product ID:</label>
+        <input type="text" id="product_id" name="product_id" value="<%= productOrder.product_id %>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="product_quantity">Quantity:</label>
+        <input type="number" id="product_quantity" name="product_quantity" value="<%= productOrder.product_quantity %>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="product_unit_price">Unit Price:</label>
+        <input type="number" id="product_unit_price" name="product_unit_price" step="0.01" value="<%= productOrder.product_unit_price %>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="total_price">Total Price:</label>
+        <input type="number" id="total_price" name="total_price" step="0.01" value="<%= productOrder.total_price %>" required>
+    </div>
+
+    <div class="form-group">
+        <button type="submit">Update Product Order</button>
+    </div>
+</form>
+
+<a href="/manage-product-orders" class="btn">Back to Product Orders</a>

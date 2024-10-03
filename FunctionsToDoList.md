@@ -29,7 +29,7 @@ FUNCTION CLASSES:
 
 [6] Order Management  -DONE
        Generate Orders: Function to add new orders [ e-commerce or postal ]. -PENDING
-       Update Order Information: Ability to update orders like order status. -PENDING
+       Update Order Information: Ability to update orders like order status. 
 
 [7] Shipment Management  -DONE
        Create Shipment Record: Register a new shipment with its order details.

@@ -1,5 +1,6 @@
     import path from 'path';
     import { fileURLToPath } from 'url';
+    import pool from "./DBConnection.js";
     import express from 'express';
     import employeeManagementToken from './EmployeeManagement.js';
     import warehouseManagementToken from './WarehouseManagement.js';
@@ -8,6 +9,8 @@
     import customerManagementToken from './CustomerManagement.js';
     import shipmentManagementToken from './ShipmentManagement.js';
     import carrierPartnerTokens from './CarrierPartnerManagement.js';
+    import orderTokens from './OrderManagement.js';
+    import statusAndCategoriesManagementToken from './StatusAndCategoriesManagement.js';
 
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
@@ -767,6 +770,178 @@ app.post('/delete-partner/:id', async (req, res) => {
         res.status(500).send('Error deleting partner.');
     }
 });
+app.get('/orders', async (req, res) => {
+    try {
+        const orders = await orderTokens.listAllOrders(); // Fetch all orders
+        res.render('layout', {
+            title: 'Order Management',
+            content: 'orders', // Specify the content to include
+            orders // Pass orders data if needed in the orders.ejs
+        });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).send('Error fetching orders.');
+    }
+});
+
+app.get('/manage-orders', (req, res) => {
+    res.render('manage-order'); // Render the orders page
+});
+
+// Route to manage postal orders
+app.get('/postal-orders', async (req, res) => {
+    try {
+        const postalOrders = await orderTokens.listAllPostalOrders(); // Make sure this function exists
+        res.render('manage-postal-orders', { postalOrders });
+    } catch (error) {
+        console.error('Error fetching postal orders:', error);
+        res.status(500).send('Error fetching postal orders.');
+    }
+});
+
+// Route to manage product orders
+app.get('/product-orders', async (req, res) => {
+    try {
+        const productOrders = await orderTokens.listAllProductOrders(); // Make sure this function exists
+        res.render('manage-product-orders', { productOrders });
+    } catch (error) {
+        console.error('Error fetching product orders:', error);
+        res.status(500).send('Error fetching product orders.');
+    }
+});
+
+// Route to display the status and category management page
+app.get('/manage-status-and-category', async (req, res) => {
+    try {
+        const statuses = await orderTokens.listAllStatuses(); // Fetch statuses
+        const categories = await orderTokens.listAllCategories(); // Fetch categories
+        res.render('manage-status-and-category', { statuses, categories }); // Render the page with statuses and categories
+    } catch (error) {
+        console.error('Error fetching statuses and categories:', error);
+        res.status(500).send('Error fetching statuses and categories.');
+    }
+});
+
+
+// Fetch a specific postal order by ID
+app.get('/update-postal-order/:id', async (req, res) => {
+    const postal_order_id = req.params.id;
+    try {
+        // Use a function that fetches the postal order by its ID
+        const [postalOrder] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
+        
+        if (postalOrder.length > 0) {
+            res.render('update-postal-order', { postalOrder: postalOrder[0] }); // Pass the order details to the view
+        } else {
+            res.status(404).send('Postal order not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching postal order:', error);
+        res.status(500).send('Error fetching postal order.');
+    }
+});
+// Update Postal Order Route
+app.get('/update-postal-order/:id', async (req, res) => {
+    const postal_order_id = req.params.id;
+    try {
+        const postalOrder = await orderTokens.viewPostalOrder(postal_order_id); // Call the function to get the postal order
+        if (postalOrder) {
+            res.render('update-postal-order', { postalOrder }); // Pass the order details to the view
+        } else {
+            res.status(404).send('Postal order not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching postal order:', error);
+        res.status(500).send('Error fetching postal order.');
+    }
+});
+
+
+// Handle POST request for updating postal order
+app.post('/update-postal-order/:id', async (req, res) => {
+    const { order_id, parcel_id, total_price } = req.body;
+    const postal_order_id = req.params.id;
+    try {
+        await orderTokens.updatePostalOrders(order_id, parcel_id, total_price, postal_order_id);
+        res.redirect('/postal-orders'); // Redirect to the postal orders management page after update
+    } catch (error) {
+        console.error('Error updating postal order:', error);
+        res.status(500).send('Error updating postal order.');
+    }
+});
+// Delete Postal Order Route
+app.post('/delete-postal-order/:id', async (req, res) => {
+    const postal_order_id = req.params.id;
+    try {
+        const result = await deletePostalOrder(postal_order_id); // Ensure you have this function to handle deletion
+        if (result) {
+            res.redirect('/manage-postal-orders'); // Redirect to postal orders management after deletion
+        } else {
+            res.status(404).send('Postal order not found.');
+        }
+    } catch (error) {
+        console.error('Error deleting postal order:', error);
+        res.status(500).send('Error deleting postal order.');
+    }
+});
+
+
+app.get('/manage-product-orders', async (req, res) => {
+    try {
+        const productOrders = await orderTokens.listAllProductOrders(); // Get all product orders
+        res.render('manage-product-orders', { productOrders }); // Render the EJS file with product orders
+    } catch (error) {
+        console.error('Error fetching product orders:', error);
+        res.status(500).send('Error fetching product orders.');
+    }
+});
+
+// Route to update product order form
+app.get('/update-product-order/:id', async (req, res) => {
+    const product_order_id = req.params.id;
+    try {
+        const [productOrders] = await pool.query("SELECT * FROM product_orders WHERE product_order_id = ?", [product_order_id]);
+        if (productOrders.length > 0) {
+            res.render('update-product-order', { productOrder: productOrders[0] }); // Pass the order details to the view
+        } else {
+            res.status(404).send('Product order not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching product order:', error);
+        res.status(500).send('Error fetching product order.');
+    }
+});
+
+// Handle POST request for updating product order
+app.post('/update-product-order/:id', async (req, res) => {
+    const { order_id, product_id, product_quantity, product_unit_price, total_price } = req.body;
+    const product_order_id = req.params.id;
+    try {
+        await orderTokens.updateProductOrders(order_id, product_id, product_quantity, product_unit_price, total_price, product_order_id);
+        res.redirect('/manage-product-orders'); // Redirect to the product orders management page after update
+    } catch (error) {
+        console.error('Error updating product order:', error);
+        res.status(500).send('Error updating product order.');
+    }
+});
+
+// Delete Product Order Route
+app.post('/delete-product-order/:id', async (req, res) => {
+    const product_order_id = req.params.id;
+    try {
+        const result = await orderTokens.deleteProductOrder(product_order_id); // Ensure you have this function to handle deletion
+        if (result) {
+            res.redirect('/manage-product-orders'); // Redirect to product orders management after deletion
+        } else {
+            res.status(404).send('Product order not found.');
+        }
+    } catch (error) {
+        console.error('Error deleting product order:', error);
+        res.status(500).send('Error deleting product order.');
+    }
+});
+
+
 
     // Start the server
     app.listen(port, () => {
