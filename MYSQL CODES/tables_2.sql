@@ -269,3 +269,18 @@ CREATE TABLE employee_logs (
     employee_log_description TEXT,
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
 );
+
+CREATE TABLE warehouse_employees (
+    warehouse_id VARCHAR(10) NOT NULL,
+    employee_id VARCHAR(10) NOT NULL,
+    PRIMARY KEY (warehouse_id, employee_id),
+    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE warehouse_logs (
+    warehouse_log_id VARCHAR(10) PRIMARY KEY,
+    date_time TIMESTAMP,
+    warehouse_id VARCHAR(10),
+    warehouse_log_description TEXT
+);
