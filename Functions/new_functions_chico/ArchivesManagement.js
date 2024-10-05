@@ -176,7 +176,7 @@ async function archiveWarehouse(warehouse_id) {
     }
 }
 
-export {
+export default {
     archiveShipment,
     archiveParcel,
     archiveProduct,

@@ -22,4 +22,3 @@ import WarehouseManager from './WarehouseManagement.js';
     InventoryManagement.js --> done 
 */
 
-console.log(ParcelManager.viewParcel('PAR0000005'));
