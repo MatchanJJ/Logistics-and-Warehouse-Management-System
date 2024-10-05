@@ -1,4 +1,4 @@
-import db from './dbConnection/DBConnection.js';
+import db from '../DBConnection.js';
 import idGen from './new_functions_chico/idGenerator.js';
 
 /* Tables involved: 

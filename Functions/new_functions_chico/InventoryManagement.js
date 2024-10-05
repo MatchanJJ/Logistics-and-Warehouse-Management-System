@@ -1,4 +1,4 @@
-import db from '../dbConnection/DBConnection.js';
+import db from '../DBConnection.js';
 
 async function getInventory () {
     try {

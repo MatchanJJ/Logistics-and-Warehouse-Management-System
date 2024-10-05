@@ -1,4 +1,4 @@
-import db from '../dbConnection/DBConnection.js';
+import db from '../DBConnection.js';
 import idGen from './idGenerator.js';
 import prodima from './ProductInventoryManagement.js';
 
