@@ -212,7 +212,15 @@ CREATE TABLE employees (
     FOREIGN KEY (employee_role_id) REFERENCES employee_roles(employee_role_id)
 );
 
--- LOGS --
+CREATE TABLE warehouse_employees (
+    warehouse_id VARCHAR(10) NOT NULL,
+    employee_id VARCHAR(10) NOT NULL,
+    PRIMARY KEY (warehouse_id, employee_id),
+    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- log tables --
 
 CREATE TABLE order_logs (
     order_log_id VARCHAR(10) PRIMARY KEY,
@@ -270,17 +278,103 @@ CREATE TABLE employee_logs (
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
 );
 
-CREATE TABLE warehouse_employees (
-    warehouse_id VARCHAR(10) NOT NULL,
-    employee_id VARCHAR(10) NOT NULL,
-    PRIMARY KEY (warehouse_id, employee_id),
-    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE warehouse_logs (
     warehouse_log_id VARCHAR(10) PRIMARY KEY,
     date_time TIMESTAMP,
     warehouse_id VARCHAR(10),
     warehouse_log_description TEXT
+);
+
+-- archive tables --
+
+CREATE TABLE shipment_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    shipment_id VARCHAR(10) NOT NULL,  -- Original shipment ID
+    order_id VARCHAR(10),
+    carrier_id VARCHAR(10),
+    shipping_service_id VARCHAR(10),
+    shipping_address TEXT,
+    shipment_date TIMESTAMP,
+    estimated_delivery_date DATE,
+    shipment_status_id VARCHAR(10),
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE parcel_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    parcel_id VARCHAR(10) NOT NULL,  -- Original parcel ID
+    parcel_category_id VARCHAR(10),
+    parcel_weight DECIMAL(10, 2),
+    parcel_description TEXT,
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE product_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    product_id VARCHAR(10) NOT NULL,  -- Original product ID
+    product_name VARCHAR(255),
+    product_category_id VARCHAR(10),
+    product_weight DECIMAL(10, 2),
+    product_length DECIMAL(10, 2),
+    product_width DECIMAL(10, 2),
+    product_height DECIMAL(10, 2),
+    product_supplier VARCHAR(255),
+    product_unit_price DECIMAL(10, 2),
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    order_id VARCHAR(10) NOT NULL,  -- Original order ID
+    customer_id VARCHAR(10),
+    order_date_time TIMESTAMP,
+    order_status_id VARCHAR(10),
+    shipping_address TEXT,
+    shipping_receiver VARCHAR(255),
+    shipping_service_id VARCHAR(10),
+    order_total_amount DECIMAL(10, 2),
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    order_id VARCHAR(10) NOT NULL,  -- Original order ID
+    customer_id VARCHAR(10),
+    order_date_time TIMESTAMP,
+    order_status_id VARCHAR(10),
+    shipping_address TEXT,
+    shipping_receiver VARCHAR(255),
+    shipping_service_id VARCHAR(10),
+    order_total_amount DECIMAL(10, 2),
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employee_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    employee_id VARCHAR(10) NOT NULL,  -- Original employee ID
+    employee_first_name VARCHAR(255),
+    employee_last_name VARCHAR(255),
+    contact_info TEXT,
+    employee_role_id VARCHAR(10),
+    employee_salary DECIMAL(10, 2),
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE customer_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    customer_id VARCHAR(10) NOT NULL,  -- Original customer ID
+    customer_first_name VARCHAR(255),
+    customer_last_name VARCHAR(255),
+    customer_email VARCHAR(255),
+    customer_address TEXT,
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE warehouse_archives (
+    archive_id VARCHAR(10) PRIMARY KEY,
+    warehouse_id VARCHAR(10) NOT NULL,  -- Original warehouse ID
+    warehouse_address TEXT,
+    capacity DECIMAL(10, 2),
+    warehouse_type_id VARCHAR(10),
+    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
