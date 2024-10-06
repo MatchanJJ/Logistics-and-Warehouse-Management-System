@@ -1,6 +1,22 @@
 import db from '../DBconnection/DBConnection.js';
 import idGen from './idGenerator.js';
 
+// Add a log entry to the customer_logs table
+async function addCustomerLog(customer_id, log_description) {
+    try {
+        const newID = await idGen.generateID('customer_logs', 'customer_log_id', 'CSL');
+        const [result] = await db.query(`
+            INSERT INTO customer_logs (employee_log_id, employee_id, employee_log_description)
+            VALUES (?, ?, ?);
+        `, [newID, employee_id, log_description]);
+
+        return result.affectedRows > 0;
+    } catch (error) {
+        console.error('Error adding employee log:', error);
+        return false;
+    }
+};
+
 // Add a log entry to the employee_logs table
 async function addEmployeeLog(employee_id, log_description) {
     try {
@@ -15,7 +31,7 @@ async function addEmployeeLog(employee_id, log_description) {
         console.error('Error adding employee log:', error);
         return false;
     }
-}
+};
 
 // Add a log entry to the order_logs table
 async function addOrderLog(order_id, order_status_id, log_description) {
@@ -31,7 +47,7 @@ async function addOrderLog(order_id, order_status_id, log_description) {
         console.error('Error adding order log:', error);
         return false;
     }
-}
+};
 
 // Add a log entry to the parcel_inventory_logs table
 async function addParcelInventoryLog(parcel_inventory_id, warehouse_id, log_description) {
@@ -47,7 +63,7 @@ async function addParcelInventoryLog(parcel_inventory_id, warehouse_id, log_desc
         console.error('Error adding parcel inventory log:', error);
         return false;
     }
-}
+};
 
 // Add a log entry to the product_inventory_logs table
 async function addProductInventoryLog(product_inventory_id, warehouse_id, log_description) {
@@ -63,7 +79,7 @@ async function addProductInventoryLog(product_inventory_id, warehouse_id, log_de
         console.error('Error adding product inventory log:', error);
         return false;
     }
-}
+};
 
 // Add a log entry to the return_logs table
 async function addReturnLog(return_id, log_description) {
@@ -79,7 +95,7 @@ async function addReturnLog(return_id, log_description) {
         console.error('Error adding return log:', error);
         return false;
     }
-}
+};
 
 // Add a log entry to the shipment_logs table
 async function addShipmentLog(shipment_id, log_description) {
@@ -95,7 +111,7 @@ async function addShipmentLog(shipment_id, log_description) {
         console.error('Error adding shipment log:', error);
         return false;
     }
-}
+};
 
 // Add a log entry to the warehouse_logs table
 async function addWarehouseLog(warehouse_id, log_description) {
@@ -111,9 +127,10 @@ async function addWarehouseLog(warehouse_id, log_description) {
         console.error('Error adding warehouse log:', error);
         return false;
     }
-}
+};
 
 export default {
+    addCustomerLog,
     addEmployeeLog,
     addOrderLog,
     addParcelInventoryLog,

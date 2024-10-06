@@ -136,7 +136,7 @@ CREATE TABLE shipping_services (
 CREATE TABLE orders (
     order_id VARCHAR(10) PRIMARY KEY,
     customer_id VARCHAR(10),
-    order_date_time TIMESTAMP NOT NULL,
+    order_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     order_status_id VARCHAR(10),
     shipping_service_id VARCHAR(10),
     shipping_address TEXT NOT NULL,
@@ -224,63 +224,58 @@ CREATE TABLE warehouse_employees (
 
 CREATE TABLE order_logs (
     order_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     order_id VARCHAR(10),
-    order_status_id VARCHAR(10),
-    order_log_description TEXT,
-    FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (order_status_id) REFERENCES order_status(order_status_id)
+    order_log_description TEXT
+);
+
+CREATE TABLE customer_logs (
+    customer_log_id VARCHAR(10) PRIMARY KEY,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    customer_id VARCHAR(10),
+    customer_log_description TEXT,
 );
 
 CREATE TABLE shipment_logs (
     shipment_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     shipment_id VARCHAR(10),
-    shipment_log_description TEXT,
-    FOREIGN KEY (shipment_id) REFERENCES shipments(shipment_id)
+    shipment_log_description TEXT
 );
 
 CREATE TABLE return_logs (
     return_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     return_id VARCHAR(10),
-    return_log_description TEXT,
-    FOREIGN KEY (return_id) REFERENCES returns(return_id)
+    return_log_description TEXT
 );
 
 CREATE TABLE product_inventory_logs (
     product_inventory_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
-    product_inventory_id VARCHAR(10),
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    product_id VARCHAR(10),
     warehouse_id VARCHAR(10),
-    product_inventory_log_description TEXT,
-
-    FOREIGN KEY (product_inventory_id) REFERENCES product_inventories(product_inventory_id),
-    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id)
+    product_inventory_log_description TEXT
 );
 
 CREATE TABLE parcel_inventory_logs (
     parcel_inventory_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
-    parcel_inventory_id VARCHAR(10),
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    parcel_id VARCHAR(10),
     warehouse_id VARCHAR(10),
-    parcel_inventory_log_description TEXT,
-
-    FOREIGN KEY (parcel_inventory_id) REFERENCES parcel_inventories(parcel_inventory_id),
-    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id)    
+    parcel_inventory_log_description TEXT,    
 );
 
 CREATE TABLE employee_logs (
     employee_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     employee_id VARCHAR(10),
-    employee_log_description TEXT,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+    employee_log_description TEXT
 );
 
 CREATE TABLE warehouse_logs (
     warehouse_log_id VARCHAR(10) PRIMARY KEY,
-    date_time TIMESTAMP,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     warehouse_id VARCHAR(10),
     warehouse_log_description TEXT
 );
