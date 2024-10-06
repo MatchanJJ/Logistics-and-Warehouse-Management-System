@@ -11,7 +11,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\Functions\\Main.js"
+            //"program": "${workspaceFolder}\\Functions\\Main.js"
+            "program": "${workspaceFolder}\\Functions\\new_functions_chico\\app.js"
         }
     ]
 }
