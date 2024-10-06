@@ -1,39 +1,42 @@
 <h2>Shipment Details</h2>
 <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
-<table>
-    <tr>
-        <th>Shipment ID:</th>
-        <td><%= shipment.shipment_id %></td>
-    </tr>
-    <tr>
-        <th>Order ID:</th>
-        <td><%= shipment.order_id %></td>
-    </tr>
-    <tr>
-        <th>Carrier ID:</th>
-        <td><%= shipment.carrier_id %></td>
-    </tr>
-    <tr>
-        <th>Shipping Service ID:</th>
-        <td><%= shipment.shipping_service_id %></td>
-    </tr>
-    <tr>
-        <th>Shipping Address:</th>
-        <td><%= shipment.shipping_address %></td>
-    </tr>
-    <tr>
-        <th>Shipment Date:</th>
-        <td><%= shipment.shipment_date %></td>
-    </tr>
-    <tr>
-        <th>Estimated Delivery Date:</th>
-        <td><%= shipment.estimated_delivery_date %></td>
-    </tr>
-    <tr>
-        <th>Status ID:</th>
-        <td><%= shipment.shipment_status_id %></td>
-    </tr>
-</table>
-
-<a href="/update-shipment/<%= shipment.shipment_id %>">Edit Shipment</a> |
-<a href="/shipments">Back to Shipment List</a>
+<div class="container">
+    <table>
+        <tr>
+            <th>Shipment ID:</th>
+            <td><%= shipment.shipment_id %></td>
+        </tr>
+        <tr>
+            <th>Order ID:</th>
+            <td><%= shipment.order_id %></td>
+        </tr>
+        <tr>
+            <th>Carrier ID:</th>
+            <td><%= shipment.carrier_id %></td>
+        </tr>
+        <tr>
+            <th>Shipping Service ID:</th>
+            <td><%= shipment.shipping_service_id %></td>
+        </tr>
+        <tr>
+            <th>Shipping Address:</th>
+            <td><%= shipment.shipping_address %></td>
+        </tr>
+        <tr>
+            <th>Shipment Date:</th>
+            <td><%= shipment.shipment_date %></td>
+        </tr>
+        <tr>
+            <th>Estimated Delivery Date:</th>
+            <td><%= shipment.estimated_delivery_date %></td>
+        </tr>
+        <tr>
+            <th>Status ID:</th>
+            <td><%= shipment.shipment_status_id %></td>
+        </tr>
+    </table>
+    
+    <a href="/update-shipment/<%= shipment.shipment_id %>">Edit Shipment</a> |
+    <a href="/shipments">Back to Shipment List</a>
+    
+</div>

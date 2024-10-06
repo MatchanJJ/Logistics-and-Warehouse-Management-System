@@ -47,7 +47,8 @@ app.use((req, res, next) => {
 
 // Route to display the Add Employee form
 app.get('/add-employee', (req, res) => {
-    res.render('add-employee');  // Render the add-employee.ejs form
+    res.render('layout', { title: 'Add Employee', content: 'add-employee' }); // Render the layout with the add-warehouse content
+    //res.render('add-employee');  // Render the add-employee.ejs form
 });
 
 // Route to handle form submission for adding a new employee
@@ -74,7 +75,8 @@ app.get('/manage-job-roles', async (req, res) => {
 
 // GET: Show form to add a new job role
 app.get('/add-job-role', (req, res) => {
-    res.render('add-job-role'); // Render the form to add a new job role
+    res.render('layout', { title: 'Add Job Role', content: 'add-job-role' }); // Render the layout with the add-warehouse content
+    //res.render('add-job-role'); // Render the form to add a new job role
 });
 
 // POST: Add a new job role
@@ -95,7 +97,8 @@ app.get('/update-job-role/:id', async (req, res) => {
     try {
         const jobRole = await employeeManagementToken.viewJobRole(id); // Fetch the job role by ID
         if (jobRole) {
-            res.render('update-job-role', { jobRole }); // Render the update form with the job role details
+            res.render('layout', { title: 'Update Job Role', content: 'update-job-role',jobRole });
+            //res.render('update-job-role', { jobRole }); // Render the update form with the job role details
         } else {
             res.status(404).send('Job role not found.');
         }
@@ -169,7 +172,8 @@ app.post('/add-job-role', async (req, res) => {
         try {
             const employee = await employeeManagementToken.viewEmployee(id); // Fetch employee details by ID
             if (employee) {
-                res.render('view-employee', { employee }); // Render the employee details page
+                res.render('layout', { title: 'View Employee', content: 'view-employee', employee }); // Render the layout with the add-warehouse content
+                //res.render('view-employee', { employee }); // Render the employee details page
             } else {
                 res.status(404).send('Employee not found.');
             }
@@ -188,7 +192,8 @@ app.get('/update-employee/:id', async (req, res) => {
     try {
         const employee = await employeeManagementToken.viewEmployee(id); // Fetch employee details by ID
         if (employee) {
-            res.render('update-employee', { employee }); // Render the update form
+            res.render('layout', { title: 'Update Employee', content: 'update-employee' , employee }); // Render the layout with the add-warehouse content
+            //res.render('update-employee', { employee }); // Render the update form
         } else {
             res.status(404).send('Employee not found.');
         }
@@ -249,7 +254,9 @@ app.post('/update-employee/:id', async (req, res) => {
     
     // Route to render form for adding a new warehouse
     app.get('/add-warehouse', (req, res) => {
-        res.render('add-warehouse'); // Render the form for adding a new warehouse
+        //res.render('add-warehouse'); // Render the form for adding a new warehouse
+        res.render('layout', { title: 'Add Warehouse', content: 'add-warehouse' }); // Render the layout with the add-warehouse content
+
     });
     
 
@@ -275,7 +282,9 @@ app.get('/update-warehouse/:id', async (req, res) => {
     try {
         const warehouse = await warehouseManagementToken.findWarehouseById(id); // Fetch warehouse details by ID
         if (warehouse) {
-            res.render('update-warehouse', { warehouse }); // Render the update form with the warehouse details
+            res.render('layout', { title: 'Update Warehouse', content: 'update-warehouse', warehouse }); // Render the layout with the add-warehouse content
+
+            //res.render('update-warehouse', { warehouse }); // Render the update form with the warehouse details
         } else {
             res.status(404).send('Warehouse not found.');
         }
@@ -336,7 +345,7 @@ app.get('/inventory', (req, res) => {
 app.get('/parcel', async (req, res) => {
     try {
         const parcels = await parcelManagementToken.listAllParcel(); // Assuming this function exists
-        res.render('parcel', {
+        res.render('layout', {
             title: 'Parcel Inventory',
             content: 'parcel',
             parcels // Pass the parcels data to the view
@@ -350,7 +359,7 @@ app.get('/parcel', async (req, res) => {
 app.get('/product', async (req, res) => {
     try {
         const products = await productManagementToken.listAllProduct(); // Assuming this function exists
-        res.render('product', {
+        res.render('layout', {
             title: 'Product Inventory',
             content: 'product',
             products // Pass the products data to the view
@@ -380,7 +389,8 @@ app.get('/product', async (req, res) => {
 
     // Route for adding a new parcel (form rendering)
     app.get('/add-parcel', (req, res) => {
-        res.render('add-parcel'); // Render the form for adding a new parcel
+        res.render('layout', { title: 'Add Parcel', content: 'add-parcel' }); // Render the layout with the add-warehouse content
+        //res.render('add-parcel'); // Render the form for adding a new parcel
     });
 
     // Handle the form submission for adding a new parcel
@@ -412,7 +422,8 @@ app.post('/add-parcel-category', async (req, res) => {
         try {
             const parcel = await parcelManagementToken.findParcel(parcel_id); // Fetch parcel details
             if (parcel) {
-                res.render('edit-parcel', { parcel }); // Render the edit form with parcel data
+                res.render('layout', { title: 'Edit Parcel', content: 'edit-parcel' , parcel}); // Render the layout with the add-warehouse content
+                //res.render('edit-parcel', { parcel }); // Render the edit form with parcel data
             } else {
                 res.status(404).send('Parcel not found.');
             }
@@ -445,7 +456,8 @@ app.post('/add-parcel-category', async (req, res) => {
     });
 
     app.get('/add-product', (req, res) => {
-        res.render('add-product'); // Render the form for adding a new product
+        res.render('layout', { title: 'Add Product', content: 'add-product' }); // Render the layout with the add-warehouse content
+        //res.render('add-product'); // Render the form for adding a new product
     });
 
     // Handle the form submission for adding a new product
@@ -465,7 +477,8 @@ app.post('/add-parcel-category', async (req, res) => {
         try {
             const product = await productManagementToken.findProduct(product_id); // Fetch product details
             if (product) {
-                res.render('edit-product', { product }); // Render the edit form with product data
+                res.render('layout', { title: 'Edit Product', content: 'edit-product',product }); // Render the layout with the add-warehouse content
+                //res.render('edit-product', { product }); // Render the edit form with product data
             } else {
                 res.status(404).send('Product not found.');
             }
@@ -553,8 +566,9 @@ app.get('/customer/:id', async (req, res) => {
     const customer_id = req.params.id; // Extract customer ID from the route parameters
     try {
         const customer = await customerManagementToken.findCustomerById(customer_id); // Fetch customer details
-        if (customer) {
-            res.render('view-customer', { customer }); // Render the view-customer.ejs template
+        if (customer) { 
+            res.render('layout', { title: 'View Customer', content: 'view-customer', customer });
+            //res.render('view-customer', { customer }); // Render the view-customer.ejs template
         } else {
             res.status(404).send('Customer not found.');
         }
@@ -571,7 +585,8 @@ app.get('/update-customer/:id', async (req, res) => {
     try {
         const customer = await customerManagementToken.findCustomerById(id); // Fetch customer details
         if (customer) {
-            res.render('update-customer', { customer }); // Render the update form
+            res.render('layout', { title: 'Update Customer', content: 'update-customer',customer });
+            //res.render('update-customer', { customer }); // Render the update form
         } else {
             res.status(404).send('Customer not found.');
         }
@@ -654,7 +669,8 @@ app.get('/shipment/:id', async (req, res) => {
     try {
         const shipment = await shipmentManagementToken.findShipmentById(shipment_id); // Fetch shipment details
         if (shipment) {
-            res.render('view-shipment', { shipment }); // Render the view-shipment.ejs template
+            res.render('layout', { title: 'Shipment Details', content: 'view-shipment', shipment });
+            //res.render('view-shipment', { shipment }); // Render the view-shipment.ejs template
         } else {
             res.status(404).send('Shipment not found.');
         }
@@ -666,7 +682,8 @@ app.get('/shipment/:id', async (req, res) => {
 
 // Route to render form for adding a new shipment
 app.get('/add-shipment', (req, res) => {
-    res.render('add-shipment'); // Render the form for adding a new shipment
+    res.render('layout', { title: 'Add Shipment ', content: 'add-shipment' });
+    //res.render('add-shipment'); // Render the form for adding a new shipment
 });
 
 // Handle form submission for adding a new shipment
@@ -687,7 +704,8 @@ app.get('/update-shipment/:id', async (req, res) => {
     try {
         const shipment = await shipmentManagementToken.findShipmentById(shipment_id); // Fetch shipment details
         if (shipment) {
-            res.render('update-shipment', { shipment }); // Render the update form
+            res.render('layout', { title: 'Update Shipment', content: 'update-shipment', shipment });
+            //res.render('update-shipment', { shipment }); // Render the update form
         } else {
             res.status(404).send('Shipment not found.');
         }
@@ -725,17 +743,26 @@ app.post('/delete-shipment/:id', async (req, res) => {
 // Route to manage logistics partners
 app.get('/manage-partner', async (req, res) => {
     try {
-        const partners = await carrierPartnerTokens.listAllLogisticsPartners(); // Fetch partners from the database
-        res.render('partner', { partners }); // Pass the fetched partners to the partner view
+        // Fetch partners from the database
+        const partners = await carrierPartnerTokens.listAllLogisticsPartners();
+
+        // Render the layout with the partner view as content
+        res.render('layout', {
+            title: 'Manage Partners', // Set the title for the layout
+            content: 'partner-content', // This should match the name of your EJS file without the .ejs extension
+            partners // Pass the fetched partners to the partner view
+        });
     } catch (error) {
         console.error('Error fetching logistics partners:', error);
         res.status(500).send('Error fetching logistics partners.');
     }    
 });
 
+
 // Route to display the Add Partner form
 app.get('/add-partner', (req, res) => {
-    res.render('add-partner'); // Renders the add-partner.ejs form
+    res.render('layout', { title: 'Add Logistic Partner', content: 'add-partner' }); // Render the layout with the add-warehouse content
+   // res.render('add-partner'); // Renders the add-partner.ejs form
 });
 
 // Route to handle form submission for adding a new partner
@@ -755,7 +782,8 @@ app.get('/update-partner/:id', async (req, res) => {
     try {
         const partner = await carrierPartnerTokens.viewLogisticsPartner(req.params.id); // Fetch the partner by ID
         if (partner) {
-            res.render('update-partner', { partner }); // Render the update form with the partner details
+            res.render('layout', { title: 'Update Logistic Partner', content: 'update-partner', partner }); // Render the layout with the add-warehouse content
+            //res.render('update-partner', { partner }); // Render the update form with the partner details
         } else {
             res.status(404).send('Partner not found.');
         }
@@ -803,14 +831,16 @@ app.get('/orders', async (req, res) => {
 });
 
 app.get('/manage-orders', (req, res) => {
-    res.render('manage-order'); // Render the orders page
+    res.render('layout', { title: 'Manage Orders', content: 'manage-order' }); // Render the layout with the add-warehouse content
+    //res.render('manage-order'); // Render the orders page
 });
 
 // Route to manage postal orders
 app.get('/postal-orders', async (req, res) => {
     try {
         const postalOrders = await orderTokens.listAllPostalOrders(); // Make sure this function exists
-        res.render('manage-postal-orders', { postalOrders });
+        res.render('layout', { title: 'Manage Postal Orders', content: 'manage-postal-orders', postalOrders }); // Render the layout with the add-warehouse content
+        //res.render('manage-postal-orders', { postalOrders });
     } catch (error) {
         console.error('Error fetching postal orders:', error);
         res.status(500).send('Error fetching postal orders.');
@@ -821,7 +851,8 @@ app.get('/postal-orders', async (req, res) => {
 app.get('/product-orders', async (req, res) => {
     try {
         const productOrders = await orderTokens.listAllProductOrders(); // Make sure this function exists
-        res.render('manage-product-orders', { productOrders });
+        res.render('layout', { title: 'Manage Product Order', content: 'manage-product-orders' , productOrders});
+        //res.render('manage-product-orders', { productOrders });
     } catch (error) {
         console.error('Error fetching product orders:', error);
         res.status(500).send('Error fetching product orders.');
@@ -830,29 +861,30 @@ app.get('/product-orders', async (req, res) => {
 
 
 // Fetch a specific postal order by ID
-app.get('/update-postal-order/:id', async (req, res) => {
-    const postal_order_id = req.params.id;
-    try {
-        // Use a function that fetches the postal order by its ID
-        const [postalOrder] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
-        
-        if (postalOrder.length > 0) {
-            res.render('update-postal-order', { postalOrder: postalOrder[0] }); // Pass the order details to the view
-        } else {
-            res.status(404).send('Postal order not found.');
-        }
-    } catch (error) {
-        console.error('Error fetching postal order:', error);
-        res.status(500).send('Error fetching postal order.');
-    }
-});
+//app.get('/update-postal-order/:id', async (req, res) => {
+//    const postal_order_id = req.params.id;
+//    try {
+//        // Use a function that fetches the postal order by its ID
+//        const [postalOrder] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
+//        
+//        if (postalOrder.length > 0) {
+//            res.render('update-postal-order', { postalOrder: postalOrder[0] }); // Pass the order details to the view
+//        } else {
+//            res.status(404).send('Postal order not found.');
+//        }
+//    } catch (error) {
+//        console.error('Error fetching postal order:', error);
+//        res.status(500).send('Error fetching postal order.');
+//    }
+//});
 // Update Postal Order Route
 app.get('/update-postal-order/:id', async (req, res) => {
     const postal_order_id = req.params.id;
     try {
         const postalOrder = await orderTokens.viewPostalOrder(postal_order_id); // Call the function to get the postal order
         if (postalOrder) {
-            res.render('update-postal-order', { postalOrder }); // Pass the order details to the view
+            res.render('layout', { title: 'Update Postal Order', content: 'update-postal-order', postalOrder });
+            //res.render('update-postal-order', { postalOrder }); // Pass the order details to the view
         } else {
             res.status(404).send('Postal order not found.');
         }
@@ -908,7 +940,8 @@ app.get('/update-product-order/:id', async (req, res) => {
     try {
         const [productOrders] = await pool.query("SELECT * FROM product_orders WHERE product_order_id = ?", [product_order_id]);
         if (productOrders.length > 0) {
-            res.render('update-product-order', { productOrder: productOrders[0] }); // Pass the order details to the view
+            res.render('layout', { title: 'Update Product Order', content: 'update-product-order', productOrder: productOrders[0]});
+            //res.render('update-product-order', { productOrder: productOrders[0] }); // Pass the order details to the view
         } else {
             res.status(404).send('Product order not found.');
         }
@@ -949,7 +982,8 @@ app.post('/delete-product-order/:id', async (req, res) => {
 
 // Display the form for adding a new postal order
 app.get('/add-postal-order', (req, res) => {
-    res.render('add-postal-order');
+    res.render('layout', { title: 'Add New Postal Order ', content: 'add-postal-order' }); // Render the layout with the add-warehouse content
+    //res.render('add-postal-order');
 });
 
 // Handle form submission for adding a new postal order
@@ -966,7 +1000,8 @@ app.post('/add-postal-order', async (req, res) => {
 
 // Display the form for adding a new product order
 app.get('/add-product-order', (req, res) => {
-    res.render('add-product-order');
+    res.render('layout', { title: 'Add New Product Order', content: 'add-product-order' });
+    //res.render('add-product-order');
 });
 // Handle form submission for adding a new product order
 app.post('/add-product-order', async (req, res) => {
@@ -1017,7 +1052,8 @@ app.get('/manage-status-and-category', (req, res) => {
 app.get('/manage-order-status', async (req, res) => {
     try {
         const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses();
-        res.render('manage-order-status', { orderStatuses });
+        res.render('layout', { title: 'Manage Order Status', content: 'manage-order-status', orderStatuses});
+        //res.render('manage-order-status', { orderStatuses });
     } catch (error) {
         console.error('Error fetching order statuses:', error);
         res.status(500).send('Error fetching order statuses.');
@@ -1039,7 +1075,8 @@ app.get('/manage-shipment-status', async (req, res) => {
 app.get('/manage-return-status', async (req, res) => {
     try {
         const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses();
-        res.render('manage-return-status', { returnStatuses });
+        res.render('layout', { title: 'Manage Return Status', content: 'manage-return-status', returnStatuses });
+        //res.render('manage-return-status', { returnStatuses });
     } catch (error) {
         console.error('Error fetching return statuses:', error);
         res.status(500).send('Error fetching return statuses.');
@@ -1047,15 +1084,15 @@ app.get('/manage-return-status', async (req, res) => {
 });
 
 // Warehouse Types Management
-app.get('/manage-warehouse-types', async (req, res) => {
-    try {
-        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes();
-        res.render('manage-warehouse-types', { warehouseTypes });
-    } catch (error) {
-        console.error('Error fetching warehouse types:', error);
-        res.status(500).send('Error fetching warehouse types.');
-    }
-});
+//app.get('/manage-warehouse-types', async (req, res) => {
+//    try {
+//        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes();
+//        res.render('manage-warehouse-types', { warehouseTypes });
+//    } catch (error) {
+//        console.error('Error fetching warehouse types:', error);
+//        res.status(500).send('Error fetching warehouse types.');
+//    }
+//});
 
 // Order Types Management
 app.get('/manage-order-types', async (req, res) => {
@@ -1068,27 +1105,27 @@ app.get('/manage-order-types', async (req, res) => {
     }
 });
 
-// Product Categories Management
-app.get('/manage-product-categories', async (req, res) => {
-    try {
-        const productCategories = await statusAndCategoriesManagementToken.getProductCategories();
-        res.render('manage-product-categories', { productCategories });
-    } catch (error) {
-        console.error('Error fetching product categories:', error);
-        res.status(500).send('Error fetching product categories.');
-    }
-});
+//// Product Categories Management
+//app.get('/manage-product-categories', async (req, res) => {
+//    try {
+//        const productCategories = await statusAndCategoriesManagementToken.getProductCategories();
+//        res.render('manage-product-categories', { productCategories });
+//    } catch (error) {
+//        console.error('Error fetching product categories:', error);
+//        res.status(500).send('Error fetching product categories.');
+//    }
+//});
 
 // Parcel Categories Management
-app.get('/manage-parcel-categories', async (req, res) => {
-    try {
-        const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
-        res.render('manage-parcel-categories', { parcelCategories });
-    } catch (error) {
-        console.error('Error fetching parcel categories:', error);
-        res.status(500).send('Error fetching parcel categories.');
-    }
-});
+//app.get('/manage-parcel-categories', async (req, res) => {
+//    try {
+//        const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
+//        res.render('manage-parcel-categories', { parcelCategories });
+//    } catch (error) {
+//        console.error('Error fetching parcel categories:', error);
+//        res.status(500).send('Error fetching parcel categories.');
+//    }
+//});
 
 
 
@@ -1106,7 +1143,8 @@ app.get('/manage-order-status', async (req, res) => {
 
 // Route to display the add-order-status form
 app.get('/add-order-status', (req, res) => {
-    res.render('add-order-status'); // Renders the form to add new status
+    res.render('layout', { title: 'Add New Order Status', content: 'add-order-status' });
+    //res.render('add-order-status'); // Renders the form to add new status
 });
 
 // Route to handle the form submission for adding a new order status
@@ -1128,7 +1166,8 @@ app.get('/update-order-status/:id', async (req, res) => {
         const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses(); // Fetch the specific status
         const orderStatus = orderStatuses.find(status => status.order_status_id === order_status_id);
         if (orderStatus) {
-            res.render('update-order-status', { orderStatus });
+            res.render('layout', { title: 'Update Order Status', content: 'update-order-status', orderStatus });
+            //res.render('update-order-status', { orderStatus });
         } else {
             res.status(404).send('Order status not found.');
         }
@@ -1165,19 +1204,21 @@ app.post('/delete-order-status/:id', async (req, res) => {
 
 //RETURN STATUS
 // Route to display the manage-return-status page
-app.get('/manage-return-status', async (req, res) => {
-    try {
-        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses(); // Fetch return statuses from DB
-        res.render('manage-return-status', { returnStatuses });
-    } catch (error) {
-        console.error('Error fetching return statuses:', error);
-        res.status(500).send('Error fetching return statuses.');
-    }
-});
+//app.get('/manage-return-status', async (req, res) => {
+//    try {
+//        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses(); // Fetch return statuses from DB
+//        res.render('layout', { title: 'Manage Return Status', content: 'manage-return-status', returnStatuses });
+//        //res.render('manage-return-status', { returnStatuses });
+//    } catch (error) {
+//        console.error('Error fetching return statuses:', error);
+//        res.status(500).send('Error fetching return statuses.');
+//    }
+//});
 
 // Route to display the add-return-status form
 app.get('/add-return-status', (req, res) => {
-    res.render('add-return-status'); // Renders the form to add a new return status
+    res.render('layout', { title: 'Add New Return Status', content: 'add-return-status'});
+    //res.render('add-return-status'); // Renders the form to add a new return status
 });
 
 // Route to handle the form submission for adding a new return status
@@ -1199,7 +1240,8 @@ app.get('/update-return-status/:id', async (req, res) => {
         const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses(); // Fetch return statuses
         const returnStatus = returnStatuses.find(status => status.return_status_id === return_status_id);
         if (returnStatus) {
-            res.render('update-return-status', { returnStatus });
+            res.render('layout', { title: 'Update Return Status', content: 'update-return-status', returnStatus });
+            //res.render('update-return-status', { returnStatus });
         } else {
             res.status(404).send('Return status not found.');
         }
@@ -1239,7 +1281,8 @@ app.post('/delete-return-status/:id', async (req, res) => {
 app.get('/manage-warehouse-types', async (req, res) => {
     try {
         const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes(); // Fetch warehouse types
-        res.render('manage-warehouse-types', { warehouseTypes });
+        res.render('layout', { title: 'Manage Warehouse Types', content: 'manage-warehouse-types', warehouseTypes });
+        //res.render('manage-warehouse-types', { warehouseTypes });
     } catch (error) {
         console.error('Error fetching warehouse types:', error);
         res.status(500).send('Error fetching warehouse types.');
@@ -1248,7 +1291,8 @@ app.get('/manage-warehouse-types', async (req, res) => {
 
 // Route to display the add-warehouse-type form
 app.get('/add-warehouse-type', (req, res) => {
-    res.render('add-warehouse-type'); // Render the form to add a new warehouse type
+    res.render('layout', { title: 'Add New Warehouse Type', content: 'add-warehouse-type' });
+    //res.render('add-warehouse-type'); // Render the form to add a new warehouse type
 });
 
 // Route to handle the form submission for adding a new warehouse type
@@ -1270,7 +1314,8 @@ app.get('/update-warehouse-type/:id', async (req, res) => {
         const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes();
         const warehouseType = warehouseTypes.find(type => type.warehouse_type_id === warehouse_type_id);
         if (warehouseType) {
-            res.render('update-warehouse-type', { warehouseType });
+            res.render('layout', { title: 'Update Warehouse Type', content: 'update-warehouse-type', warehouseType });
+            //res.render('update-warehouse-type', { warehouseType });
         } else {
             res.status(404).send('Warehouse type not found.');
         }
@@ -1314,7 +1359,8 @@ app.post('/delete-warehouse-type/:id', async (req, res) => {
 app.get('/manage-product-categories', async (req, res) => {
     try {
         const productCategories = await statusAndCategoriesManagementToken.getProductCategories(); // Fetch product categories
-        res.render('manage-product-categories', { productCategories });
+        res.render('layout', { title: 'Manage Product Categories', content: 'manage-product-categories', productCategories });
+        //res.render('manage-product-categories', { productCategories });
     } catch (error) {
         console.error('Error fetching product categories:', error);
         res.status(500).send('Error fetching product categories.');
@@ -1323,7 +1369,8 @@ app.get('/manage-product-categories', async (req, res) => {
 
 // Route to display the form to add a new product category
 app.get('/add-product-category', (req, res) => {
-    res.render('add-product-category'); // Render the EJS file for adding product categories
+    res.render('layout', { title: 'Add Product Category', content: 'add-product-category' });
+    //res.render('add-product-category'); // Render the EJS file for adding product categories
 });
 
 
@@ -1345,7 +1392,8 @@ app.get('/update-product-category/:id', async (req, res) => {
         // Fetch the existing product category using the provided ID
         const [rows] = await pool.query("SELECT * FROM product_categories WHERE product_category_id = ?", [productCategoryId]);
         if (rows.length > 0) {
-            res.render('update-product-category', { productCategory: rows[0] }); // Pass the current category details to the view
+            res.render('layout', { title: 'Update Product Category', content: 'update-product-category', productCategory: rows[0] });
+            //res.render('update-product-category', { productCategory: rows[0] }); // Pass the current category details to the view
         } else {
             res.status(404).send('Product category not found.');
         }
@@ -1387,7 +1435,8 @@ app.post('/delete-product-category/:id', async (req, res) => {
 app.get('/manage-parcel-categories', async (req, res) => {
     try {
         const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
-        res.render('manage-parcel-categories', { parcelCategories });
+        res.render('layout', { title: 'Manage Parcel Categoeies', content: 'manage-parcel-categories', parcelCategories });
+        //res.render('manage-parcel-categories', { parcelCategories });
     } catch (error) {
         console.error('Error fetching parcel categories:', error);
         res.status(500).send('Error fetching parcel categories.');
@@ -1396,7 +1445,8 @@ app.get('/manage-parcel-categories', async (req, res) => {
 
 // Display the form to add a new parcel category
 app.get('/add-parcel-category', (req, res) => {
-    res.render('add-parcel-category');
+    res.render('layout', { title: 'Add new Parcel Category ', content: 'add-parcel-category' });
+    //res.render('add-parcel-category');
 });
 
 // Handle the form submission to add a new parcel category
@@ -1421,7 +1471,8 @@ app.get('/update-parcel-category/:id', async (req, res) => {
     try {
         const [parcelCategory] = await statusAndCategoriesManagementToken.getParcelCategories(parcelCategoryId);
         if (parcelCategory) {
-            res.render('update-parcel-category', { parcelCategory });
+            res.render('layout', { title: 'Update Parcel Category ', content: 'update-parcel-category', parcelCategory });
+            //res.render('update-parcel-category', { parcelCategory });
         } else {
             res.status(404).send('Parcel category not found.');
         }
