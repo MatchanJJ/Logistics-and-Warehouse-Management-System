@@ -624,3 +624,82 @@ tbody tr:hover {
     color: red;
     font-weight: bold;
 }
+
+/* styles.css */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.delete-btn {
+    background-color: red;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three buttons in the first row */
+    grid-gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 20px;
+}
+
+.grid-container a {
+    display: block;
+    padding: 20px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.grid-container a:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr; /* Stack buttons in one column for small screens */
+    }
+}

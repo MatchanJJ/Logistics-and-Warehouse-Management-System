@@ -1,14 +1,29 @@
-<link rel="stylesheet" href="/styles.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Warehouse Type</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to the external CSS -->
+</head>
 <body>
-    <h2>Update Warehouse Type</h2>
-    <form action="/update-warehouse-type/<%= warehouseType.warehouse_type_id %>" method="POST">
-        <label for="warehouse_type_id">Type ID:</label>
-        <input type="text" id="warehouse_type_id" name="warehouse_type_id" value="<%= warehouseType.warehouse_type_id %>" readonly><br>
+    <div class="form-container"> <!-- Wrapping the form in a container -->
+        <h2>Update Warehouse Type</h2>
+        <form action="/update-warehouse-type/<%= warehouseType.warehouse_type_id %>" method="POST">
+            <div class="form-group">
+                <label for="warehouse_type_id">Type ID:</label>
+                <input type="text" id="warehouse_type_id" name="warehouse_type_id" value="<%= warehouseType.warehouse_type_id %>" readonly>
+            </div>
 
-        <label for="warehouse_type_name">Type Name:</label>
-        <input type="text" id="warehouse_type_name" name="warehouse_type_name" value="<%= warehouseType.warehouse_type_name %>" required><br>
+            <div class="form-group">
+                <label for="warehouse_type_name">Type Name:</label>
+                <input type="text" id="warehouse_type_name" name="warehouse_type_name" value="<%= warehouseType.warehouse_type_name %>" required>
+            </div>
 
-        <button type="submit">Update Type</button>
-    </form>
+            <div class="form-group">
+                <button type="submit">Update Type</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
