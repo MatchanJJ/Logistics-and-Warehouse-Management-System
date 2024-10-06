@@ -1,3 +1,6 @@
+<a href="/inventories">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
 <h2>Parcel Inventory</h2>
 <link rel="stylesheet" href="/styles.css">
 <a href="/add-parcel" class="btn">Add New Parcel</a>
@@ -12,19 +15,13 @@
             <th>Parcel Length</th>
             <th>Parcel Width</th>
             <th>Parcel Height</th>
-            <th>Fragile</th>
-            <th>Perishable</th>
-            <th>Hazardous</th>
-            <th>Oversized</th>
-            <th>Returnable</th>
-            <th>Temperature Sensitive</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <% if (Array.isArray(parcels) && parcels.length > 0) { %>
             <% parcels.forEach(parcel => { %>
-                <tr>
+                <tr onclick="window.location.href='/view-parcel/<%= parcel.parcel_id %>'" style="cursor: pointer;">
                     <td><%= parcel.parcel_id %></td>
                     <td><%= parcel.parcel_category_id %></td>
                     <td><%= parcel.parcel_description %></td>
@@ -33,14 +30,8 @@
                     <td><%= parcel.parcel_length %></td>
                     <td><%= parcel.parcel_width %></td>
                     <td><%= parcel.parcel_height %></td>
-                    <td><%= parcel.is_fragile ? 'Yes' : 'No' %></td>
-                    <td><%= parcel.is_perishable ? 'Yes' : 'No' %></td>
-                    <td><%= parcel.is_hazardous ? 'Yes' : 'No' %></td>
-                    <td><%= parcel.is_oversized ? 'Yes' : 'No' %></td>
-                    <td><%= parcel.is_returnable ? 'Yes' : 'No' %></td>
-                    <td><%= parcel.is_temperature_sensitive ? 'Yes' : 'No' %></td>
                     <td>
-                        <a href="/edit-parcel/<%= parcel.parcel_id %>">Edit</a> |
+                        <a href="/edit-parcel/<%= parcel.parcel_id %>"><button>Edit</button></a> 
                         <form action="/delete-parcel/<%= parcel.parcel_id %>" method="POST" style="display:inline;">
                             <button type="submit">Delete</button>
                         </form>
@@ -52,6 +43,5 @@
                 <td colspan="14">No parcels available.</td>
             </tr>
         <% } %>
-        
     </tbody>
 </table>

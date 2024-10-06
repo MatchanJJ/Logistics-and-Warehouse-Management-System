@@ -1,26 +1,14 @@
+<a href="/employees">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
 <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 <body>
-    <header>
-        <h1>Logistics and Warehouse Management System</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/warehouses">Warehouses</a></li>
-                <li><a href="/inventories">Inventories</a></li>
-                <li><a href="/employees">Employees</a></li>
-                <li><a href="/customers">Customers</a></li>
-                <li><a href="/orders">Orders</a></li>
-                <li><a href="/shipments">Shipments</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <main>
+        <h2>Job Roles List</h2>
         <div>
             <a href="/add-job-role" class="btn">Add New Job Role</a>
         </div>
 
-        <h2>Job Roles List</h2>
         <% if (jobRoles && jobRoles.length > 0) { %>
             <table class="responsive-table">
                 <thead>
@@ -49,9 +37,5 @@
             <p>No job roles found.</p>
         <% } %>
     </main>
-
-    <footer>
-        <p>&copy; 2024 Logistics and Warehouse Management System</p>
-    </footer>
 </body>
 </html>

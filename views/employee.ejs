@@ -1,3 +1,6 @@
+<a href="/">
+    <img class="home" src="/home-button.png" alt="home">
+</a>
 <h2>Employee List</h2>
 <a href="/add-employee" class="btn">Add New Employee</a>
 <a href="/manage-job-roles" class="btn">Manage Job Role</a>
@@ -15,7 +18,7 @@
     </thead>
     <tbody>
         <% employees.forEach(employee => { %>
-        <tr>
+        <tr onclick="window.location.href='/employee/<%= employee.employee_id %>'" style="cursor: pointer;">
             <td><%= employee.employee_id %></td>
             <td><%= employee.employee_first_name %></td>
             <td><%= employee.employee_last_name %></td>
@@ -23,8 +26,7 @@
             <td><%= employee.employee_role_id %></td>
             <td><%= employee.employee_salary %></td>
             <td>
-                <a href="/employee/<%= employee.employee_id %>">View</a> | 
-                <a href="/update-employee/<%= employee.employee_id %>">Update</a> | 
+                <a href="/update-employee/<%= employee.employee_id %>"><button>Update</button></a> 
                 <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>

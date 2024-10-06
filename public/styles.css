@@ -6,41 +6,87 @@ body {
     background-color: #f4f4f4; /* Light gray background */
 }
 
-header {
-    background: #4a4c4f; /* Blue background for the header */
-    color: #fff; /* White text color */
-    padding: 15px 0; /* Padding for header */
-    text-align: center; /* Centered text */
-}
+ li {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+    
+  }
+  
+  a {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #edf0f1;
+      text-decoration: none;
+  }
+  
+  button {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #edf0f1;
+      text-decoration: none;
+  }
+  
+  header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px 10%;
+      background-color: #24252A;
+  }
 
-header h1 {
-    margin: 0; /* Remove margin */
-}
+  
+  .logo{
+      cursor: pointer;
+  }
 
-nav {
-    margin: 10tex 0; /* Margin for navigation */
+  .back{
+    cursor: pointer;
+    width: 32px;  
+    height: 32px;
+    margin-bottom: 0px ;
 }
-
-nav ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0; /* Remove padding */
+.home{
+    cursor: pointer;
+    width: 28px;  
+    height: 28px;
+    margin-bottom: 0px ;
 }
-
-nav ul li {
-    display: inline; /* Display list items in a row */
-    margin: 0 15px; /* Margin between items */
-}
-
-nav a {
-    color: #fff; /* White text color for links */
-    text-decoration: none; /* Remove underline */
-    font-weight: bold; /* Bold text */
-}
-
-nav a:hover {
-    text-decoration: underline; /* Underline on hover */
-}
-
+  .nav_links{
+      list-style: none;
+  
+  }
+  .nav_links li{
+      display: inline-block;
+      padding: 0px 8px;
+  
+  }
+  .nav_links li a{
+      transition: all 0.3s ease 0s;
+  }
+  
+  .nav_links li a:hover{
+      color: #0008a9
+  }
+  
+  button{
+      padding:12px 30px;
+      background-color: rgba(0,136, 169, 1);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease 0s;
+  
+  }
+  
+  button:hover{
+      background-color: rgba(0,136, 169, 0.8);
+  
+  }
 /* Main content area */
 main {
     padding: 20px; /* Padding for main content */
@@ -107,7 +153,7 @@ div.error {
 footer {
     text-align: center; /* Centered text */
     padding: 10px 0; /* Padding for footer */
-    background: #007bff; /* Blue background */
+    background-color: #24252A;
     color: #fff; /* White text color */
     position: relative; /* Position relative for footer */
     bottom: 0; /* Stick to the bottom */

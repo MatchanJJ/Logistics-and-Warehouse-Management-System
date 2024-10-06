@@ -1,3 +1,6 @@
+<a href="/manage-orders">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
 <link rel="stylesheet" href="/styles.css">
 <h2>Manage Product Orders</h2>
 <a href="/add-product-order" class="btn">Add New Product Order</a>
@@ -24,7 +27,7 @@
                     <td><%= order.product_unit_price %></td>
                     <td><%= order.total_price %></td>
                     <td>
-                        <a href="/update-product-order/<%= order.product_order_id %>">Update</a> |
+                        <a href="/update-product-order/<%= order.product_order_id %>"><button>Update</button></a> 
                         <form action="/delete-product-order/<%= order.product_order_id %>" method="POST" style="display:inline;">
                             <button type="submit">Delete</button>
                         </form>

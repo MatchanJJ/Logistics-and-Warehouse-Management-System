@@ -1,3 +1,6 @@
+<a href="/customers">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
 <title>Customer Details - <%= customer.customer_first_name %> <%= customer.customer_last_name %></title>
 <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 <body>
@@ -32,7 +35,6 @@
             <!-- Action buttons for editing and going back -->
             <div class="actions">
                 <a href="/update-customer/<%= customer.customer_id %>" class="btn">Edit Customer</a>
-                <a href="/customers" class="btn">Back to Customer List</a>
             </div>
         </div>
     </main>

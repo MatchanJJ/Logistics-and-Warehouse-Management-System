@@ -1,0 +1,33 @@
+<a href="/parcel">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+<link rel="stylesheet" href="/styles.css">
+<div class="container">
+    <main>
+        <h2>Parcel Details</h2>
+        <div class="parcel-details">
+            <p><strong>Parcel ID:</strong> <%= parcel.parcel_id %></p>
+            <p><strong>Parcel Category ID:</strong> <%= parcel.parcel_category_id %></p>
+            <p><strong>Description:</strong> <%= parcel.parcel_description %></p>
+            <p><strong>Unit Price:</strong> <%= parcel.parcel_unit_price %></p>
+            <p><strong>Weight:</strong> <%= parcel.parcel_weight %> kg</p>
+            <p><strong>Length:</strong> <%= parcel.parcel_length %> kg</p>
+            <p><strong>Width:</strong> <%= parcel.parcel_width %> kg</p>
+            <p><strong>Height:</strong> <%= parcel.parcel_height %> kg</p>
+            <p><strong>Parcel is Fragile:</strong> <%= parcel.is_fragile ? 'Yes' : 'No' %></p>
+            <p><strong>Parcel is Perishable:</strong> <%= parcel.is_perishable ? 'Yes' : 'No' %></p>
+            <p><strong>Parcel is Hazardous:</strong> <%= parcel.is_hazardous ? 'Yes' : 'No' %></p>
+            <p><strong>Parcel is Oversized:</strong> <%= parcel.is_oversized ? 'Yes' : 'No' %></p>
+            <p><strong>Parcel is Returnable:</strong> <%= parcel.is_returnable ? 'Yes' : 'No' %></p>
+            <p><strong>Parcel is Temperature Sensitive:</strong> <%= parcel.is_temperature_sensitive ? 'Yes' : 'No' %></p>
+
+        </div>
+
+        <a href="/parcel" class="btn">Back to Parcel Inventory</a>
+        <a href="/edit-parcel/<%= parcel.parcel_id %>" class="btn">Edit Parcel</a>
+        <form action="/delete-parcel/<%= parcel.parcel_id %>" method="POST" style="display:inline;">
+            <button type="submit" class="btn">Delete Parcel</button>
+        </form>
+    </main>
+</div>
+    

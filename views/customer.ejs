@@ -1,4 +1,6 @@
-<!-- views/customer.ejs -->
+<a href="/">
+    <img class="home" src="/home-button.png" alt="home">
+</a>
 <h2>Customer List</h2>
 <table>
     <thead>
@@ -13,15 +15,14 @@
     </thead>
     <tbody>
         <% customers.forEach(customer => { %>
-        <tr>
+        <tr onclick="window.location.href='/customer/<%= customer.customer_id %>'" style="cursor: pointer;">
             <td><%= customer.customer_id %></td>
             <td><%= customer.customer_first_name %></td>
             <td><%= customer.customer_last_name %></td>
             <td><%= customer.customer_email %></td>
             <td><%= customer.customer_address %></td>
-            <td>
-                <a href="/customer/<%= customer.customer_id %>">View</a> |
-                <a href="/update-customer/<%= customer.customer_id %>">Update</a>
+            <td> 
+                <a href="/update-customer/<%= customer.customer_id %>"><button>Update</button></a>
                 </form>
             </td>
         </tr>

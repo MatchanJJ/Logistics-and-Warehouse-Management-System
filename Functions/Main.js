@@ -20,8 +20,8 @@
     const app = express();
     const port = 8080;
     app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use((req, res, next) => {
+    app.use(express.urlencoded({ extended: true }));
+    app.use((req, res, next) => {
     console.log(req.body); // Log incoming request body
     next();
 });
@@ -66,7 +66,8 @@ app.post('/add-employee', async (req, res) => {
 app.get('/manage-job-roles', async (req, res) => {
     try {
         const jobRoles = await employeeManagementToken.listAllJobRoles(); // Fetch job roles from the database
-        res.render('manage-job-roles', { jobRoles }); // Render the view and pass job roles
+        res.render('layout', { title: 'Manage Job Roles', content: 'manage-job-roles', jobRoles});
+        //res.render('manage-job-roles', { jobRoles }); // Render the view and pass job roles
     } catch (error) {
         console.error('Error fetching job roles:', error);
         res.status(500).send('Error fetching job roles.');
@@ -415,6 +416,25 @@ app.post('/add-parcel-category', async (req, res) => {
     }
 });
 
+app.get('/view-parcel/:parcel_id', async (req, res) => {
+    const parcelId = req.params.parcel_id;
+
+    try {
+        const parcel = await parcelManagementToken.findParcel(parcelId); // Await the async function
+
+        if (parcel) {
+            res.render('layout', { title: 'Parcel Details', content: 'view-parcel', parcel });
+        } else {
+            res.status(404).send('Parcel not found');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+});
+
+
+
 
     // Route for editing a parcel (render form with existing data)
     app.get('/edit-parcel/:id', async (req, res) => {
@@ -468,6 +488,23 @@ app.post('/add-parcel-category', async (req, res) => {
             res.redirect('/product'); // Redirect to the home page after adding
         } catch (error) {
             res.status(500).send('Error adding product.');
+        }
+    });
+
+    app.get('/view-product/:parcel_id', async (req, res) => {
+        const productId = req.params.parcel_id;
+    
+        try {
+            const product = await productManagementToken.findProduct(productId); // Await the async function
+    
+            if (product) {
+                res.render('layout', { title: 'Product Details', content: 'view-product', product });
+            } else {
+                res.status(404).send('Parcel not found');
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Internal server error');
         }
     });
 
@@ -1044,7 +1081,8 @@ app.post('/add-product-order', async (req, res) => {
 
 // Route to render the "Manage Status and Category" page
 app.get('/manage-status-and-category', (req, res) => {
-    res.render('manage-status-and-category');
+    res.render('layout', { title: 'Manage Status And Category', content: 'manage-status-and-category'});
+    //res.render('manage-status-and-category');
 });
 
 

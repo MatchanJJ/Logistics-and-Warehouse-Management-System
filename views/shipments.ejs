@@ -1,3 +1,6 @@
+<a href="/">
+    <img class="home" src="/home-button.png" alt="home">
+</a>
 <h2>Shipment List</h2>
 
 <!-- Buttons to add a new shipment -->
@@ -21,7 +24,7 @@
     </thead>
     <tbody>
         <% shipments.forEach(shipment => { %>
-        <tr>
+        <tr onclick="window.location.href='/shipment/<%= shipment.shipment_id %>'" style="cursor: pointer;">
             <td><%= shipment.shipment_id %></td>
             <td><%= shipment.order_id %></td>
             <td><%= shipment.carrier_id %></td>
@@ -31,11 +34,7 @@
             <td><%= shipment.estimated_delivery_date %></td>
             <td><%= shipment.shipment_status_id %></td>
             <td>
-                <!-- View Button -->
-                <a href="/shipment/<%= shipment.shipment_id %>" class="btn">View</a> | 
-                <!-- Update Button -->
-                <a href="/update-shipment/<%= shipment.shipment_id %>" class="btn">Update</a> |
-                <!-- Delete Form -->
+                <a href="/update-shipment/<%= shipment.shipment_id %>" class="btn">Update</a> 
                 <form action="/delete-shipment/<%= shipment.shipment_id %>" method="POST" style="display:inline;">
                     <button type="submit" class="btn" style="background-color: red;">Delete</button>
                 </form>

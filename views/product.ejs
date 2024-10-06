@@ -1,3 +1,6 @@
+<a href="/inventories">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
 <h2>Product Inventory</h2>
 <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
@@ -13,16 +16,13 @@
             <th>Description</th>
             <th>Unit Price</th>
             <th>Weight</th>
-            <th>Length</th>
-            <th>Width</th>
-            <th>Height</th>
-            <th>Fragile</th>
+            <th>Dimensions</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <% products.forEach(product => { %>
-        <tr>
+        <tr onclick="window.location.href='/view-product/<%= product.product_id %>'" style="cursor: pointer;">
             <td><%= product.product_id %></td>
             <td><%= product.product_category_id %></td>
             <td><%= product.product_name %></td>
@@ -31,12 +31,9 @@
             <td><%= product.product_description %></td>
             <td><%= product.product_unit_price %></td>
             <td><%= product.product_weight %></td>
-            <td><%= product.product_length %></td>
-            <td><%= product.product_width %></td>
-            <td><%= product.product_height %></td>
-            <td><%= product.is_fragile ? 'Yes' : 'No' %></td>
+            <td><%= product.product_length %> x <%= product.product_length %> x <%= product.product_width %> </td>
             <td>
-                <a href="/edit-product/<%= product.product_id %>">Edit</a>
+                <a href="/edit-product/<%= product.product_id %>"><button>Edit</button></a> 
                 <form action="/delete-product/<%= product.product_id %>" method="POST" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>
