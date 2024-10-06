@@ -1,0 +1,96 @@
+<link rel="stylesheet" href="/styles.css">
+    <div class="form-wrapper">
+        <h2>Add Product</h2>
+        <form action="/add-product" method="POST" class="form-container">
+            <div class="form-group">
+                <label for="product_id">Product ID:</label>
+                <input type="text" id="product_id" name="product_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_category_id">Product Category ID:</label>
+                <input type="text" id="product_category_id" name="product_category_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_name">Product Name:</label>
+                <input type="text" id="product_name" name="product_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_brand">Product Brand:</label>
+                <input type="text" id="product_brand" name="product_brand" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_supplier">Product Supplier:</label>
+                <input type="text" id="product_supplier" name="product_supplier" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_description">Product Description:</label>
+                <textarea id="product_description" name="product_description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="product_unit_price">Product Unit Price:</label>
+                <input type="number" id="product_unit_price" name="product_unit_price" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_weight">Product Weight:</label>
+                <input type="number" id="product_weight" name="product_weight" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_length">Product Length:</label>
+                <input type="number" id="product_length" name="product_length" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_width">Product Width:</label>
+                <input type="number" id="product_width" name="product_width" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_height">Product Height:</label>
+                <input type="number" id="product_height" name="product_height" required>
+            </div>
+
+            <div class="form-group">
+                <label for="is_fragile">Fragile:</label>
+                <input type="checkbox" id="is_fragile" name="is_fragile">
+            </div>
+
+            <div class="form-group">
+                <label for="is_perishable">Perishable:</label>
+                <input type="checkbox" id="is_perishable" name="is_perishable">
+            </div>
+
+            <div class="form-group">
+                <label for="is_hazardous">Hazardous:</label>
+                <input type="checkbox" id="is_hazardous" name="is_hazardous">
+            </div>
+
+            <div class="form-group">
+                <label for="is_oversized">Oversized:</label>
+                <input type="checkbox" id="is_oversized" name="is_oversized">
+            </div>
+
+            <div class="form-group">
+                <label for="is_returnable">Returnable:</label>
+                <input type="checkbox" id="is_returnable" name="is_returnable">
+            </div>
+
+            <div class="form-group">
+                <label for="is_temperature_sensitive">Temperature Sensitive:</label>
+                <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn">Add Product</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

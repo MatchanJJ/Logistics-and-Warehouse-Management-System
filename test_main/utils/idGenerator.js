@@ -1,4 +1,4 @@
-import pool from "../DBConnection.js"
+import pool from "../DBconnection/DBConnection.js"
 import { nanoid } from "nanoid";
 
 // Export token manager

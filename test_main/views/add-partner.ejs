@@ -1,0 +1,35 @@
+<h2>Add Logistics Partner</h2>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+<div class="form-wrapper"> <!-- Container for the form -->
+    <form action="/add-partner" method="POST" class="form-container">
+        <!-- Carrier ID -->
+        <div class="form-group">
+            <label for="carrier_id">Carrier ID:</label>
+            <input type="text" id="carrier_id" name="carrier_id" required>
+        </div>
+
+        <!-- Carrier Name -->
+        <div class="form-group">
+            <label for="carrier_name">Carrier Name:</label>
+            <input type="text" id="carrier_name" name="carrier_name" required>
+        </div>
+
+        <!-- Shipping Service ID -->
+        <div class="form-group">
+            <label for="shipping_service_id">Shipping Service ID:</label>
+            <input type="text" id="shipping_service_id" name="shipping_service_id" required>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="form-group">
+            <label for="carrier_contact_info">Contact Info:</label>
+            <input type="text" id="carrier_contact_info" name="carrier_contact_info" required>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn">Add Partner</button>
+        </div>
+    </form>
+</div>

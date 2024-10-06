@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="/styles.css">
+<h2>Manage Product Orders</h2>
+<a href="/add-product-order" class="btn">Add New Product Order</a>
+<table class="responsive-table">
+    <thead>
+        <tr>
+            <th>Product Order ID</th>
+            <th>Order ID</th>
+            <th>Product ID</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (productOrders && productOrders.length > 0) { %>
+            <% productOrders.forEach(order => { %>
+                <tr>
+                    <td><%= order.product_order_id %></td>
+                    <td><%= order.order_id %></td>
+                    <td><%= order.product_id %></td>
+                    <td><%= order.product_quantity %></td>
+                    <td><%= order.product_unit_price %></td>
+                    <td><%= order.total_price %></td>
+                    <td>
+                        <a href="/update-product-order/<%= order.product_order_id %>">Update</a> |
+                        <form action="/delete-product-order/<%= order.product_order_id %>" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="6">No product orders available.</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

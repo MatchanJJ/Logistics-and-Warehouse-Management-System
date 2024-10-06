@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+<body>
+    <div class="form-wrapper">
+        <h2>Update Job Role</h2>
+        <form action="/update-job-role/<%= jobRole.employee_role_id %>" method="POST" class="form-container">
+            <div class="form-group">
+                <label for="employee_role_id">Role ID:</label>
+                <input type="text" id="employee_role_id" name="employee_role_id" value="<%= jobRole.employee_role_id %>" readonly required>
+            </div>
+
+            <div class="form-group">
+                <label for="role_name">Role Name:</label>
+                <input type="text" id="role_name" name="role_name" value="<%= jobRole.role_name %>" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn">Update Role</button>
+                <a href="/manage-job-roles" class="btn">Cancel</a> <!-- Link to go back to the job roles management page -->
+            </div>
+        </form>
+    </div>
+</body>
+</html>

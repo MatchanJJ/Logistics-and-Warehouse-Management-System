@@ -1,4 +1,4 @@
-import pool from './test_main/DBconnection/DBConnection.js';
+import pool from '../test_main/DBconnection/DBConnection.js';
 
 // Function to create a new customer
 async function createCustomer(customer_id, customer_first_name, customer_last_name, customer_email, customer_address) {

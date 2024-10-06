@@ -1,6 +1,6 @@
     import path from 'path';
     import { fileURLToPath } from 'url';
-    import pool from "./test_main/DBconnection/DBConnection.js";
+    import pool from './DBConnection.js';
     import express from 'express';
     import employeeManagementToken from './EmployeeManagement.js';
     import warehouseManagementToken from './WarehouseManagement.js';

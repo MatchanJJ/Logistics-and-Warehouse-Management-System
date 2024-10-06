@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Order Status</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- External CSS -->
+</head>
+<body>
+    <div class="form-container">
+        <h2>Update Order Status</h2>
+        <form action="/update-order-status/<%= orderStatus.order_status_id %>" method="POST">
+            <label for="order_status_id">Status ID:</label>
+            <input type="text" id="order_status_id" name="order_status_id" value="<%= orderStatus.order_status_id %>" readonly>
+
+            <label for="order_status_name">Status Name:</label>
+            <input type="text" id="order_status_name" name="order_status_name" value="<%= orderStatus.order_status_name %>" required>
+
+            <button type="submit">Update Status</button>
+        </form>
+    </div>
+</body>
+</html>

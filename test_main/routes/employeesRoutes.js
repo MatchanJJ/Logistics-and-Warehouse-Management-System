@@ -1,30 +1,15 @@
-// import functions
-import EmployeeManager from './EmployeeManagement.js';
+import express from 'express';
+import { getAllEmployees, addEmployee, deleteEmployee } from '../controllers/EmployeeController.js';
 
-// employeesRoutes.js
-import { Router } from 'express';
-const app = Router();
+const router = express.Router();
 
-// Define your routes
-const setupRoutes = (app) => {
-    Router.get('/', (req, res) => {
-        res.render('index', { title: 'Home' });
-    });
+// Route to get all employees
+router.get('/employees', getAllEmployees);
 
-    Router.get('/about', (req, res) => {
-        res.render('about', { title: 'About Us' });
-    });
+// Route to add an employee (usually would be a POST request)
+router.post('/employees', addEmployee);
 
-    // You can add more routes here
+// Route to delete an employee
+router.delete('/employees/:employee_id', deleteEmployee);
 
-    // Use the router in the app
-    app.use('/', Router);
-};
-
-// Route to display the Add Employee form
-app.get('/add-employee', (req, res) => {
-    res.render('add-employee');  // Render the add-employee.ejs form
-});
-
-
-export default setupRoutes;
+export default router;
