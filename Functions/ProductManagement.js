@@ -1,5 +1,4 @@
-import pool from "./test_main/DBconnection/DBConnection.js";
-
+import pool from "./DBConnection.js";
 // FINDING A SPECIFIC PRODUCT
 async function findProduct(product_id) {
     try {

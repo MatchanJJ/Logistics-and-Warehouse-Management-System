@@ -1,5 +1,4 @@
-import pool from './test_main/DBconnection/DBConnection.js'; // Ensure the database connection is correctly imported
-
+import pool from "./DBConnection.js";
 const warehouseManagementToken = {
     // LIST ALL WAREHOUSE
     async listAllWarehouse() {

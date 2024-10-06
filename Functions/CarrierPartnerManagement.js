@@ -1,4 +1,4 @@
-import pool from "./test_main/DBconnection/DBConnection.js";
+import pool from "./DBConnection.js";
 const carrierPartnerTokens = {
     addCarrierPartner,
     updateLogisticsPartner,

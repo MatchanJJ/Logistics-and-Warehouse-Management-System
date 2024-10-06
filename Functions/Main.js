@@ -1,6 +1,6 @@
     import path from 'path';
     import { fileURLToPath } from 'url';
-    import pool from "./test_main/DBconnection/DBConnection.js";
+    import pool from "./DBConnection.js";
     import express from 'express';
     import employeeManagementToken from './EmployeeManagement.js';
     import warehouseManagementToken from './WarehouseManagement.js';
@@ -1467,11 +1467,12 @@ app.post('/add-parcel-category', async (req, res) => {
 
 // Display the form to update a parcel category
 app.get('/update-parcel-category/:id', async (req, res) => {
-    const parcelCategoryId = req.params.id;
+    const parcelCategoryId = req.params.id; 
+    console.log(parcelCategoryId);
     try {
-        const [parcelCategory] = await statusAndCategoriesManagementToken.getParcelCategories(parcelCategoryId);
-        if (parcelCategory) {
-            res.render('layout', { title: 'Update Parcel Category ', content: 'update-parcel-category', parcelCategory });
+        const [rows] = await pool.query("SELECT * FROM parcel_categories WHERE parcel_category_id = ?",[parcelCategoryId]);
+        if (rows.length > 0) {
+            res.render('layout', { title: 'Update Parcel Category ', content: 'update-parcel-category', parcelCategory: rows[0] });
             //res.render('update-parcel-category', { parcelCategory });
         } else {
             res.status(404).send('Parcel category not found.');
@@ -1484,15 +1485,12 @@ app.get('/update-parcel-category/:id', async (req, res) => {
 
 // Handle the form submission to update a parcel category
 app.post('/update-parcel-category/:id', async (req, res) => {
-    const parcelCategoryId = req.params.id;
     const { parcel_category_name } = req.body;
+    const parcelCategoryId = req.params.id;
+
     try {
-        const result = await statusAndCategoriesManagementToken.updateParcelCategory(parcelCategoryId, parcel_category_name);
-        if (result) {
-            res.redirect('/manage-parcel-categories');
-        } else {
-            res.status(404).send('Parcel category not found.');
-        }
+        await statusAndCategoriesManagementToken.updateParcelCategory(parcelCategoryId, parcel_category_name);
+        res.redirect('/manage-parcel-categories'); // Redirect after successful update
     } catch (error) {
         console.error('Error updating parcel category:', error);
         res.status(500).send('Error updating parcel category.');

@@ -1,4 +1,4 @@
-import pool from "./test_main/DBconnection/DBConnection.js";
+import pool from "./DBConnection.js";
 
 // ADDING NEW EMPLOYEE
 async function addEmployee(employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) {
