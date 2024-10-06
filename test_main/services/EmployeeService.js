@@ -1,5 +1,7 @@
 import db from '../DBconnection/DBConnection.js';
 import idGen from '../utils/idGenerator.js';
+import logger from '../utils/logUtil.js';
+import archiver from '../utils/archiveUtil.js';
 
 // get all Employees
 async function getEmployees () {
@@ -14,10 +16,10 @@ async function getEmployees () {
             FROM employees e
             JOIN employee_roles er ON e.employee_role_id = er.employee_role_id;`
         );
-        console.log(rows);
         return rows;
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching employees:', error);
+        return [];
     }
 };
 
@@ -36,12 +38,15 @@ async function viewEmployee(employee_id) {
             WHERE e.employee_id = ?;`, 
             [employee_id]
         );
-
-        console.log(rows);
-        return rows.length > 0 ? rows[0] : null;
+        if (rows.length > 0) {
+            return rows[0];
+        } else {
+            console.log(`Employee with ID ${employee_id} not found.`);
+            return [];
+        }
     } catch (error) {
         console.error('Error retrieving employee:', error);
-        return null;
+        return [];
     }
 };
 
@@ -49,15 +54,21 @@ async function viewEmployee(employee_id) {
 async function addEmployee (employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) {
     try {
         const newID = await idGen.generateID('employees', 'employee_id', 'EMP');
-        console.log(newID);
         const [result] = await db.query(
             `INSERT INTO employees (employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary) VALUES (?, ?, ?, ?, ?, ?);`, 
             [newID, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary]
         );
-        console.log(result);
-        return result.insertId;
+        if (result.affectedRows > 0) {
+            console.log(`Employee added with ID ${newID}.`);
+            const log_message = `Added new employee.`;
+            logger.addEmployeeLog(newID, log_message);
+            return true;
+        } else {
+            console.log('Failed to add customer.');
+            return false;
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error adding employee:', error);
     }
 };
 
@@ -68,10 +79,18 @@ async function assignJobRole (employee_role_id, employee_id) {
             `UPDATE employees SET employee_role_id = ? WHERE employee_id = ?`, 
             [employee_role_id, employee_id]
         );
-        console.log(result);
-        return result.affectedRows > 0;
+        if (result.affectedRows > 0) {
+            console.log(`Employee with ID ${newID} assigned to role with ID ${employee_id}.`);
+            const log_message = `Assigned new role to employee with role_id ${employee_role_id}.`;
+            logger.addEmployeeLog(newID, log_message);
+            return true;
+        } else {
+            console.log('Failed to assign job to employee.');
+            return false;
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error assigning job to employee:', error);
+        return false;
     }
 };
 
@@ -82,10 +101,18 @@ async function updateEmployee (employee_first_name, employee_last_name, contact_
             `UPDATE employees SET employee_first_name = ?, employee_last_name = ?, contact_info = ?, employee_salary = ? WHERE employee_id = ?`, 
             [employee_first_name, employee_last_name, contact_info, employee_salary, employee_id]
         );
-        console.log(result);
-        return result.affectedRows > 0;
+        if (result.affectedRows > 0) {
+            console.log(`Employee details updated with ID ${employee_id}.`);
+            const log_message = `Updated employee data.`;
+            logger.addEmployeeLog(newID, log_message);
+            return true;
+        } else {
+            console.log('Failed to assign job to employee.');
+            return false;
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error updating employee details:', error);
+        return false;
     }
 };
 
@@ -100,14 +127,22 @@ async function removeEmployee (employee_id) {
             console.log(`Cannot remove employee ${employee_id}. They are assigned to a warehouse.`);
             return false; 
         }
-        const [result] = await db.query(`
-            DELETE FROM employees WHERE employee_id = ?;
-        `, [employee_id]);
-        if (result.affectedRows > 0) {
-            console.log(`Employee ${employee_id} successfully removed.`);
-            return true; 
+        // If employee is not assigned to any warehouse, proceed to archive and delete the employee data
+        if (await archiver.archiveEmployee(employee_id)) {
+            const [result] = await db.query(`
+                DELETE FROM employees WHERE employee_id = ?;
+            `, [employee_id]);
+            if (result.affectedRows > 0) {
+                console.log(`Employee ${employee_id} successfully removed.`);
+                const log_message = "Removed employee data."
+                logger.addEmployeeLog(employee_id)
+                return true; 
+            } else {
+                console.log(`No employee found with ID ${employee_id}.`);
+                return false;
+            }
         } else {
-            console.log(`No employee found with ID ${employee_id}.`);
+            console.log("Error archiving and removing employee data.")
             return false;
         }
     } catch (error) {
@@ -126,6 +161,8 @@ async function assignEmployeeToWarehouse(warehouse_id, employee_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Employee ${employee_id} assigned to warehouse ${warehouse_id} successfully.`);
+            const log_message = `Assigned employee to warehouse with warehouse ID ${warehouse_id}`;
+            logger.addEmployeeLog(employee_id, log_message);
             return true;
         } else {
             console.log('Failed to assign employee to warehouse.');
@@ -148,6 +185,8 @@ async function updateEmployeeWarehouse(current_warehouse_id, new_warehouse_id, e
 
         if (result.affectedRows > 0) {
             console.log(`Employee ${employee_id} transferred from warehouse ${current_warehouse_id} to warehouse ${new_warehouse_id}.`);
+            const log_message = `Transferred employee from warehouse:${current_warehouse_id} to warehouse:${new_warehouse_id}.`;
+            logger.addEmployeeLog(employee_id, log_message);
             return true;
         } else {
             console.log(`Failed to transfer employee ${employee_id} to warehouse ${new_warehouse_id}.`);
@@ -169,6 +208,8 @@ async function removeEmployeeFromWarehouse(warehouse_id, employee_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Employee ${employee_id} removed from warehouse ${warehouse_id}.`);
+            const log_message = `Unassigned employee from warehouse:${warehouse_id}`;
+            logger.addEmployeeLog(employee_id, log_message);
             return true;
         } else {
             console.log(`Failed to remove employee ${employee_id} from warehouse ${warehouse_id}.`);

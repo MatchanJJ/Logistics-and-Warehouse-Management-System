@@ -6,9 +6,9 @@ async function addCustomerLog(customer_id, log_description) {
     try {
         const newID = await idGen.generateID('customer_logs', 'customer_log_id', 'CSL');
         const [result] = await db.query(`
-            INSERT INTO customer_logs (employee_log_id, employee_id, employee_log_description)
+            INSERT INTO customer_logs (customer_log_id, customer_id, employee_log_description)
             VALUES (?, ?, ?);
-        `, [newID, employee_id, log_description]);
+        `, [newID, customer_id, log_description]);
 
         return result.affectedRows > 0;
     } catch (error) {
@@ -34,14 +34,13 @@ async function addEmployeeLog(employee_id, log_description) {
 };
 
 // Add a log entry to the order_logs table
-async function addOrderLog(order_id, order_status_id, log_description) {
+async function addOrderLog(order_id, log_description) {
     try {
-        const newID = await idGen.generateID('order_logs', 'order_log_id', 'ORDL');
+        const newID = await idGen.generateID('order_logs', 'order_log_id', 'ORL');
         const [result] = await db.query(`
-            INSERT INTO order_logs (order_log_id, order_id, order_status_id, order_log_description)
+            INSERT INTO order_logs (order_log_id, order_id, order_log_description)
             VALUES (?, ?, ?, ?);
-        `, [newID, order_id, order_status_id, log_description]);
-
+        `, [newID, order_id, log_description]);
         return result.affectedRows > 0;
     } catch (error) {
         console.error('Error adding order log:', error);
@@ -50,13 +49,13 @@ async function addOrderLog(order_id, order_status_id, log_description) {
 };
 
 // Add a log entry to the parcel_inventory_logs table
-async function addParcelInventoryLog(parcel_inventory_id, warehouse_id, log_description) {
+async function addParcelInventoryLog(parcel_id, warehouse_id, log_description) {
     try {
         const newID = await idGen.generateID('parcel_inventory_logs', 'parcel_inventory_log_id', 'PIL');
         const [result] = await db.query(`
             INSERT INTO parcel_inventory_logs (parcel_inventory_log_id, parcel_inventory_id, warehouse_id, parcel_inventory_log_description)
             VALUES (?, ?, ?, ?);
-        `, [newID, parcel_inventory_id, warehouse_id, log_description]);
+        `, [newID, parcel_id, warehouse_id, log_description]);
 
         return result.affectedRows > 0;
     } catch (error) {
@@ -66,13 +65,13 @@ async function addParcelInventoryLog(parcel_inventory_id, warehouse_id, log_desc
 };
 
 // Add a log entry to the product_inventory_logs table
-async function addProductInventoryLog(product_inventory_id, warehouse_id, log_description) {
+async function addProductInventoryLog(product_id, warehouse_id, log_description) {
     try {
         const newID = await idGen.generateID('product_inventory_logs', 'product_inventory_log_id', 'PIL');
         const [result] = await db.query(`
             INSERT INTO product_inventory_logs (product_inventory_log_id, product_inventory_id, warehouse_id, product_inventory_log_description)
             VALUES (?, ?, ?, ?);
-        `, [newID, product_inventory_id, warehouse_id, log_description]);
+        `, [newID, product_id, warehouse_id, log_description]);
 
         return result.affectedRows > 0;
     } catch (error) {

@@ -17,11 +17,14 @@ async function archiveShipment(shipment_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Shipment ${shipment_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive shipment ${shipment_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving shipment:', error);
+        return false;
     }
 };
 
@@ -39,11 +42,14 @@ async function archiveParcel(parcel_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Parcel ${parcel_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive parcel ${parcel_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving parcel:', error);
+        return false;
     }
 };
 
@@ -61,11 +67,14 @@ async function archiveProduct(product_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Product ${product_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive product ${product_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving product:', error);
+        return false;
     }
 };
 
@@ -83,11 +92,14 @@ async function archiveOrder(order_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Order ${order_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive order ${order_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving order:', error);
+        return false;
     }
 };
 
@@ -105,11 +117,14 @@ async function archiveEmployee(employee_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Employee ${employee_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive employee ${employee_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving employee:', error);
+        return false;
     }
 };
 
@@ -127,11 +142,14 @@ async function archiveCustomer(customer_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Customer ${customer_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive customer ${customer_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving customer:', error);
+        return false;
     }
 };
 
@@ -149,11 +167,14 @@ async function archiveWarehouse(warehouse_id) {
 
         if (result.affectedRows > 0) {
             console.log(`Warehouse ${warehouse_id} archived successfully.`);
+            return true;
         } else {
             console.log(`Failed to archive warehouse ${warehouse_id}.`);
+            return false;
         }
     } catch (error) {
         console.error('Error archiving warehouse:', error);
+        return false;
     }
 };
 

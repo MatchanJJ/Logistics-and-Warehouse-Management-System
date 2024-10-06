@@ -154,7 +154,6 @@ CREATE TABLE product_orders (
     order_id VARCHAR(10),
     product_id VARCHAR(10),
     product_quantity INT(6) NOT NULL,
-    product_unit_price DECIMAL(10, 2) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
@@ -182,6 +181,7 @@ CREATE TABLE shipments (
     order_id VARCHAR(10),
     carrier_id VARCHAR(10),
     shipping_service_id VARCHAR(10),
+    current_location TEXT,
     shipping_address TEXT,
     shipment_date TIMESTAMP,
     estimated_delivery_date DATE,
@@ -198,8 +198,7 @@ CREATE TABLE returns (
     return_reason TEXT NOT NULL,
     return_date DATE,
     return_status_id VARCHAR(10),
-    FOREIGN KEY (return_status_id) REFERENCES return_status(return_status_id),
-    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+    FOREIGN KEY (return_status_id) REFERENCES return_status(return_status_id)
 );
 
 CREATE TABLE employees (
@@ -233,7 +232,7 @@ CREATE TABLE customer_logs (
     customer_log_id VARCHAR(10) PRIMARY KEY,
     date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     customer_id VARCHAR(10),
-    customer_log_description TEXT,
+    customer_log_description TEXT
 );
 
 CREATE TABLE shipment_logs (
@@ -263,7 +262,7 @@ CREATE TABLE parcel_inventory_logs (
     date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parcel_id VARCHAR(10),
     warehouse_id VARCHAR(10),
-    parcel_inventory_log_description TEXT,    
+    parcel_inventory_log_description TEXT    
 );
 
 CREATE TABLE employee_logs (
