@@ -11,6 +11,9 @@
     import carrierPartnerTokens from './CarrierPartnerManagement.js';
     import orderTokens from './OrderManagement.js';
     import statusAndCategoriesManagementToken from './StatusAndCategoriesManagement.js';
+    import ProductServiceToken from "/home/matchan/Logistics-and-Warehouse-Management-System/test_main/services/ProductService.js";
+    import ParcelServiceToken from "/home/matchan/Logistics-and-Warehouse-Management-System/test_main/services/ParcelService.js";
+
 
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
@@ -345,7 +348,7 @@ app.get('/inventory', (req, res) => {
 
 app.get('/parcel', async (req, res) => {
     try {
-        const parcels = await parcelManagementToken.listAllParcel(); // Assuming this function exists
+        const parcels = await ParcelServiceToken.getParcels(); // Assuming this function exists
         res.render('layout', {
             title: 'Parcel Inventory',
             content: 'parcel',
@@ -359,7 +362,7 @@ app.get('/parcel', async (req, res) => {
 
 app.get('/product', async (req, res) => {
     try {
-        const products = await productManagementToken.listAllProduct(); // Assuming this function exists
+        const products = await ProductServiceToken.getProducts(); // Assuming this function exists
         res.render('layout', {
             title: 'Product Inventory',
             content: 'product',
@@ -393,6 +396,54 @@ app.get('/product', async (req, res) => {
         res.render('layout', { title: 'Add Parcel', content: 'add-parcel' }); // Render the layout with the add-warehouse content
         //res.render('add-parcel'); // Render the form for adding a new parcel
     });
+    app.post('/add-parcel', async (req, res) => {
+        // Extract data from the form submission
+        const {
+            parcel_category_id,
+            parcel_description,
+            parcel_unit_price,
+            parcel_weight,
+            parcel_length,
+            parcel_width,
+            parcel_height,
+            is_fragile,
+            is_perishable,
+            is_hazardous,
+            is_oversized,
+            is_returnable,
+            is_temperature_sensitive
+        } = req.body;
+    
+        try {
+            // Add the new parcel using the addParcel service method
+            const result = await ParcelServiceToken.addParcel(
+                parcel_category_id,
+                parcel_description,
+                parcel_unit_price,
+                parcel_weight,
+                parcel_length,
+                parcel_width,
+                parcel_height,
+                !!is_fragile, // Convert to boolean
+                !!is_perishable, // Convert to boolean
+                !!is_hazardous, // Convert to boolean
+                !!is_oversized, // Convert to boolean
+                !!is_returnable, // Convert to boolean
+                !!is_temperature_sensitive // Convert to boolean
+            );
+    
+            if (result) {
+                // Redirect or render a success page
+                res.redirect('/parcel');
+            } else {
+                res.status(500).send('Failed to add parcel.');
+            }
+        } catch (error) {
+            console.error('Error adding parcel:', error);
+            res.status(500).send('Error adding parcel.');
+        }
+    });
+    
 
     // Handle the form submission for adding a new parcel
     // Example handler for adding a parcel category
@@ -454,15 +505,64 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
 
     // Handle the form submission for updating a parcel
     app.post('/edit-parcel/:id', async (req, res) => {
-        const parcel_id = req.params.id; // Extract parcel ID from the route parameters
-        const { parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive } = req.body;
+        const parcel_id = req.params.id; 
+        const { 
+            parcel_category_id, 
+            parcel_description, 
+            parcel_unit_price, 
+            parcel_weight, 
+            parcel_length, 
+            parcel_width, 
+            parcel_height, 
+            is_fragile, 
+            is_perishable, 
+            is_hazardous, 
+            is_oversized, 
+            is_returnable, 
+            is_temperature_sensitive 
+        } = req.body;
+        console.log({
+            is_fragile,
+            is_perishable,
+            is_hazardous,
+            is_oversized,
+            is_returnable,
+            is_temperature_sensitive
+        });
+        
+        // Convert checkbox values to boolean
+        const isFragile = !!is_fragile; // true if checked, false if not
+        const isPerishable = !!is_perishable;
+        const isHazardous = !!is_hazardous;
+        const isOversized = !!is_oversized;
+        const isReturnable = !!is_returnable;
+        const isTemperatureSensitive = !!is_temperature_sensitive;
+    
         try {
-            await parcelManagementToken.updateParcel(parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_returnable, is_temperature_sensitive, parcel_id);
-            res.redirect('/parcel'); // Redirect to the home page after updating
+            await ParcelServiceToken.updateParcel(
+                parcel_category_id,
+                parcel_description,
+                parcel_unit_price,
+                parcel_weight,
+                parcel_length,
+                parcel_width,
+                parcel_height,
+                isFragile,
+                isPerishable,
+                isHazardous,
+                isOversized,
+                isReturnable,
+                isTemperatureSensitive,
+                parcel_id
+            );
+            res.redirect('/parcel'); 
         } catch (error) {
+            console.error('Error updating parcel:', error);
             res.status(500).send('Error updating parcel.');
         }
     });
+    
+    
 
     // Route for deleting a parcel
     app.post('/delete-parcel/:id', async (req, res) => {
@@ -482,9 +582,14 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
 
     // Handle the form submission for adding a new product
     app.post('/add-product', async (req, res) => {
-        const { product_id, product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive } = req.body;
+        const { product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive } = req.body;
         try {
-            await productManagementToken.insertProduct(product_id, product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive);
+            await ProductServiceToken.addProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, !!is_fragile, // Convert to boolean
+                !!is_perishable, // Convert to boolean
+                !!is_hazardous, // Convert to boolean
+                !!is_oversized, // Convert to boolean
+                !!is_returnable, // Convert to boolean
+                !!is_temperature_sensitive );
             res.redirect('/product'); // Redirect to the home page after adding
         } catch (error) {
             res.status(500).send('Error adding product.');
@@ -495,7 +600,7 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
         const productId = req.params.parcel_id;
     
         try {
-            const product = await productManagementToken.findProduct(productId); // Await the async function
+            const product = await ProductServiceToken.viewProduct(productId); // Await the async function
     
             if (product) {
                 res.render('layout', { title: 'Product Details', content: 'view-product', product });
@@ -512,7 +617,7 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
     app.get('/edit-product/:id', async (req, res) => {
         const product_id = req.params.id; // Extract product ID from the route parameters
         try {
-            const product = await productManagementToken.findProduct(product_id); // Fetch product details
+            const product = await ProductServiceToken.viewProduct(product_id); // Fetch product details
             if (product) {
                 res.render('layout', { title: 'Edit Product', content: 'edit-product',product }); // Render the layout with the add-warehouse content
                 //res.render('edit-product', { product }); // Render the edit form with product data
@@ -526,21 +631,85 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
 
     // Handle the form submission for updating a product
     app.post('/edit-product/:id', async (req, res) => {
-        const product_id = req.params.id; // Extract product ID from the route parameters
-        const { product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive } = req.body;
+        const product_id = req.params.id; 
+        //console.log('Received req.body:', req.body); // Log the entire req.body
+
+        const { 
+            product_category_id, 
+            product_name, 
+            product_brand, 
+            product_supplier, 
+            product_description, 
+            product_unit_price,
+            product_weight, 
+            product_length, 
+            product_width, 
+            product_height, 
+            is_fragile, 
+            is_perishable, 
+            is_hazardous, 
+            is_oversized,
+            is_returnable,
+            is_temperature_sensitive 
+        } = req.body;
+        
+        console.log({
+            is_fragile,
+            is_perishable,
+            is_hazardous,
+            is_oversized,
+            is_returnable,
+            is_temperature_sensitive
+        });
+        
+        // Convert checkbox values to boolean
+        const isFragile = !!is_fragile; // true if checked, false if not
+        const isPerishable = !!is_perishable;
+        const isHazardous = !!is_hazardous;
+        const isOversized = !!is_oversized;
+        const isReturnable = !!is_returnable;
+        const isTemperatureSensitive = !!is_temperature_sensitive;
+    
         try {
-            await productManagementToken.updateProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id);
-            res.redirect('/product'); // Redirect to the home page after updating
+            await ProductServiceToken.updateProduct(
+                product_category_id, 
+                product_name, 
+                product_brand, 
+                product_supplier, 
+                product_description, 
+                product_unit_price,
+                product_weight, 
+                product_length, 
+                product_width, 
+                product_height,
+                isFragile,
+                isPerishable,
+                isHazardous,
+                isOversized,
+                isReturnable,
+                isTemperatureSensitive,
+                product_id
+            );
+            const [updatedProduct] = await pool.query(
+                `SELECT * FROM products WHERE product_id = ?`, 
+                [product_id]
+            );
+        
+            console.log('Updated Product:', updatedProduct);
+            res.redirect('/product'); 
         } catch (error) {
+            console.error('Error updating product:', error);
             res.status(500).send('Error updating product.');
         }
     });
-
+    
+    
+    
     // Route for deleting a product
     app.post('/delete-product/:id', async (req, res) => {
         const product_id = req.params.id; // Extract product ID from the route parameters
         try {
-            await productManagementToken.deleteProduct(product_id); // Call the delete function
+            await ProductServiceToken.removeProduct(product_id) // Call the delete function
             res.redirect('/product'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting product.');

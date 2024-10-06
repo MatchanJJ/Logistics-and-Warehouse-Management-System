@@ -53,7 +53,7 @@ async function addParcelInventoryLog(parcel_id, warehouse_id, log_description) {
     try {
         const newID = await idGen.generateID('parcel_inventory_logs', 'parcel_inventory_log_id', 'PIL');
         const [result] = await db.query(`
-            INSERT INTO parcel_inventory_logs (parcel_inventory_log_id, parcel_inventory_id, warehouse_id, parcel_inventory_log_description)
+            INSERT INTO parcel_inventory_logs (parcel_inventory_log_id, parcel_id, warehouse_id, parcel_inventory_log_description)
             VALUES (?, ?, ?, ?);
         `, [newID, parcel_id, warehouse_id, log_description]);
 
@@ -69,7 +69,7 @@ async function addProductInventoryLog(product_id, warehouse_id, log_description)
     try {
         const newID = await idGen.generateID('product_inventory_logs', 'product_inventory_log_id', 'PIL');
         const [result] = await db.query(`
-            INSERT INTO product_inventory_logs (product_inventory_log_id, product_inventory_id, warehouse_id, product_inventory_log_description)
+            INSERT INTO product_inventory_logs (product_inventory_log_id, product_id, warehouse_id, product_inventory_log_description)
             VALUES (?, ?, ?, ?);
         `, [newID, product_id, warehouse_id, log_description]);
 

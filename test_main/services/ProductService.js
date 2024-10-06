@@ -36,6 +36,7 @@ async function viewProduct (product_id) {
         const [rows] = await db.query(`
             SELECT
                 p.product_id,
+                pc.product_category_id,
                 p.product_name,
                 p.product_brand,
                 p.product_supplier,
@@ -50,6 +51,7 @@ async function viewProduct (product_id) {
                 p.is_hazardous,
                 p.is_oversized,
                 p.is_returnable,
+                p.is_temperature_sensitive,
                 pc.product_category_name AS category_name
             FROM products p
             JOIN product_categories pc ON p.product_category_id = pc.product_category_id
@@ -90,6 +92,7 @@ async function addProduct (product_category_id, product_name, product_brand, pro
 // update product details
 async function updateProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id) {
     try {
+
         const [result] = await db.query(
             `UPDATE products SET product_category_id = ?, product_name = ?, product_brand = ?, product_supplier = ?, product_description = ?, product_unit_price = ?, product_weight = ?, product_length = ?, product_width = ?, product_height =?, is_fragile = ?, is_perishable = ?, is_hazardous = ?, is_oversized = ?, is_returnable = ?, is_temperature_sensitive = ? WHERE product_id = ?`,
             [product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id]
@@ -169,10 +172,11 @@ async function removeProduct(product_id) {
     }
 };
 
-export default {
+const ProductServiceToken = {
     getProducts,
     viewProduct,
     addProduct,
     updateProduct,
     removeProduct
 };
+export default  ProductServiceToken;

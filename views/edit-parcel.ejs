@@ -50,33 +50,36 @@
         </div>
 
         <!-- Checkbox Group for Parcel Attributes -->
-        <div class="checkbox-group">
-            <div class="form-group">
-                <label for="is_fragile">Fragile:</label>
-                <input type="checkbox" id="is_fragile" name="is_fragile" <%= parcel.is_fragile ? 'checked' : '' %>>
-            </div>
-
-            <div class="form-group">
-                <label for="is_perishable">Perishable:</label>
-                <input type="checkbox" id="is_perishable" name="is_perishable" <%= parcel.is_perishable ? 'checked' : '' %>>
-            </div>
-
-            <div class="form-group">
-                <label for="is_hazardous">Hazardous:</label>
-                <input type="checkbox" id="is_hazardous" name="is_hazardous" <%= parcel.is_hazardous ? 'checked' : '' %>>
-            </div>
-
-            <div class="form-group">
-                <label for="is_returnable">Returnable:</label>
-                <input type="checkbox" id="is_returnable" name="is_returnable" <%= parcel.is_returnable ? 'checked' : '' %>>
-            </div>
-
-            <div class="form-group">
-                <label for="is_temperature_sensitive">Temperature Sensitive:</label>
-                <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive" <%= parcel.is_temperature_sensitive ? 'checked' : '' %>>
-            </div>
+        <div class="form-group">
+            <label for="is_fragile">Fragile:</label>
+            <input type="checkbox" id="is_fragile" name="is_fragile" value="true" <%= parcel.is_fragile ? 'checked' : '' %>>
         </div>
-
+        
+        <div class="form-group">
+            <label for="is_perishable">Perishable:</label>
+            <input type="checkbox" id="is_perishable" name="is_perishable" value="true" <%= parcel.is_perishable ? 'checked' : '' %>>
+        </div>
+        
+        <div class="form-group">
+            <label for="is_hazardous">Hazardous:</label>
+            <input type="checkbox" id="is_hazardous" name="is_hazardous" value="true" <%= parcel.is_hazardous ? 'checked' : '' %>>
+        </div>
+        
+        <div class="form-group">
+            <label for="is_oversized">Oversized:</label>
+            <input type="checkbox" id="is_oversized" name="is_oversized" value="true" <%= parcel.is_oversized ? 'checked' : '' %>>
+        </div>
+        
+        <div class="form-group">
+            <label for="is_returnable">Returnable:</label>
+            <input type="checkbox" id="is_returnable" name="is_returnable" value="true" <%= parcel.is_returnable ? 'checked' : '' %>>
+        </div>
+        
+        <div class="form-group">
+            <label for="is_temperature_sensitive">Temperature Sensitive:</label>
+            <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive" value="true" <%= parcel.is_temperature_sensitive ? 'checked' : '' %>>
+        </div>
+        
         <!-- Submit Button -->
         <div class="form-group">
             <button type="submit" class="btn">Update Parcel</button>

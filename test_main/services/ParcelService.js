@@ -44,6 +44,7 @@ async function viewParcel (parcel_id) {
                 p.is_hazardous,
                 p.is_oversized,
                 p.is_returnable,
+                p.is_temperature_sensitive,
                 pc.parcel_category_name AS category_name
             FROM parcels p
             JOIN parcel_categories pc ON p.parcel_category_id = pc.parcel_category_id
@@ -83,7 +84,7 @@ async function addParcel (parcel_category_id, parcel_description, parcel_unit_pr
 async function updateParcel(parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, parcel_id) {
     try {
         const [result] = await db.query(
-            `UPDATE parcels SET parcel_category_id = ?, _name = ?, parcel_description = ?, parcel_unit_price = ?, parcel_weight = ?, parcel_length = ?, parcel_width = ?, parcel_height =?, is_fragile = ?, is_perishable = ?, is_hazardous = ?, is_oversized = ?, is_returnable = ?, is_temperature_sensitive = ? WHERE parcel_id = ?`,
+            `UPDATE parcels SET parcel_category_id = ?, parcel_description = ?, parcel_unit_price = ?, parcel_weight = ?, parcel_length = ?, parcel_width = ?, parcel_height =?, is_fragile = ?, is_perishable = ?, is_hazardous = ?, is_oversized = ?, is_returnable = ?, is_temperature_sensitive = ? WHERE parcel_id = ?`,
             [parcel_category_id, parcel_description, parcel_unit_price, parcel_weight, parcel_length, parcel_width, parcel_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, parcel_id]
         );
         if (result.affectedRows > 0) {
@@ -162,10 +163,12 @@ async function removeParcel(parcel_id) {
     }
 };
 
-export default {
+const ParcelServiceToken = {
     getParcels,
     viewParcel,
     addParcel,
     updateParcel,
     removeParcel
 };
+
+export default ParcelServiceToken;

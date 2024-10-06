@@ -8,7 +8,7 @@
     <thead>
         <tr>
             <th>Parcel ID</th>
-            <th>Parcel Category ID</th>
+            <th>Parcel Category Name</th>
             <th>Parcel Description</th>
             <th>Parcel Unit Price</th>
             <th>Parcel Weight</th>
@@ -23,7 +23,7 @@
             <% parcels.forEach(parcel => { %>
                 <tr onclick="window.location.href='/view-parcel/<%= parcel.parcel_id %>'" style="cursor: pointer;">
                     <td><%= parcel.parcel_id %></td>
-                    <td><%= parcel.parcel_category_id %></td>
+                    <td><%= parcel.category_name %></td>
                     <td><%= parcel.parcel_description %></td>
                     <td><%= parcel.parcel_unit_price %></td>
                     <td><%= parcel.parcel_weight %></td>
