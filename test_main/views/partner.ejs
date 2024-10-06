@@ -1,0 +1,37 @@
+<h2>Logistics Partners</h2>
+<div>
+    <a href="/add-partner" class="btn">Add New Partner</a>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+</div>
+
+<% if (partners && partners.length > 0) { %>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Carrier ID</th>
+                <th>Carrier Name</th>
+                <th>Shipping Service ID</th>
+                <th>Contact Info</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% partners.forEach(partner => { %>
+            <tr>
+                <td><%= partner.carrier_id %></td>
+                <td><%= partner.carrier_name %></td>
+                <td><%= partner.shipping_service_id %></td>
+                <td><%= partner.carrier_contact_info %></td>
+                <td>
+                    <a href="/update-partner/<%= partner.carrier_id %>" class="btn">Update</a>
+                    <form action="/delete-partner/<%= partner.carrier_id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn" style="background-color: red;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<% } else { %>
+    <p>No logistics partners found.</p>
+<% } %>

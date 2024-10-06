@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+<body>
+    <header>
+        <h1>Logistics and Warehouse Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/warehouses">Warehouses</a></li>
+                <li><a href="/inventories">Inventories</a></li>
+                <li><a href="/employees">Employees</a></li>
+                <li><a href="/customers">Customers</a></li>
+                <li><a href="/orders">Orders</a></li>
+                <li><a href="/shipments">Shipments</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div>
+            <a href="/add-job-role" class="btn">Add New Job Role</a>
+        </div>
+
+        <h2>Job Roles List</h2>
+        <% if (jobRoles && jobRoles.length > 0) { %>
+            <table class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>Role ID</th>
+                        <th>Role Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% jobRoles.forEach(role => { %>
+                    <tr>
+                        <td><%= role.employee_role_id %></td>
+                        <td><%= role.role_name %></td>
+                        <td>
+                            <a href="/update-job-role/<%= role.employee_role_id %>" class="btn">Update</a>
+                            <form action="/delete-job-role/<%= role.employee_role_id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn" style="background-color: red;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No job roles found.</p>
+        <% } %>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Logistics and Warehouse Management System</p>
+    </footer>
+</body>
+</html>

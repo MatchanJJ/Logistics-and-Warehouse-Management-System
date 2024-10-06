@@ -1,8 +1,8 @@
 // imports for routing
 import path from 'path';
 import { fileURLToPath } from 'url';
-import pool from "./DBconnection/DBConnection.js";
 import express from 'express';
+import employeeRoutes from './routes/employeesRoutes.js';
 
 // get __filename and __direname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -22,10 +22,10 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, '../../public'))); // Serve static files
+app.use(express.static(path.join(__dirname, './public'))); // Serve static files
 
 // Set the views directory and view engine
-app.set('views', path.join(__dirname, '../../views'));
+app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
 
 // Home route (blank or simple welcome message)
@@ -35,6 +35,9 @@ app.get('/', (req, res) => {
         content: 'home'  // Render the blank home page
     });
 });
+
+// Use employee routes
+app.use(employeeRoutes);
 
 // Start the server
 app.listen(port, () => {

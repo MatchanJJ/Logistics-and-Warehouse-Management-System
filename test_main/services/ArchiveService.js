@@ -7,6 +7,7 @@ async function getShipmentArchives () {
         return result;
     } catch (error) {
         console.error('Error getting shipment_archive:', error);
+        return [];
     }
 };
 
@@ -17,6 +18,7 @@ async function getParcelArchives () {
         return result;
     } catch (error) {
         console.error('Error getting parcel_archive:', error);
+        return [];
     }
 };
 
@@ -27,6 +29,7 @@ async function getProductArchives () {
         return result;
     } catch (error) {
         console.error('Error getting product_archive:', error);
+        return [];
     }
 };
 
@@ -37,6 +40,7 @@ async function getOrderArchives () {
         return result;
     } catch (error) {
         console.error('Error getting order_archive:', error);
+        return [];
     }
 };
 
@@ -47,6 +51,7 @@ async function getEmployeeArchives () {
         return result;
     } catch (error) {
         console.error('Error getting employee_archive:', error);
+        return [];
     }
 };
 
@@ -57,6 +62,7 @@ async function getCustomerArchives () {
         return result;
     } catch (error) {
         console.error('Error getting customer_archive:', error);
+        return [];
     }
 };
 
@@ -67,6 +73,7 @@ async function getWarehouseArchives () {
         return result;
     } catch (error) {
         console.error('Error getting warehouse_archive:', error);
+        return [];
     }
 };
 

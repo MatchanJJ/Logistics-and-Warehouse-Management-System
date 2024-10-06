@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= employee.employee_first_name %> <%= employee.employee_last_name %> - Employee Details</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <main>
+        <!-- Wrapping all content in one div container -->
+        <div class="container"> 
+            <h2>Details of <%= employee.employee_first_name %> <%= employee.employee_last_name %></h2>
+            
+            <!-- Employee details in a table -->
+            <table>
+                <tr>
+                    <th>ID:</th>
+                    <td><%= employee.employee_id %></td>
+                </tr>
+                <tr>
+                    <th>First Name:</th>
+                    <td><%= employee.employee_first_name %></td>
+                </tr>
+                <tr>
+                    <th>Last Name:</th>
+                    <td><%= employee.employee_last_name %></td>
+                </tr>
+                <tr>
+                    <th>Contact Info:</th>
+                    <td><%= employee.contact_info %></td>
+                </tr>
+                <tr>
+                    <th>Role ID:</th>
+                    <td><%= employee.employee_role_id %></td>
+                </tr>
+                <tr>
+                    <th>Salary:</th>
+                    <td><%= employee.employee_salary %></td>
+                </tr>
+            </table>
+
+            <!-- Actions for editing and deleting the employee -->
+            <div class="actions">
+                <a href="/update-employee/<%= employee.employee_id %>" class="btn">Edit Employee</a> |
+                <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn delete-btn">Delete Employee</button>
+                </form>
+            </div>
+
+            <!-- Back button to go back to employee list -->
+            <a href="/employees" class="btn">Back to Employee List</a>
+        </div>
+    </main>
+
+</body>
+</html>

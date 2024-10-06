@@ -1,0 +1,32 @@
+<h2>Warehouse Availability</h2>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+<% if (warehouseAvailability && warehouseAvailability.length > 0) { %>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Warehouse Type ID</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% warehouseAvailability.forEach(warehouse => { %>
+            <tr>
+                <td><%= warehouse.warehouse_id %></td>
+                <td><%= warehouse.warehouse_address %></td>
+                <td><%= warehouse.capacity %></td>
+                <td><%= warehouse.warehouse_type_id %></td>
+                <td class="<%= warehouse.isAvailable === 'Available' ? 'available' : 'full' %>">
+                    <%= warehouse.isAvailable %>
+                </td>                
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<% } else { %>
+    <p>No warehouses found or all warehouses are unavailable.</p>
+<% } %>
+<a href="/warehouses" class="btn">Back to Warehouse List</a>
