@@ -336,19 +336,6 @@ CREATE TABLE order_archives (
     archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE order_archives (
-    archive_id VARCHAR(10) PRIMARY KEY,
-    order_id VARCHAR(10) NOT NULL,  -- Original order ID
-    customer_id VARCHAR(10),
-    order_date_time TIMESTAMP,
-    order_status_id VARCHAR(10),
-    shipping_address TEXT,
-    shipping_receiver VARCHAR(255),
-    shipping_service_id VARCHAR(10),
-    order_total_amount DECIMAL(10, 2),
-    archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE employee_archives (
     archive_id VARCHAR(10) PRIMARY KEY,
     employee_id VARCHAR(10) NOT NULL,  -- Original employee ID

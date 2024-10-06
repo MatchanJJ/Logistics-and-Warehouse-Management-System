@@ -1,4 +1,4 @@
-import db from '../DBConnection.js';
+import db from '../DBconnection/DBConnection.js';
 import idGen from './idGenerator.js';
 
 // Add a log entry to the employee_logs table

@@ -1,5 +1,5 @@
 import db from '../DBConnection.js';
-import idGen from './idGenerator.js';
+import idGen from '../utils/idGenerator.js';
 
 const token_manager = {
     getOrders,
