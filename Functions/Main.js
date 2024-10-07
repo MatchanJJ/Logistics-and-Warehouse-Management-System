@@ -1028,11 +1028,11 @@ app.post('/update-partner/:id', async (req, res) => {
         res.status(500).send('Error updating partner.');
     }
 });
-
+import CarrierService from '../test_main/services/CarrierService.js';
 // DELETE A PARTNER
 app.post('/delete-partner/:id', async (req, res) => {
     try {
-        await carrierPartnerTokens.deleteLogisticsPartner(req.params.id); // Delete the partner
+        await CarrierService.removeCarrier(req.params.id); // Delete the partner
         res.redirect('/manage-partner'); // Redirect back to partner management page
     } catch (error) {
         console.error('Error deleting partner:', error);
