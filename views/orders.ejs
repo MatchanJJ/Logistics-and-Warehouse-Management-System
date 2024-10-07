@@ -1,13 +1,57 @@
-<a href="/">
-    <img class="home" src="/home-button.png" alt="home">
-</a>
 
-
-<div class="home-container"><h2>Orders</h2>
-    <link rel="stylesheet" href="/styles.css">
-    <div class="button-container">
-        <a href="/manage-orders" class="order-btn">Order Management</a>
-        <a href="/manage-status-and-category" class="order-btn">Status and Category Management</a>
-    </div>
-    
-</divc>
+        <body>
+            <a href="/">
+                <img class="home" src="/home-button.png" alt="home">
+            </a>
+        </a>
+        <a href="/order-logs">
+            <img class="home" src="/log.png" alt="log">
+        </a>
+        <a href="/order-archives">
+            <img class="home" src="/inbox.png" alt="archive">
+        </a>
+                <h2>Orders</h2>
+                <link rel="stylesheet" href="/styles.css">
+                    <a href="/add-orders" class="btn">Add Order</a>
+                    <a href="/manage-orders" class="btn">Order Management</a>
+                    <a href="/manage-status-and-category" class="btn">Status and Category Management</a>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Order Status</th>
+                        <th>Shipping Service</th>
+                        <th>Shipping Address</th>
+                        <th>Shipping Receiver</th>
+                        <th>Order Type</th>
+                        <th>Unit Price</th>
+                        <th>Item Type</th>
+                        <th>Total Amount</th>
+                        <th>Order Items</th>
+                        <th>Total Quantity</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td><%= order.order_id %></td>
+                            <td><%= order.customer_name %></td>
+                            <td><%= order.order_status %></td>
+                            <td><%= order.shipping_service %></td>
+                            <td><%= order.shipping_address %></td>
+                            <td><%= order.shipping_receiver %></td>
+                            <td><%= order.order_type %></td>
+                            <td><%= order.unit_price %></td>
+                            <td><%= order.item_type %></td>
+                            <td><%= order.total_amount %></td>
+                            <td><%= order.order_items %></td>
+                            <td><%= order.total_quantity %></td>
+                            <td><%= order.category %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </body>

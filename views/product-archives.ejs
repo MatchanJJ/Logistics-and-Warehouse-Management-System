@@ -1,0 +1,43 @@
+
+<body>
+    <a href="/product">
+        <img class="back" src="/back-button.png" alt="back">
+    </a> 
+    <h1>Product Archives</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Archive ID</th>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Category ID</th>
+                <th>Weight</th>
+                <th>Dimentsions</th>
+                <th>Supplier</th>
+                <th>Unit Price</th> 
+                <th>Timestamp</th> 
+            </tr>
+        </thead>
+        <tbody>
+            <% if (productArchives.length > 0) { %>
+                <% productArchives.forEach(archive => { %>
+                    <tr>
+                        <td><%= archive.archive_id %></td>
+                        <td><%= archive.product_id %></td>
+                        <td><%= archive.product_name %></td>
+                        <td><%= archive.product_category_id %></td>
+                        <td><%= archive.product_weight %></td>
+                        <td><%= archive.product_length %> x <%= archive.product_width %> x<%= archive.product_height %></td>
+                        <td><%= archive.product_supplier %></td>
+                        <td><%= archive.product_unit_price %></td>
+                        <td><%= archive.archived_at %></td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="5">No archives found.</td> <!-- Adjust colspan as per the number of columns -->
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>

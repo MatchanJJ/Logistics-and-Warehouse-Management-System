@@ -1,0 +1,26 @@
+<body>
+    <a href="/returns">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
+    <h1>Return Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Log ID</th>
+                <th>Return ID</th>
+                <th>Log Message</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% returnLogs.forEach(log => { %>
+                <tr>
+                    <td><%= log.log_id %></td>
+                    <td><%= log.return_id %></td>
+                    <td><%= log.message %></td>
+                    <td><%= log.timestamp %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>

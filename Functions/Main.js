@@ -14,7 +14,10 @@
     import ProductServiceToken from "../test_main/services/ProductService.js";
     import ParcelServiceToken from "../test_main/services/ParcelService.js";
     import WarehouseServices from '../test_main/services/WarehouseServices.js';
-
+    import LogService from '../test_main/services/LogService.js';
+    import ArchiveService from '../test_main/services/ArchiveService.js';
+    import ReturnService from '../test_main/services/ReturnService.js';
+    import OrderService from '../test_main/services/OrderService.js';
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -1066,7 +1069,7 @@ app.post('/delete-partner/:id', async (req, res) => {
 });
 app.get('/orders', async (req, res) => {
     try {
-        const orders = await orderTokens.listAllOrders(); // Fetch all orders
+        const orders = await OrderService.getOrders(); // Fetch all orders
         res.render('layout', {
             title: 'Order Management',
             content: 'orders', // Specify the content to include
@@ -1108,21 +1111,6 @@ app.get('/product-orders', async (req, res) => {
 });
 
 
-// Fetch a specific postal order by ID
-//app.get('/update-postal-order/:id', async (req, res) => {
-//    const postal_order_id = req.params.id;
-//    try {
-//        // Use a function that fetches the postal order by its ID
-//        const [postalOrder] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
-//        
-//        if (postalOrder.length > 0) {
-//            res.render('update-postal-order', { postalOrder: postalOrder[0] }); // Pass the order details to the view
-//        } else {
-//            res.status(404).send('Postal order not found.');
-//        }
-//    } catch (error) {
-//        console.error('Error fetching postal order:', error);
-//        res.status(500).send('Error fetching postal order.');
 //    }
 //});
 // Update Postal Order Route
@@ -1264,32 +1252,6 @@ app.post('/add-product-order', async (req, res) => {
 });
 
 
-
-//// Routes for Warehouse Types
-//app.get('/warehouse-types', statusAndCategoriesManagementToken.listAllWarehouseTypes);
-//app.post('/add-warehouse-type', statusAndCategoriesManagementToken.insertWarehouseType);
-//app.post('/update-warehouse-type/:id', statusAndCategoriesManagementToken.updateWarehouseType);
-//app.post('/delete-warehouse-type/:id', statusAndCategoriesManagementToken.deleteWarehouseType);
-//
-//// Routes for Order Types
-//app.get('/order-types', statusAndCategoriesManagementToken.listAllOrderTypes);
-//app.post('/add-order-type', statusAndCategoriesManagementToken.insertOrderType);
-//app.post('/update-order-type/:id', statusAndCategoriesManagementToken.updateOrderType);
-//app.post('/delete-order-type/:id', statusAndCategoriesManagementToken.deleteOrderType);
-//
-//// Routes for Product Categories
-//app.get('/product-categories', statusAndCategoriesManagementToken.listAllProductCategories);
-//app.post('/add-product-category', statusAndCategoriesManagementToken.insertProductCategory);
-//app.post('/update-product-category/:id', statusAndCategoriesManagementToken.updateProductCategory);
-//app.post('/delete-product-category/:id', statusAndCategoriesManagementToken.deleteProductCategory);
-//
-//// Routes for Parcel Categories
-//app.get('/parcel-categories', statusAndCategoriesManagementToken.listAllParcelCategories);
-//app.post('/add-parcel-category', statusAndCategoriesManagementToken.insertParcelCategory);
-//app.post('/update-parcel-category/:id', statusAndCategoriesManagementToken.updateParcelCategory);
-//app.post('/delete-parcel-category/:id', statusAndCategoriesManagementToken.deleteParcelCategory);
-
-
 // Route to render the "Manage Status and Category" page
 app.get('/manage-status-and-category', (req, res) => {
     res.render('layout', { title: 'Manage Status And Category', content: 'manage-status-and-category'});
@@ -1332,16 +1294,6 @@ app.get('/manage-return-status', async (req, res) => {
     }
 });
 
-// Warehouse Types Management
-//app.get('/manage-warehouse-types', async (req, res) => {
-//    try {
-//        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes();
-//        res.render('manage-warehouse-types', { warehouseTypes });
-//    } catch (error) {
-//        console.error('Error fetching warehouse types:', error);
-//        res.status(500).send('Error fetching warehouse types.');
-//    }
-//});
 
 // Order Types Management
 app.get('/manage-order-types', async (req, res) => {
@@ -1354,27 +1306,6 @@ app.get('/manage-order-types', async (req, res) => {
     }
 });
 
-//// Product Categories Management
-//app.get('/manage-product-categories', async (req, res) => {
-//    try {
-//        const productCategories = await statusAndCategoriesManagementToken.getProductCategories();
-//        res.render('manage-product-categories', { productCategories });
-//    } catch (error) {
-//        console.error('Error fetching product categories:', error);
-//        res.status(500).send('Error fetching product categories.');
-//    }
-//});
-
-// Parcel Categories Management
-//app.get('/manage-parcel-categories', async (req, res) => {
-//    try {
-//        const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
-//        res.render('manage-parcel-categories', { parcelCategories });
-//    } catch (error) {
-//        console.error('Error fetching parcel categories:', error);
-//        res.status(500).send('Error fetching parcel categories.');
-//    }
-//});
 
 
 
@@ -1451,18 +1382,6 @@ app.post('/delete-order-status/:id', async (req, res) => {
     }
 });
 
-//RETURN STATUS
-// Route to display the manage-return-status page
-//app.get('/manage-return-status', async (req, res) => {
-//    try {
-//        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses(); // Fetch return statuses from DB
-//        res.render('layout', { title: 'Manage Return Status', content: 'manage-return-status', returnStatuses });
-//        //res.render('manage-return-status', { returnStatuses });
-//    } catch (error) {
-//        console.error('Error fetching return statuses:', error);
-//        res.status(500).send('Error fetching return statuses.');
-//    }
-//});
 
 // Route to display the add-return-status form
 app.get('/add-return-status', (req, res) => {
@@ -1765,3 +1684,184 @@ app.post('/delete-parcel-category/:id', async (req, res) => {
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
+
+
+//warehouse logs
+app.get('/warehouse-logs', async (req, res) => {
+    try {
+        const logs = await LogService.getWarehouseLogs();
+        res.render('layout', { title: 'Warehouse Logs ', content: 'warehouse-logs', logs });
+    } catch (error) {
+        res.status(500).send('Error fetching warehouse logs');
+    }
+});
+
+//warehouse archives
+app.get('/warehouse-archives', async (req, res) => {
+    try {
+        const archives = await ArchiveService.getWarehouseArchives();
+        res.render('layout', { title: 'Warehouse Archives ', content: 'warehouse-archives', archives });
+    } catch (error) {
+        res.status(500).send('Error fetching warehouse archives');
+    }
+});
+
+//shipment logs
+app.get('/shipment-logs', async (req, res) => {
+    try {
+        const shipmentLogs = await LogService.getShipmentLogs();
+        res.render('layout', { title: 'Shipment Logs ', content: 'shipment-logs', shipmentLogs });
+    } catch (error) {
+        res.status(500).send('Error fetching shipment logs');
+    }
+});
+
+//shipment archives
+app.get('/shipment-archives', async (req, res) => {
+    try {
+        const shipmentArchives = await ArchiveService.getShipmentArchives();
+        res.render('layout', { title: 'Shipment Archives ', content: 'shipment-archives', shipmentArchives });
+    } catch (error) {
+        res.status(500).send('Error fetching shipment archives');
+    }
+});
+
+//customer logs
+app.get('/customer-logs', async (req, res) => {
+    try {
+        const customerLogs = await LogService.getCustomerLogs();
+        res.render('layout', { title: 'Customer Logs ', content: 'customer-logs', customerLogs });
+    } catch (error) {
+        res.status(500).send('Error fetching customer logs');
+    }
+});
+
+//customer archives
+app.get('/customer-archives', async (req, res) => {
+    try {
+        const customerArchives = await ArchiveService.getCustomerArchives();
+        res.render('layout', { title: 'Customer Archives ', content: 'customer-archives', customerArchives });
+    } catch (error) {
+        res.status(500).send('Error fetching customer archives');
+    }
+});
+
+//employee logs
+app.get('/employee-logs', async (req, res) => {
+    try {
+        const employeeLogs = await LogService.getEmployeeLogs();
+        res.render('layout', { title: 'Employee Logs ', content: 'employee-logs', employeeLogs });
+    } catch (error) {
+        res.status(500).send('Error fetching customer logs');
+    }
+});
+
+//employee archives
+app.get('/employee-archives', async (req, res) => {
+    try {
+        const employeeArchives = await ArchiveService.getEmployeeArchives();
+        res.render('layout', { title: 'Employee Archives', content: 'employee-archives', employeeArchives });
+    } catch (error) {
+        res.status(500).send('Error fetching customer archives');
+    }
+});
+
+//get all returns
+app.get('/returns', async (req, res) => {
+    try {
+        const returns = await ReturnService.getAllReturns();
+        res.render('layout', { title: 'Returns', content: 'returns', returns });
+    } catch (error) {
+        res.status(500).send('Error fetching returns');
+    }
+});
+// return logs
+app.get('/return-logs', async (req, res) => {
+    try {
+        const returnLogs = await LogService.getReturnLogs();
+        res.render('layout', { title: 'Return Logs ', content: 'return-logs', returnLogs });
+    } catch (error) {
+        res.status(500).send('Error fetching customer logs');
+    }
+});
+
+
+// add order router
+app.get('/add-orders', (req, res) => {
+    res.render('layout', { title: 'Add Order', content: 'add-orders' });
+});
+
+// Route to handle form submission
+app.post('/add-orders', async (req, res) => {
+    const { customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount } = req.body;
+    const success = await OrderService.addOrder(customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount);
+
+    if (success) {
+        res.redirect('/orders'); // Redirect to the orders page or wherever you want
+    } else {
+        res.status(500).send('Error adding order'); // Handle error response
+    }
+});
+
+// parcel inventory logs
+app.get('/parcel-inventory-logs', async (req, res) => {
+    try {
+        const logs = await LogService.getParcelInventoryLogs();
+        res.render('layout', { title: 'Parcel Inventory Logs ', content: 'parcel-inventory-logs', logs });
+    } catch (error) {
+        res.status(500).send('Error fetching customer logs');
+    }
+});
+
+//parcel archives
+app.get('/parcel-archives', async (req, res) => {
+    try {
+        const archives = await ArchiveService.getParcelArchives();
+        res.render('layout', { title: 'Parcel Archives ', content: 'parcel-archives', archives });
+    } catch (error) {
+        res.status(500).send('Error fetching customer archives');
+    }
+});
+
+
+// product inventory logs
+app.get('/product-inventory-logs', async (req, res) => {
+    try {
+        const inventoryLogs = await LogService.getProductInventoryLogs();
+        res.render('layout', { title: 'Product Inventory Logs ', content: 'product-inventory-logs', inventoryLogs });
+    } catch (error) {
+        res.status(500).send('Error fetching customer logs');
+    }
+});
+
+//product archives
+app.get('/product-archives', async (req, res) => {
+    try {
+        const productArchives = await ArchiveService.getProductArchives();
+        res.render('layout', { title: 'Product Archives ', content: 'product-archives', productArchives });
+    } catch (error) {
+        res.status(500).send('Error fetching customer archives');
+    }
+});
+
+
+//order logs
+
+app.get('/order-logs', async (req, res) => {
+    try {
+        const orderLogs = await LogService.getOrderLogs();
+        res.render('layout', { title: 'Orders Logs ', content: 'order-logs', orderLogs });
+    } catch (error) {
+        res.status(500).send('Error fetching customer logs');
+    }
+});
+
+//order archives
+app.get('/order-archives', async (req, res) => {
+    try {
+        const orderArchives = await ArchiveService.getOrderArchives();
+        res.render('layout', { title: 'Orders Archives ', content: 'order-archives', orderArchives });
+    } catch (error) {
+        res.status(500).send('Error fetching customer archives');
+    }
+});

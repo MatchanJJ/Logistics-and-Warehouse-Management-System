@@ -1,0 +1,33 @@
+<body>
+    <a href="/">
+        <img class="home" src="/home-button.png" alt="home">
+    </a>
+    <a href="/return-logs">
+        <img class="home" src="/log.png" alt="log">
+    </a>
+    
+    <h1>All Returns</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Return ID</th>
+                <th>Order ID</th>
+                <th>Return Reason</th>
+                <th>Return Date</th>
+                <th>Return Status ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% returns.forEach(returnItem => { %>
+                <tr>
+                    <td><%= returnItem.return_id %></td>
+                    <td><%= returnItem.order_id %></td>
+                    <td><%= returnItem.return_reason %></td>
+                    <td><%= returnItem.return_date %></td>
+                    <td><%= returnItem.return_status_id %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

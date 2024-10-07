@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/styles.css">
+<body>
+    <a href="/shipments">
+        <img class="back" src="/back-button.png" alt="hbackome">
+    </a>
+    <h1>Shipment Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Log Message</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% shipmentLogs.forEach(log => { %>
+                <tr>
+                    <td><%= log.id %></td>
+                    <td><%= log.message %></td>
+                    <td><%= log.timestamp %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

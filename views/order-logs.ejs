@@ -1,0 +1,35 @@
+
+<body>
+    <a href="/orders">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>  
+    <h1>Order Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Timestamp</th>
+                <th>Order ID</th>
+                <th>Description</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <% if (orderLogs.length > 0) { %>
+                <% orderLogs.forEach(log => { %>
+                    <tr>
+                        <td><%= log.order_log_id %></td>
+                        <td><%= log.date_time %></td>
+                        <td><%= log.order_id %></td>
+                        <td><%= log.order_log_description %></td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6">No order logs found.</td> <!-- Adjust colspan as per the number of columns -->
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>

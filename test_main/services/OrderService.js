@@ -2,6 +2,7 @@ import db from '../DBconnection/DBConnection.js';
 import idGen from '../utils/idGenerator.js';
 import logger from '../utils/logUtil.js';
 import archiver from '../utils/archiveUtil.js';
+import { DATE, DATETIME, TIMESTAMP } from 'mysql/lib/protocol/constants/types.js';
 
 // get orders
 async function getOrders () {
@@ -198,16 +199,18 @@ async function addOrder(customer_id, item_id, item_quantity, shipping_service_id
     try {
         const order_status_id = 'OST0000001'; // default starting order status
         const newID = await idGen.generateID('orders', 'order_id', 'ORD');
+        const order_date_time = new Date();
+        console.log(order_date_time);
         const [result] = await db.query(`
-            INSERT INTO orders (order_id, customer_id, order_status_id, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO orders (order_id, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?);
         `, [newID, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount]);
         const log_message = `Added new order with ID ${newID}`;
         logger.addOrderLog(newID, log_message);
         if (result.affectedRows > 0) {
-            if (order_type_id === 'postal') {
+            if (order_type_id === 'OTY0000001') {
                 await addPostalOrder(newID, item_id);
-            } else if (order_type_id === 'product') {
+            } else if (order_type_id === 'OTY0000002') {
                 await addProductOrder(newID, item_id, item_quantity);
             }
             console.log('Order added successfully.');

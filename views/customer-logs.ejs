@@ -1,0 +1,26 @@
+
+<body>
+    <a href="/customers">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
+    <h1>Customer Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Log Message</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% customerLogs.forEach(log => { %>
+                <tr>
+                    <td><%= log.id %></td>
+                    <td><%= log.message %></td>
+                    <td><%= log.timestamp %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+<body>
+    <a href="/warehouses">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
+    <h1>Warehouse Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Log Message</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% logs.forEach(log => { %>
+                <tr>
+                    <td><%= log.id %></td>
+                    <td><%= log.message %></td>
+                    <td><%= log.timestamp %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

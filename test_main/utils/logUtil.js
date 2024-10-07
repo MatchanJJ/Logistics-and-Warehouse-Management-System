@@ -76,7 +76,7 @@ async function addOrderLog(order_id, log_description) {
         const newID = await idGen.generateID('order_logs', 'order_log_id', 'ORL');
         const [result] = await db.query(`
             INSERT INTO order_logs (order_log_id, order_id, order_log_description)
-            VALUES (?, ?, ?, ?);
+            VALUES (?, ?, ?);
         `, [newID, order_id, log_description]);
         return result.affectedRows > 0;
     } catch (error) {

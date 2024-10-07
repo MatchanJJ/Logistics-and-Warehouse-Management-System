@@ -1,0 +1,35 @@
+<body>
+    <main>
+        <a href="/parcel">
+            <img class="back" src="/back-button.png" alt="back">
+        </a>    
+        <h1>Parcel Inventory Logs</h1>
+        <% if (logs && logs.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Log ID</th>
+                        <th>Timestamp</th>
+                        <th>Parcel ID</th>
+                        <th>Warehouse ID</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% logs.forEach(log => { %>
+                        <tr>
+                            <td><%= log.parcel_inventory_log_id %></td>
+                            <td><%= log.date_time %></td>
+                            <td><%= log.parcel_id %></td>
+                            <td><%= log.warehouse_id %></td>
+                            <td><%= log.parcel_inventory_log_description %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No parcel inventory logs found.</p>
+        <% } %>
+    </main>
+    
+</body>

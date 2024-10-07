@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/styles.css">
+<body>
+    <a href="/shipments">
+        <img class="home" src="/back-button.png" alt="back">
+    </a>
+    <h1>Shipment Archives</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Archive Message</th>
+                <th>Date Archived</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% shipmentArchives.forEach(archive => { %>
+                <tr>
+                    <td><%= archive.id %></td>
+                    <td><%= archive.message %></td>
+                    <td><%= archive.date_archived %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

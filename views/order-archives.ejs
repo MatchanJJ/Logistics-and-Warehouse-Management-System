@@ -1,0 +1,46 @@
+
+<body>
+    <a href="/orders">
+        <img class="back" src="/back-button.png" alt="back">
+    </a> 
+    <h1>Order Archives</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Archive ID</th>
+                <th>Order ID</th>
+                <th>Customer ID</th>
+                <th>Order Timestamp</th>
+                <th>Order Status ID</th>
+                <th>Shipping Address</th> 
+                <th>Shipping Receiver</th>
+                <th>Receiver ID</th>
+                <th>Total Amount</th>
+                <th>Archive Timestamp</th> 
+            </tr>
+        </thead>
+        <tbody>
+            <% if (orderArchives.length > 0) { %>
+                <% orderArchives.forEach(archive => { %>
+                    <tr>
+                        <td><%= archive.archive_id %></td>
+                        <td><%= archive.order_id %></td>
+                        <td><%= archive.customer_id %></td>
+                        <td><%= archive.order_date_time %></td>
+                        <td><%= archive.order_status_id %></td>
+                        <td><%= archive.shipping_address %></td>
+                        <td><%= archive.shipping_receiver %></td>
+                        <td><%= archive.shipping_service_id %></td>
+                        <td><%= archive.order_total_amount %></td>
+                        <td><%= archive.archived_at %></td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6">No order archives found.</td> <!-- Adjust colspan as per the number of columns -->
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+

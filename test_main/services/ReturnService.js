@@ -76,8 +76,25 @@ async function updateReturnStatus(return_id, new_status_id) {
     }
 };
 
+// Get all returns
+async function getAllReturns() {
+    try {
+        const [rows] = await db.query(`
+            SELECT *
+            FROM returns;
+        `);
+
+        return rows; // Return all the rows fetched from the database
+    } catch (error) {
+        console.error('Error retrieving all returns:', error);
+        return []; // Return an empty array in case of an error
+    }
+};
+
+
 export default {
     addReturn,
     viewReturn,
-    updateReturnStatus
+    updateReturnStatus,
+    getAllReturns
 };

@@ -1,0 +1,32 @@
+<body>
+    <a href="/parcel">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>    
+        <h1>Parcel Archives</h1>
+    <main>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Archive ID</th>
+                        <th>Parcel ID</th>
+                        <th>Parcel Category ID</th>
+                        <th>Parcel Weight</th>
+                        <th>Parcel Description</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% archives.forEach(archive => { %>
+                        <tr>
+                            <td><%= archive.archive_id %></td>
+                            <td><%= archive.parcel_id %></td>
+                            <td><%= archive.parcel_category_id %></td>
+                            <td><%= archive.parcel_weight %></td>
+                            <td><%= archive.parcel_description %></td>
+                            <td><%= archive.archived_at %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+    </main>
+</body>
