@@ -4,6 +4,7 @@ import whs from './WarehouseServices.js';
 
 async function getInventory () {
     try {
+        // update to show only parcel/product type, item_name, parcel/product ID, warehouse_id, warehouse_address, and warehouse_location, total_volume and quantity 
         const [rows] = await db.query (
             `SELECT 
                 'Product' AS inventory_type,
@@ -25,10 +26,14 @@ async function getInventory () {
                 p.is_hazardous AS hazardous,
                 p.is_oversized AS oversized,
                 p.is_temperature_sensitive AS temperature_sensitive
-            FROM product_inventories pi
-            JOIN products p ON pi.product_id = p.product_id
-            JOIN warehouses w ON pi.warehouse_id = w.warehouse_id
-            JOIN warehouse_locations wl ON pi.warehouse_location_id = wl.warehouse_location_id
+            FROM 
+                product_inventories pi
+            JOIN 
+                products p ON pi.product_id = p.product_id
+            JOIN 
+                warehouses w ON pi.warehouse_id = w.warehouse_id
+            JOIN 
+                warehouse_locations wl ON pi.warehouse_location_id = wl.warehouse_location_id
 
             UNION ALL
 
@@ -52,10 +57,14 @@ async function getInventory () {
                 par.is_hazardous AS hazardous,
                 par.is_oversized AS oversized,
                 par.is_temperature_sensitive AS temperature_sensitive
-            FROM parcel_inventories pari
-            JOIN parcels par ON pari.parcel_id = par.parcel_id
-            JOIN warehouses w ON pari.warehouse_id = w.warehouse_id
-            JOIN warehouse_locations wl ON pari.warehouse_location_id = wl.warehouse_location_id;
+            FROM 
+                parcel_inventories pari
+            JOIN 
+                parcels par ON pari.parcel_id = par.parcel_id
+            JOIN 
+                warehouses w ON pari.warehouse_id = w.warehouse_id
+            JOIN 
+                warehouse_locations wl ON pari.warehouse_location_id = wl.warehouse_location_id;
             `
         );
         return rows;
@@ -233,7 +242,7 @@ async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf
         `, [parcel_id, warehouse_id, warehouse_location_id, quantity, total_volume]);
 
         console.log('Parcel assigned to warehouse:', result.insertId);
-        const log_message = `Parcel assigned with parcel_inventory_id:${parcel_id} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
+        const log_message = `Parcel: ${parcel_id} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
         logger.addParcelInventoryLog(parcel_id, warehouse_id, log_message);
         return true;  // Return the result of the insert operation
     } catch (error) {

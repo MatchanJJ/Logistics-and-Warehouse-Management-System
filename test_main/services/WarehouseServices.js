@@ -61,6 +61,8 @@ async function removeWarehouseLocation(warehouse_location_id) {
     }
 };
 
+// WAREHOUSE ENTITY FUNCTIONS
+
 // get warehouses
 async function getWarehouses () {
     try {

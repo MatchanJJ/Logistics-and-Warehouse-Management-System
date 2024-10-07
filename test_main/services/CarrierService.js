@@ -83,6 +83,7 @@ async function removeCarrier(carrier_id) {
 };
 
 export default {
+    getCarriers,
     addCarrier,
     updateCarrier,
     removeCarrier
