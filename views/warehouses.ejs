@@ -29,6 +29,9 @@
                 <td><%= warehouse.warehouse_type_id %></td>
                 <td>
                     <a href="/update-warehouse/<%= warehouse.warehouse_id %>" class="btn">Update</a> 
+                    <form action="/delete-warehouse/<%= warehouse.warehouse_id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn" style="background-color: red;">Delete</button>
+                    </form>
                 </td>
             </tr>
             <% }) %>

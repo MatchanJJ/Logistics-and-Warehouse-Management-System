@@ -1,8 +1,7 @@
-<h2>Add New Customer</h2>
-<form action="/customers" method="POST">
-    <label for="customer_id">Customer ID:</label>
-    <input type="text" id="customer_id" name="customer_id" required><br>
-
+<link rel="stylesheet" href="/styles.css">
+<div class="container">
+    <h2>Add New Customer</h2>
+<form action="/add-customer" method="POST">
     <label for="customer_first_name">First Name:</label>
     <input type="text" id="customer_first_name" name="customer_first_name" required><br>
 
@@ -18,3 +17,5 @@
     <button type="submit">Add Customer</button>
 </form>
 <a href="/customers">Back to Customer List</a>
+
+</div>

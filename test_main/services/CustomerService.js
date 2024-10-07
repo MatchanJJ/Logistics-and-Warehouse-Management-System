@@ -121,3 +121,9 @@ async function removeCustomer(customer_id) {
         return false;
     }
 };
+
+export default {
+    getCustomers,
+    viewCustomerInfo,
+    addCustomer
+};

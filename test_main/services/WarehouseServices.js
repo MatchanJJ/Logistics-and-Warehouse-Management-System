@@ -165,7 +165,7 @@ async function removeWarehouse(warehouse_id) {
     try {
         if (await isEmpty(warehouse_id)) {
             if (await archiver.archiveWarehouse(warehouse_id)) {
-                const [result] = await pool.query(
+                const [result] = await db.query(
                     "DELETE FROM warehouses WHERE warehouse_id = ?",
                     [warehouse_id]
                 );

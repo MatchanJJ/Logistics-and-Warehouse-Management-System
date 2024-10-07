@@ -229,15 +229,25 @@ app.post('/update-employee/:id', async (req, res) => {
     }
 });
 
-
+import EmployeeService from '../test_main/services/EmployeeService.js';
 
     app.post('/delete-employee/:id', async (req, res) => {
         try {
-            await employeeManagementToken.deleteEmployee(req.params.id);
+            await EmployeeService.removeEmployee(req.params.id);
             res.redirect('/employees'); // Redirect back to the employee list after deletion
         } catch (error) {
             console.error('Error deleting employee:', error);
             res.status(500).send('Error deleting employee.');
+        }
+    });
+    import WarehouseServices from '../test_main/services/WarehouseServices.js';
+    app.post('/delete-warehouse/:id', async (req, res) => {
+        const warehouse_id = req.params.id; // Extract parcel ID from the route parameters
+        try {
+            await WarehouseServices.removeWarehouse(warehouse_id) // Call the delete function
+            res.redirect('/warehouses'); // Redirect to the home page after deletion
+        } catch (error) {
+            res.status(500).send('Error deleting parcel.');
         }
     });
 
@@ -255,6 +265,7 @@ app.post('/update-employee/:id', async (req, res) => {
             res.status(500).send('Error fetching warehouses.');  // Update error message
         }
     });
+    
     
     // Route to render form for adding a new warehouse
     app.get('/add-warehouse', (req, res) => {
@@ -568,7 +579,7 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
     app.post('/delete-parcel/:id', async (req, res) => {
         const parcel_id = req.params.id; // Extract parcel ID from the route parameters
         try {
-            await parcelManagementToken.deleteParcel(parcel_id); // Call the delete function
+            await ParcelServiceToken.removeParcel(parcel_id); // Call the delete function
             res.redirect('/parcel'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting parcel.');
@@ -652,7 +663,7 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
             is_returnable,
             is_temperature_sensitive 
         } = req.body;
-        
+
         console.log({
             is_fragile,
             is_perishable,
@@ -737,7 +748,13 @@ app.get('/customers/:id', async (req, res) => {
     try {
         const customer = await customerManagementToken.findCustomerById(customer_id); // Fetch customer details
         if (customer) {
-            res.render('view-customer', { customer }); // Render the view-customer.ejs template
+            res.render('layout', {
+                title: 'Customer Details',
+                content: 'view-customer',  // This should match the customers.ejs file
+                customer  // Pass customers to the view
+            });
+            
+           // res.render('view-customer', { customer }); // Render the view-customer.ejs template
         } else {
             res.status(404).send('Customer not found.');
         }
@@ -753,12 +770,12 @@ app.get('/customers/:id', async (req, res) => {
 app.get('/add-customer', (req, res) => {
     res.render('add-customer'); // Render the form for adding a new customer
 });
-
+import CustomerService from '../test_main/services/CustomerService.js';
 // Handle form submission for adding a new customer
 app.post('/add-customer', async (req, res) => {
-    const { customer_id, customer_first_name, customer_last_name, customer_email, customer_address } = req.body;
+    const { customer_first_name, customer_last_name, customer_email, customer_address } = req.body;
     try {
-        await customerManagementToken.createCustomer(customer_id, customer_first_name, customer_last_name, customer_email, customer_address);
+        await CustomerService.addCustomer(customer_first_name, customer_last_name, customer_email, customer_address);
         res.redirect('/customers'); // Redirect to the customer list after adding
     } catch (error) {
         console.error('Error adding customer:', error);
@@ -1719,8 +1736,6 @@ app.post('/delete-parcel-category/:id', async (req, res) => {
         res.status(500).send('Error deleting parcel category.');
     }
 });
-
-
     // Start the server
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);

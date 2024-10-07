@@ -154,6 +154,7 @@ CREATE TABLE product_orders (
     order_id VARCHAR(10),
     product_id VARCHAR(10),
     product_quantity INT(6) NOT NULL,
+    product_unit_price DECIMAL(10,2) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
