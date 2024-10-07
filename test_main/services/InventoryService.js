@@ -1,5 +1,4 @@
 import db from '../DBconnection/DBConnection.js';
-import idGen from '../utils/idGenerator.js';
 import logger from '../utils/logUtil.js';
 import whs from './WarehouseServices.js';
 
@@ -7,7 +6,6 @@ async function getInventory () {
     try {
         const [rows] = await db.query (
             `SELECT 
-                pi.product_inventory_id AS inventory_id,
                 'Product' AS inventory_type,
                 w.warehouse_address AS warehouse,
                 wl.section AS section,
@@ -34,7 +32,6 @@ async function getInventory () {
             UNION ALL
 
             SELECT 
-                pari.parcel_inventory_id AS inventory_id,
                 'Parcel' AS inventory_type,
                 w.warehouse_address AS warehouse,
                 wl.section AS section,
@@ -65,33 +62,9 @@ async function getInventory () {
     }
 };
 
-// get product_inventory_id based on product_id and warehouse_id
-async function getProductInventoryID (product_id, warehouse_id) {
-    try {
-        // Fetch product_inventory_id
-        const [product_inventory] = await db.query(`
-            SELECT product_inventory_id 
-            FROM product_inventories 
-            WHERE product_id = ? AND warehouse_id = ?;
-        `, [product_id, warehouse_id]);
-
-        if (product_inventory.length === 0) {
-            console.error('Product-Inventory not found');
-            return null;
-        }
-        return product[0];
-    } catch (error) {
-        console.error('Error fetching product_inventory_id.');
-        return null;
-    }
-};
-
 // assign product to warehouse and warehouse location
 async function assignProduct(product_id, warehouse_id, section, aisle, rack, shelf, bin, quantity) {
     try {
-        const newID = await idGen.generateID('product_inventories', 'product_inventory_id', 'PRI');
-        console.log('New Product Inventory ID:', newID);
-        
         // Fetch product dimensions from the products table
         const [product] = await db.query(`
             SELECT product_length, product_width, product_height 
@@ -114,12 +87,12 @@ async function assignProduct(product_id, warehouse_id, section, aisle, rack, she
 
         // Insert into product_inventories
         const [result] = await db.query(`
-            INSERT INTO product_inventories (product_inventory_id, warehouse_id, warehouse_location_id, product_id, quantity, total_volume) 
-            VALUES (?, ?, ?, ?, ?, ?);
-        `, [newID, warehouse_id, warehouse_location_id, product_id, quantity, total_volume]);
+            INSERT INTO product_inventories (product_id, warehouse_id, warehouse_location_id, quantity, total_volume) 
+            VALUES (?, ?, ?, ?, ?);
+        `, [product_id, warehouse_id, warehouse_location_id, quantity, total_volume]);
 
         console.log('Product assigned to warehouse:', result.insertId);
-        const log_message = `Product assigned with product_inventory_id:${newID} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
+        const log_message = `Product:${product_id} assigned to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
         logger.addProductInventoryLog(product_id, warehouse_id, log_message);
         return true;  // Return the result of the insert operation
     } catch (error) {
@@ -137,10 +110,9 @@ async function updateProductStockQuantity(product_id, warehouse_id, new_quantity
             WHERE product_id = ? AND warehouse_id = ?;`,
             [new_quantity, product_id, warehouse_id]
         );
-        const product_inventory_id = await getProductInventoryID(product_id, warehouse_id);
         if (result.affectedRows > 0) {
-            console.log(`Stock quantity updated successfully for product_inventory_id: ${product_inventory_id}`);
-            const log_message = `Update stock quantity to ${new_quantity}`;
+            console.log(`Stock quantity updated successfully for product: ${product_id} in warehouse: ${warehouse_id}.`);
+            const log_message = `Stock quantity updated for product: ${product_id} in warehouse: ${warehouse_id}.`;
             logger.addProductInventoryLog(product_id, warehouse_id, log_message);
             return true;
         } else {
@@ -179,16 +151,15 @@ async function updateProductLocation (product_id, warehouse_id, new_section, new
 // Remove assignment of product to warehouse and warehouse location
 async function removeProductWarehouseLocation(product_id, warehouse_id) {
     try {
-        const product_inventory_id = await getProductInventoryID(product_id, warehouse_id);
         // Get the product inventory details including warehouse_location_id and quantity
         const [rows] = await db.query(`
             SELECT warehouse_location_id, warehouse_id, quantity 
             FROM product_inventories 
-            WHERE product_inventory_id = ?;
-        `, [product_inventory_id]);
+            WHERE product_id = ? AND warehouse_id = ?;
+        `, [product_id, warehouse_id]);
 
         if (rows.length === 0) {
-            console.log(`No product found with inventory ID: ${product_inventory_id}`);
+            console.log(`No product ${product_id} in warehouse ${warehouse_id}`);
             return false;
         }
 
@@ -199,12 +170,12 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
             // First, remove the product from the product_inventories table
             const [result] = await db.query(`
                 DELETE FROM product_inventories 
-                WHERE product_inventory_id = ?;
-            `, [product_inventory_id]);
+                WHERE product_id = ? AND warehouse_id = ?;
+            `, [product_id, warehouse_id]);
             const log_message = `Removed assignment from warehouse:${warehouse_id}`;
             logger.addProductInventoryLog(product_id, null, log_message);
             if (result.affectedRows > 0) {
-                console.log(`Product with inventory ID ${product_inventory_id} successfully removed from warehouse.`);
+                console.log(`Product ${product_id} successfully removed from warehouse ${warehouse_id}.`);
 
                 // After removing the product, remove the warehouse location
                 const warehouseLocationRemoved = await whs.removeWarehouseLocation(warehouse_location_id);
@@ -217,11 +188,11 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
                     return false;
                 }
             } else {
-                console.log(`Failed to remove product with inventory ID ${product_inventory_id}.`);
+                console.log(`Failed to remove product with inventory.`);
                 return false;
             }
         } else {
-            console.log(`Cannot remove product with inventory ID ${product_inventory_id} because the quantity is greater than 0.`);
+            console.log(`Cannot remove product ${product_id} because the quantity is greater than 0.`);
             return false;
         }
     } catch (error) {
@@ -230,33 +201,9 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
     }
 };
 
-// get parcel_inventory_id based on parcel_id and warehouse_id
-async function getParcelInventoryID (parcel_id, warehouse_id) {
-    try {
-        // Fetch parcel_inventory_id
-        const [parcel_inventory] = await db.query(`
-            SELECT parcel_inventory_id 
-            FROM parcel_inventories 
-            WHERE parcel_id = ? AND warehouse_id = ?;
-        `, [parcel_id, warehouse_id]);
-
-        if (parcel_inventory.length === 0) {
-            console.error('Parcel-Inventory not found');
-            return null;
-        }
-        return parcel[0];
-    } catch (error) {
-        console.error('Error fetching parcel_inventory_id.');
-        return null;
-    }
-};
-
 // assign parcel to warehouse and warehouse location
 async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf, bin, quantity) {
     try {
-        const newID = await idGen.generateID('parcel_inventories', 'parcel_inventory_id', 'PIN');
-        console.log('New Parcel Inventory ID:', newID);
-        
         // Fetch parcel dimensions from the parcels table
         const [parcel] = await db.query(`
             SELECT parcel_length, parcel_width, parcel_height 
@@ -274,14 +221,14 @@ async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf
         // Calculate total volume (length * width * height) * quantity
         const total_volume = (parcel_length * parcel_width * parcel_height) * quantity;
 
-        // Get warehouse location ID
+        // Get assign to warehouse location and get ID
         const warehouse_location_id = await whs.addWarehouseLocation(warehouse_id, section, aisle, rack, shelf, bin);
 
         // Insert into parcel_inventories
         const [result] = await db.query(`
-            INSERT INTO parcel_inventories (parcel_inventory_id, warehouse_id, warehouse_location_id, parcel_id, quantity, total_volume) 
-            VALUES (?, ?, ?, ?, ?, ?);
-        `, [newID, warehouse_id, warehouse_location_id, parcel_id, quantity, total_volume]);
+            INSERT INTO parcel_inventories (parcel_id, warehouse_id, warehouse_location_id, quantity, total_volume) 
+            VALUES (?, ?, ?, ?, ?);
+        `, [parcel_id, warehouse_id, warehouse_location_id, quantity, total_volume]);
 
         console.log('Parcel assigned to warehouse:', result.insertId);
         const log_message = `Parcel assigned with parcel_inventory_id:${newID} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
@@ -302,9 +249,8 @@ async function updateParcelStockQuantity(parcel_id, warehouse_id, new_quantity) 
             WHERE parcel_id = ? AND warehouse_id = ?;`,
             [new_quantity, parcel_id, warehouse_id]
         );
-        const parcel_inventory_id = await getParcelInventoryID(parcel_id, warehouse_id);
         if (result.affectedRows > 0) {
-            console.log(`Stock quantity updated successfully for parcel_inventory_id: ${parcel_inventory_id}`);
+            console.log(`Stock quantity updated successfully for parcel: ${parcel_id} at warehouse: ${warehouse_id}`);
             const log_message = `Update stock quantity to ${new_quantity}`;
             logger.addParcelInventoryLog(parcel_id, warehouse_id, log_message);
             return true;
@@ -344,16 +290,15 @@ async function updateParcelLocation (parcel_id, warehouse_id, new_section, new_a
 // Remove assignment of parcel to warehouse and warehouse location
 async function removeParcelWarehouseLocation(parcel_id, warehouse_id) {
     try {
-        const parcel_inventory_id = await getParcelInventoryID(parcel_id, warehouse_id);
         // Get the parcel inventory details including warehouse_location_id and quantity
         const [rows] = await db.query(`
             SELECT warehouse_location_id, warehouse_id, quantity 
             FROM parcel_inventories 
-            WHERE parcel_inventory_id = ?;
-        `, [parcel_inventory_id]);
+            WHERE parcel_id = ? AND warehouse_id = ?;
+        `, [parcel_id, warehouse_id]);
 
         if (rows.length === 0) {
-            console.log(`No parcel found with inventory ID: ${parcel_inventory_id}`);
+            console.log(`No parcel ${parcel_id} found in warehouse ${warehouse_id}`);
             return false;
         }
 
@@ -364,12 +309,12 @@ async function removeParcelWarehouseLocation(parcel_id, warehouse_id) {
             // First, remove the parcel from the parcel_inventories table
             const [result] = await db.query(`
                 DELETE FROM parcel_inventories 
-                WHERE parcel_inventory_id = ?;
-            `, [parcel_inventory_id]);
+                WHERE parcel_id = ? AND warehouse_id = ?;
+            `, [parcel_id, warehouse_id]);
             const log_message = `Removed assignment from warehouse:${warehouse_id}`;
             logger.addParcelInventoryLog(parcel_id, null, log_message);
             if (result.affectedRows > 0) {
-                console.log(`Parcel with inventory ID ${parcel_inventory_id} successfully removed from warehouse.`);
+                console.log(`Parcel ${parcel_id} successfully removed from warehouse ${warehouse_id}.`);
 
                 // After removing the parcel, remove the warehouse location
                 const warehouseLocationRemoved = await whs.removeWarehouseLocation(warehouse_location_id);
