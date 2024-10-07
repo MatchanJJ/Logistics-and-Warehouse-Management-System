@@ -99,6 +99,46 @@ async function getWarehouses () {
     } 
 };
 
+// view warehouse details
+async function viewWarehouse (warehouse_id) {
+    try {
+        const [rows] = await db.query(`
+            SELECT 
+                w.warehouse_id, 
+                w.warehouse_address, 
+                w.capacity AS total_capacity,
+                wt.warehouse_type_name,
+                COALESCE(SUM(
+                    CASE WHEN pi.product_id IS NOT NULL THEN 
+                        pi.quantity * (p.product_length * p.product_width * p.product_height) 
+                    ELSE 0 END
+                    +
+                    CASE WHEN pari.parcel_id IS NOT NULL THEN 
+                        pari.quantity * (par.parcel_length * par.parcel_width * par.parcel_height)
+                    ELSE 0 END
+                ), 0) AS current_capacity_used
+            FROM 
+                warehouses w
+            LEFT JOIN warehouse_types wt ON w.warehouse_type_id = wt.warehouse_type_id
+            LEFT JOIN product_inventories pi ON w.warehouse_id = pi.warehouse_id
+            LEFT JOIN products p ON pi.product_id = p.product_id
+            LEFT JOIN parcel_inventories pari ON w.warehouse_id = pari.warehouse_id
+            LEFT JOIN parcels par ON pari.parcel_id = par.parcel_id
+            WHERE 
+                w.warehouse_id = ?
+            GROUP BY 
+                w.warehouse_id, 
+                w.warehouse_address, 
+                w.capacity, 
+                wt.warehouse_type_name;
+    `[warehouse_id]);
+        return rows;
+    } catch (error) {
+        console.error('Error retrieving warehouses:', error); 
+        return [];
+    } 
+};
+
 // is warehouse empty
 async function isEmpty(warehouse_id) {
     try {
@@ -160,6 +200,30 @@ async function addWarehouse (warehouse_address, warehouse_capacity, warehouse_ty
     }
 };
 
+// update warehouse capacity
+async function updateWarehouseCapacity(warehouse_id, new_capacity) {
+    try {
+        const [result] = await db.query (`
+            UPDATE warehouses
+            SET capacity = ?
+            WHERE warehouse_id = ?
+            `, [new_capacity, warehouse_id]   
+        );
+        if (result.affectedRows > 0) {
+            console.log(`Warehouse ${warehouse_id} capacity updated to ${new_capacity}`);
+            const log_message = `Warehouse ${warehouse_id} capacity updated to ${new_capacity}`;
+            logger.addWarehouseLog(warehouse_id, log_message);
+            return true;
+        } else {
+            console.log(`No warehouse with ID: ${warehouse_id} found.`);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error updating warehouse capacity:', error);
+        return false;
+    }
+};
+
 // remove warehouse
 async function removeWarehouse(warehouse_id) {
     try {
@@ -196,6 +260,7 @@ export default {
     updateWarehouseLocation,
     removeWarehouseLocation,
     getWarehouses,
+    viewWarehouse,
     isEmpty,
     addWarehouse,
     removeWarehouse

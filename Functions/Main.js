@@ -11,8 +11,8 @@
     import carrierPartnerTokens from './CarrierPartnerManagement.js';
     import orderTokens from './OrderManagement.js';
     import statusAndCategoriesManagementToken from './StatusAndCategoriesManagement.js';
-    import ProductServiceToken from "/home/matchan/Logistics-and-Warehouse-Management-System/test_main/services/ProductService.js";
-    import ParcelServiceToken from "/home/matchan/Logistics-and-Warehouse-Management-System/test_main/services/ParcelService.js";
+    import ProductServiceToken from "../test_main/services/ProductService.js";
+    import ParcelServiceToken from "../test_main/services/ParcelService.js";
 
 
     // Get __filename and __dirname in ES modules
