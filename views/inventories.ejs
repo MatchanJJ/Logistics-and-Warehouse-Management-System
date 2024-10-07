@@ -1,11 +1,44 @@
 <a href="/">
     <img class="home" src="/home-button.png" alt="home">
 </a>
-<div class="home-container"><h2>Inventories</h2>
-    <div class="button-container">
-        <a href="/parcel" class="order-btn">Manage Parcel</a>
-        <a href="/product" class="order-btn">Manage Product</a>
-    </div>
-</div>
+<h2>Inventories</h2>
+        <a href="/parcel" class="btn">Manage Parcel</a>
+        <a href="/product" class="btn">Manage Product</a>
+    
 
-
+        <% if (inventory && inventory.length > 0) { %>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Inventory Type</th>
+                        <th>Item Name</th>
+                        <th>Warehouse ID</th>
+                        <th>Warehouse Address</th>
+                        <th>Location in the Warehouse</th>
+                        <th>Total Volume</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% inventory.forEach(item => { %>
+                    <tr>
+                        <td><%= item.inventory_type %></td>
+                        <td><%= item.item_name %></td>
+                        <td><%= item.warehouse_id %></td>
+                        <td><%= item.warehouse %></td>
+                        <td>
+                            Section: <%= item.section %>, 
+                            Aisle: <%= item.aisle %>, 
+                            Rack: <%= item.rack %>, 
+                            Shelf: <%= item.shelf %>, 
+                            Bin: <%= item.bin %>
+                        </td>
+                        <td><%= item.total_volume %></td>
+                        <td><%= item.quantity %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No inventory found.</p>
+        <% } %>

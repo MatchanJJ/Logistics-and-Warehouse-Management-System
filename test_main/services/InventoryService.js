@@ -8,6 +8,7 @@ async function getInventory () {
             `SELECT 
                 'Product' AS inventory_type,
                 w.warehouse_address AS warehouse,
+                w.warehouse_id AS warehouse_id,
                 wl.section AS section,
                 wl.aisle AS aisle,
                 wl.rack AS rack,
@@ -34,6 +35,7 @@ async function getInventory () {
             SELECT 
                 'Parcel' AS inventory_type,
                 w.warehouse_address AS warehouse,
+                w.warehouse_id AS warehouse_id,
                 wl.section AS section,
                 wl.aisle AS aisle,
                 wl.rack AS rack,
@@ -231,7 +233,7 @@ async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf
         `, [parcel_id, warehouse_id, warehouse_location_id, quantity, total_volume]);
 
         console.log('Parcel assigned to warehouse:', result.insertId);
-        const log_message = `Parcel assigned with parcel_inventory_id:${newID} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
+        const log_message = `Parcel assigned with parcel_inventory_id:${parcel_id} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
         logger.addParcelInventoryLog(parcel_id, warehouse_id, log_message);
         return true;  // Return the result of the insert operation
     } catch (error) {

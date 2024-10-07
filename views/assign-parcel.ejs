@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+<div class="container">    
+    <form method="POST" action="/assign-parcel/<%= parcel.parcel_id %>">
+        <h2>Assign <%= parcel.parcel_id %> </h2>
+    <div>
+        <label for="warehouse_id">Warehouse ID:</label>
+        <input type="text" name="warehouse_id" value="<%= parcel.warehouse_id || '' %>" required>
+    </div>
+    <div>
+        <label for="section">Section:</label>
+        <input type="text" name="section" value="<%= parcel.section || '' %>" required>
+    </div>
+    <div>
+        <label for="aisle">Aisle:</label>
+        <input type="text" name="aisle" value="<%= parcel.aisle || '' %>" required>
+    </div>
+    <div>
+        <label for="rack">Rack:</label>
+        <input type="text" name="rack" value="<%= parcel.rack || '' %>" required>
+    </div>
+    <div>
+        <label for="shelf">Shelf:</label>
+        <input type="text" name="shelf" value="<%= parcel.shelf || '' %>" required>
+    </div>
+    <div>
+        <label for="bin">Bin:</label>
+        <input type="text" name="bin" value="<%= parcel.bin || '' %>" required>
+    </div>
+    <div>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" value="<%= parcel.quantity || '' %>" required>
+    </div>
+    <button type="submit">Assign Parcel</button>
+</form>
+<% if (message) { %>
+    <p><%= message %></p>
+<% } %>
+
+
+</div>
+

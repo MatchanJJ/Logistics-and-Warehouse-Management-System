@@ -13,7 +13,7 @@
     import statusAndCategoriesManagementToken from './StatusAndCategoriesManagement.js';
     import ProductServiceToken from "../test_main/services/ProductService.js";
     import ParcelServiceToken from "../test_main/services/ParcelService.js";
-
+    import WarehouseServices from '../test_main/services/WarehouseServices.js';
 
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
@@ -240,7 +240,6 @@ import EmployeeService from '../test_main/services/EmployeeService.js';
             res.status(500).send('Error deleting employee.');
         }
     });
-    import WarehouseServices from '../test_main/services/WarehouseServices.js';
     app.post('/delete-warehouse/:id', async (req, res) => {
         const warehouse_id = req.params.id; // Extract parcel ID from the route parameters
         try {
@@ -254,7 +253,7 @@ import EmployeeService from '../test_main/services/EmployeeService.js';
     // Warehouse route
     app.get('/warehouses', async (req, res) => {
         try {
-            const warehouses = await warehouseManagementToken.listAllWarehouse(); // Correct the variable name
+            const warehouses = await WarehouseServices.getWarehouses(); // Correct the variable name
             res.render('layout', {
                 title: 'Warehouse List',
                 content: 'warehouses',  // Assuming you have a 'warehouses.ejs' file
@@ -350,13 +349,6 @@ app.get('/check-availability', async (req, res) => {
 });
 
 
-app.get('/inventory', (req, res) => {
-    res.render('manage-inventory', {
-        title: 'Manage Inventory',
-        content: 'manage-inventory'
-    });
-});
-
 app.get('/parcel', async (req, res) => {
     try {
         const parcels = await ParcelServiceToken.getParcels(); // Assuming this function exists
@@ -386,21 +378,19 @@ app.get('/product', async (req, res) => {
 });
 
 
-    app.get('/inventories', async (req, res) => {
-        try {
-            const parcels = await parcelManagementToken.listAllParcel(); // Fetch parcel inventory
-            const products = await productManagementToken.listAllProduct(); // Fetch product inventory
-            res.render('layout', {
-                title: 'Inventories',
-                content: 'inventories', // Assuming you will create inventories.ejs
-                parcels,
-                products
-            });
-        } catch (error) {
-            console.error('Error fetching inventories:', error);
-            res.status(500).send('Error fetching inventories.');
-        }
-    });
+app.get('/inventories', async (req, res) => {
+    try {
+        const inventory = await InventoryService.getInventory(); // Call the function to fetch inventory data
+        res.render('layout', {
+            title: 'Warehouse Inventory',
+            content: 'inventories', // Assuming you have 'inventory.ejs' for the inventory table
+            inventory // Pass the inventory data to the view
+        });
+    } catch (error) {
+        console.error('Error retrieving inventory:', error);
+        res.status(500).send('Error retrieving inventory.');
+    }
+});
 
     // Route for adding a new parcel (form rendering)
     app.get('/add-parcel', (req, res) => {
@@ -494,7 +484,41 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
+// Route to render the assign parcel form with current parcel details
+app.get('/assign-parcel/:id', async (req, res) => {
+    const parcelId = req.params.id;
 
+    try {
+        // Fetch current parcel details from the database
+        const [parcel] = await pool.query(`
+            SELECT parcel_id, parcel_length, parcel_width, parcel_height, parcel_description 
+            FROM parcels 
+            WHERE parcel_id = ?;
+        `, [parcelId]);
+
+        if (parcel.length === 0) {
+            return res.status(404).send('Parcel not found'); // Handle case where parcel is not found
+        }
+
+        // Render the EJS file for assigning parcels with current parcel details
+        res.render('assign-parcel', { message: null, parcel: parcel[0] });
+    } catch (error) {
+        console.error('Error fetching parcel details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route to handle the form submission
+app.post('/assign-parcel/:id', async (req, res) => {
+    const parcelId = req.params.id; // Get the parcel ID from the URL
+    const { warehouse_id, section, aisle, rack, shelf, bin, quantity } = req.body;
+
+    const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin, quantity);
+    const message = success ? 'Parcel successfully assigned.' : 'Failed to assign parcel. Please check your inputs.';
+
+    // Re-render the form with the success or failure message
+    res.render('assign-parcel', { message, parcel: { parcel_id: parcelId, ...req.body } });
+});
 
 
 
@@ -1029,6 +1053,7 @@ app.post('/update-partner/:id', async (req, res) => {
     }
 });
 import CarrierService from '../test_main/services/CarrierService.js';
+import InventoryService from '../test_main/services/InventoryService.js';
 // DELETE A PARTNER
 app.post('/delete-partner/:id', async (req, res) => {
     try {
