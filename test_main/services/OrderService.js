@@ -16,7 +16,7 @@ async function getOrders () {
                 o.shipping_address AS shipping_address, 
                 o.shipping_receiver AS shipping_receiver,
                 ot.order_type_name AS order_type,
-                po.product_unit_price AS unit_price,
+                p.product_unit_price AS unit_price,
                 'product' AS item_type,
                 o.order_total_amount AS total_amount,
                 GROUP_CONCAT(p.product_name SEPARATOR ', ') AS order_items,
@@ -99,7 +99,6 @@ async function getOrderData(order_id) {
 
 // add postal order
 async function addPostalOrder(order_id, parcel_id) {
-    const newID = await idGen.generateID('postal_orders', 'postal_order_id', 'POL');
     try {
         const [parcel] = await db.query(`
             SELECT parcel_unit_price
@@ -108,13 +107,13 @@ async function addPostalOrder(order_id, parcel_id) {
         `, [parcel_id]);
         const { total_price } = parcel[0];
         const [result] = await db.query(`
-            INSERT INTO postal_orders (postal_order_id, order_id, parcel_id, total_price) 
-            VALUES (?, ?, ?, ?);
-        `, [newID, order_id, parcel_id, total_price]
+            INSERT INTO postal_orders (order_id, parcel_id, total_price) 
+            VALUES (?, ?, ?);
+        `, [order_id, parcel_id, total_price]
         );
         if (result.affectedRows > 0) {
-            console.log(`Added new postal order with ID ${newID}`);
-            const log_message = `Added new postal order with ID ${newID}`;
+            console.log(`Added new postal order`);
+            const log_message = `Added new postal order with parcel_id ${parcel_id}`;
             logger.addOrderLog(order_id, log_message);
             return true;
         } else {
@@ -128,7 +127,6 @@ async function addPostalOrder(order_id, parcel_id) {
 
 // add product order
 async function addProductOrder(order_id, product_id, product_quantity) {
-    const newID = await idGen.generateID('product_orders', 'product_order_id', 'PRO');
     try {
         const [product] = await db.query(`
             SELECT product_unit_price
@@ -138,12 +136,12 @@ async function addProductOrder(order_id, product_id, product_quantity) {
         const { unit_price } = parcel[0];
         const total_price = unit_price * product_quantity;
         const [result] = await db.query(`
-            INSERT INTO product_orders (product_order_id, order_id, product_id, product_quantity, total_price) 
-            VALUES (?, ?, ?, ?, ?);
+            INSERT INTO product_orders (order_id, product_id, product_quantity, total_price) 
+            VALUES (?, ?, ?, ?);
         `, [newID, order_id, product_id, product_quantity, total_price]);
         if (result.affectedRows > 0) {
-            console.log(`Added new product order with ID ${newID}`);
-            const log_message = `Added new product order with ID ${newID}`;
+            console.log(`Added new product order`);
+            const log_message = `Added new product order with product_id ${product_id}`;
             logger.addOrderLog(order_id, log_message);
             return true;
         } else {
@@ -198,7 +196,7 @@ async function removeProductOrder(order_id, product_id) {
 // Add a new order
 async function addOrder(customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) {
     try {
-        const order_status_id = 'OST0000001';
+        const order_status_id = 'OST0000001'; // default starting order status
         const newID = await idGen.generateID('orders', 'order_id', 'ORD');
         const [result] = await db.query(`
             INSERT INTO orders (order_id, customer_id, order_status_id, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) 
