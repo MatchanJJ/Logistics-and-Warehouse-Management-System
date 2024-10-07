@@ -13,8 +13,7 @@
     <thead>
         <tr>
             <th>Customer ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Full Name</th>
             <th>Email</th>
             <th>Address</th>
             <th>Actions</th>
@@ -24,10 +23,9 @@
         <% customers.forEach(customer => { %>
         <tr onclick="window.location.href='/customer/<%= customer.customer_id %>'" style="cursor: pointer;">
             <td><%= customer.customer_id %></td>
-            <td><%= customer.customer_first_name %></td>
-            <td><%= customer.customer_last_name %></td>
-            <td><%= customer.customer_email %></td>
-            <td><%= customer.customer_address %></td>
+            <td><%= customer.customer_name %></td>
+            <td><%= customer.email %></td>
+            <td><%= customer.address %></td>
             <td> 
                 <a href="/update-customer/<%= customer.customer_id %>"><button>Update</button></a>
                 </form>

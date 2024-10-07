@@ -7,18 +7,18 @@
         <thead>
             <tr>
                 <th>Log ID</th>
+                <th>Timestamp</th>
                 <th>Return ID</th>
                 <th>Log Message</th>
-                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
             <% returnLogs.forEach(log => { %>
                 <tr>
-                    <td><%= log.log_id %></td>
+                    <td><%= log.return_log_id %></td>
+                    <td><%= log.date_time %></td>
                     <td><%= log.return_id %></td>
-                    <td><%= log.message %></td>
-                    <td><%= log.timestamp %></td>
+                    <td><%= log.return_log_description %></td>
                 </tr>
             <% }) %>
         </tbody>

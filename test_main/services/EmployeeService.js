@@ -95,11 +95,13 @@ async function assignJobRole (employee_role_id, employee_id) {
 };
 
 // update employee details
-async function updateEmployee (employee_first_name, employee_last_name, contact_info, employee_salary, employee_id) {
+async function updateEmployee (employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, employee_id) {
+    const newID = await idGen.generateID('employee', 'emloyee_id', 'EMP');
+
     try {
         const [result] = await db.query(
-            `UPDATE employees SET employee_first_name = ?, employee_last_name = ?, contact_info = ?, employee_salary = ? WHERE employee_id = ?`, 
-            [employee_first_name, employee_last_name, contact_info, employee_salary, employee_id]
+            `UPDATE employees SET employee_first_name = ?, employee_last_name = ?, contact_info = ?, employee_role_id = ?,employee_salary = ? WHERE employee_id = ?`, 
+            [employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, employee_id]
         );
         if (result.affectedRows > 0) {
             console.log(`Employee details updated with ID ${employee_id}.`);

@@ -7,17 +7,27 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Archive Message</th>
-                <th>Date Archived</th>
+                <th>Archive ID</th>
+                <th>Employee ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Contact Info</th>
+                <th>Role ID</th>
+                <th>Salary</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
             <% employeeArchives.forEach(archive => { %>
                 <tr>
-                    <td><%= archive.id %></td>
-                    <td><%= archive.message %></td>
-                    <td><%= archive.date_archived %></td>
+                    <td><%= archive.archive_id %></td>
+                    <td><%= archive.employee_id %></td>
+                    <td><%= archive.employee_first_name %></td>
+                    <td><%= archive.employee_last_name %></td>
+                    <td><%= archive.contact_info %></td>
+                    <td><%= archive.employee_role_id %></td>
+                    <td><%= archive.employee_salary %></td>
+                    <td><%= archive.archived_at %></td>
                 </tr>
             <% }) %>
         </tbody>

@@ -8,17 +8,23 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Archive Message</th>
-                <th>Date Archived</th>
+                <th>Archive ID</th>
+                <th>Warehouse ID</th>
+                <th>Warehouse Address</th>
+                <th>Capacity</th>
+                <th>Warehouse Type ID</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
             <% archives.forEach(archive => { %>
                 <tr>
-                    <td><%= archive.id %></td>
-                    <td><%= archive.message %></td>
-                    <td><%= archive.date_archived %></td>
+                    <td><%= archive.archive_id %></td>
+                    <td><%= archive.warehouse_id %></td>
+                    <td><%= archive.warehouse_address %></td>
+                    <td><%= archive.capacity %></td>
+                    <td><%= archive.warehouse_type_id %></td>
+                    <td><%= archive.archived_at %></td>
                 </tr>
             <% }) %>
         </tbody>

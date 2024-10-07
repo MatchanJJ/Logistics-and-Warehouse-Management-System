@@ -190,7 +190,7 @@ async function addWarehouse (warehouse_address, warehouse_capacity, warehouse_ty
         if (result.affectedRows > 0) {
             console.log('Warehouse added with ID:', newID);
             const log_message = `Warehouse added with ID ${newID}`;
-            logger.addWarehouseLog(warehouse_id, log_message);
+            logger.addWarehouseLog(newID, log_message);
             return true;
         } else {
             console.log('Error adding warehouse.');
@@ -256,7 +256,70 @@ async function removeWarehouse(warehouse_id) {
         return false;
     }
 };
+async function getWarehouseById(warehouse_id) {
+    try {
+        const [rows] = await db.query(`
+            SELECT 
+                w.warehouse_id, 
+                w.warehouse_address, 
+                w.capacity AS total_capacity,
+                wt.warehouse_type_name,
+                COALESCE(SUM(
+                    CASE WHEN pi.product_id IS NOT NULL THEN 
+                        pi.quantity * (p.product_length * p.product_width * p.product_height) 
+                    ELSE 0 END
+                    +
+                    CASE WHEN pari.parcel_id IS NOT NULL THEN 
+                        pari.quantity * (par.parcel_length * par.parcel_width * par.parcel_height)
+                    ELSE 0 END
+                ), 0) AS current_capacity_used
+            FROM 
+                warehouses w
+            LEFT JOIN warehouse_types wt ON w.warehouse_type_id = wt.warehouse_type_id
+            LEFT JOIN product_inventories pi ON w.warehouse_id = pi.warehouse_id
+            LEFT JOIN products p ON pi.product_id = p.product_id
+            LEFT JOIN parcel_inventories pari ON w.warehouse_id = pari.warehouse_id
+            LEFT JOIN parcels par ON pari.parcel_id = par.parcel_id
+            WHERE 
+                w.warehouse_id = ?
+            GROUP BY 
+                w.warehouse_id, 
+                w.warehouse_address, 
+                w.capacity, 
+                wt.warehouse_type_name;
+        `, [warehouse_id]);
 
+        return rows.length > 0 ? rows[0] : null; // Return the first row or null if no rows found
+    } catch (error) {
+        console.error('Error retrieving warehouse by ID:', error); 
+        return null; // Return null in case of error
+    } 
+}
+
+async function getWarehouseLocationId(warehouse_id, section, aisle, rack, shelf, bin) {
+    try {
+        const [rows] = await db.query(`
+            SELECT warehouse_location_id
+            FROM warehouse_locations
+            WHERE warehouse_id = ?
+              AND section = ?
+              AND aisle = ?
+              AND rack = ?
+              AND shelf = ?
+              AND bin = ?
+        `, [warehouse_id, section, aisle, rack, shelf, bin]);
+
+        if (rows.length > 0) {
+            return rows[0].warehouse_location_id; // Return the first matching warehouse location ID
+        } else {
+            console.log('No warehouse location found with the given details.');
+            return null; // Return null if no match is found
+        }
+    } catch (error) {
+        console.error('Error retrieving warehouse location ID:', error);
+        return null; // Return null in case of error
+    }
+}
 export default {
     addWarehouseLocation,
     updateWarehouseLocation,
@@ -265,5 +328,8 @@ export default {
     viewWarehouse,
     isEmpty,
     addWarehouse,
-    removeWarehouse
+    removeWarehouse,
+    updateWarehouseCapacity,
+    getWarehouseById,
+    getWarehouseLocationId
 };

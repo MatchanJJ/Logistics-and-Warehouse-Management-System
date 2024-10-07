@@ -1,0 +1,39 @@
+
+<div class="container">
+
+    <body>
+        <a href="/warehouses">
+            <img class="back" src="/back-button.png" alt="back">
+        </a>
+        <h2>Update Warehouse Location</h2>
+        
+        <form action="/update-warehouse-location/<%= warehouse_id %>" method="POST">
+            <div class="form-group">
+                <label for="section">New Section:</label>
+                <input type="text" id="section" name="section" required placeholder="Enter new section">
+            </div>
+            
+            <div class="form-group">
+                <label for="aisle">New Aisle:</label>
+                <input type="text" id="aisle" name="aisle" required placeholder="Enter new aisle">
+            </div>
+            
+            <div class="form-group">
+                <label for="rack">New Rack:</label>
+                <input type="text" id="rack" name="rack" required placeholder="Enter new rack">
+            </div>
+            
+            <div class="form-group">
+                <label for="shelf">New Shelf:</label>
+                <input type="text" id="shelf" name="shelf" required placeholder="Enter new shelf">
+            </div>
+            
+            <div class="form-group">
+                <label for="bin">New Bin:</label>
+                <input type="text" id="bin" name="bin" required placeholder="Enter new bin">
+            </div>
+            
+            <button type="submit" class="btn">Update Location</button>
+        </form>
+    </body>
+</div>

@@ -43,6 +43,8 @@
             
             <td>
                 <a href="/edit-product/<%= product.product_id %>"><button>Edit</button></a> 
+                <a href="/assign-product/<%= product.product_id %>"><button>Assign Product</button></a> 
+
                 <form action="/delete-product/<%= product.product_id %>" method="POST" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>

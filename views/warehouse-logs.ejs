@@ -8,17 +8,19 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Log Message</th>
+                <th>Log ID</th>
                 <th>Timestamp</th>
+                <th>Warehouse ID</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
             <% logs.forEach(log => { %>
                 <tr>
-                    <td><%= log.id %></td>
-                    <td><%= log.message %></td>
-                    <td><%= log.timestamp %></td>
+                    <td><%= log.warehouse_log_id %></td>
+                    <td><%= log.date_time %></td>
+                    <td><%= log.warehouse_id %></td>
+                    <td><%= log.warehouse_log_description %></td>
                 </tr>
             <% }) %>
         </tbody>

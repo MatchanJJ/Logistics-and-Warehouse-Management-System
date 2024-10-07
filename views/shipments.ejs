@@ -20,11 +20,12 @@
             <th>Shipment ID</th>
             <th>Order ID</th>
             <th>Carrier ID</th>
-            <th>Shipping Service ID</th>
+            <th>Current Location</th>
             <th>Shipping Address</th>
             <th>Shipment Date</th>
             <th>Estimated Delivery Date</th>
-            <th>Status ID</th>
+            <th>Shipping Service</th>
+            <th>Shipment Status</th>
             <th>Actions</th> <!-- Added actions column -->
         </tr>
     </thead>
@@ -34,11 +35,12 @@
             <td><%= shipment.shipment_id %></td>
             <td><%= shipment.order_id %></td>
             <td><%= shipment.carrier_id %></td>
-            <td><%= shipment.shipping_service_id %></td>
+            <td><%= shipment.current_location %></td>
             <td><%= shipment.shipping_address %></td>
             <td><%= shipment.shipment_date %></td>
             <td><%= shipment.estimated_delivery_date %></td>
-            <td><%= shipment.shipment_status_id %></td>
+            <td><%= shipment.shipping_service %></td>
+            <td><%= shipment.shipment_status %></td>
             <td>
                 <a href="/update-shipment/<%= shipment.shipment_id %>" class="btn">Update</a> 
                 <form action="/delete-shipment/<%= shipment.shipment_id %>" method="POST" style="display:inline;">

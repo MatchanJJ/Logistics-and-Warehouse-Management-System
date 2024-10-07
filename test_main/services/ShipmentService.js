@@ -20,7 +20,7 @@ async function getShipments() {
             FROM shipments s
             JOIN shipping_services ss ON s.shipping_service_id = ss.shipping_service_id
             JOIN orders o ON s.order_id = o.order_id
-            JOIN shipment_statuses st ON s.shipment_status_id = st.shipment_status_id
+            JOIN shipment_status st ON s.shipment_status_id = st.shipment_status_id
             LEFT JOIN carriers c ON s.carrier_id = c.carrier_id;
         `);
         return rows;

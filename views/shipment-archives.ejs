@@ -7,17 +7,31 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Archive Message</th>
-                <th>Date Archived</th>
+                <th>Archive ID</th>
+                <th>Shipment ID</th>
+                <th>Order ID</th>
+                <th>Carrier ID</th>
+                <th>Shipment Service ID</th>
+                <th>Shipping Address</th>
+                <th>Shipment Date</th>
+                <th>Estimated Delivery Date</th>
+                <th>Shipment Status ID</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
             <% shipmentArchives.forEach(archive => { %>
                 <tr>
-                    <td><%= archive.id %></td>
-                    <td><%= archive.message %></td>
-                    <td><%= archive.date_archived %></td>
+                    <td><%= archive.archive_id %></td>
+                    <td><%= archive.shipment_id %></td>
+                    <td><%= archive.order_id %></td>
+                    <td><%= archive.carrier_id %></td>
+                    <td><%= archive.shipping_service_id %></td>
+                    <td><%= archive.shipping_address %></td>
+                    <td><%= archive.shipment_date %></td>
+                    <td><%= archive.estimated_delivery_date %></td>
+                    <td><%= archive.shipment_status_id %></td>
+                    <td><%= archive.archived_at %></td>
                 </tr>
             <% }) %>
         </tbody>

@@ -1,12 +1,11 @@
 <a href="/">
     <img class="home" src="/home-button.png" alt="home">
-    
 </a>
 <a href="/warehouse-logs">
     <img class="home" src="/log.png" alt="log">
 </a>
 <a href="/warehouse-archives">
-    <img class="home" src="/inbox.png" alt="archives">
+    <img class="home" src="/inbox.png" alt="archive">
 </a>
 
 <h2>Warehouse List</h2>
@@ -14,9 +13,9 @@
     <a href="/add-warehouse" class="btn">Add Warehouse</a>
     <a href="/manage-partner" class="btn">Manage Logistics Partner</a>
     <a href="/check-availability" class="btn">Check Warehouse Availability</a>
-
     <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 </div>
+
 <% if (warehouses && warehouses.length > 0) { %>
     <table border="1">
         <thead>
@@ -38,7 +37,7 @@
                 <td><%= warehouse.warehouse_address %></td>
                 <td><%= warehouse.total_capacity %></td>
                 <td><%= warehouse.current_capacity_used %></td>
-                <td><%= warehouse.total_capacity - warehouse.current_capacity_used %></td> <!-- Calculate available capacity -->
+                <td><%= warehouse.total_capacity - warehouse.current_capacity_used %></td>
                 <td><%= warehouse.warehouse_type_name %></td>
                 <td>Waiting</td>
                 <td>

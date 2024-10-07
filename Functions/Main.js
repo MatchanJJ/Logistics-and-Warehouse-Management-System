@@ -59,9 +59,9 @@ app.get('/add-employee', (req, res) => {
 
 // Route to handle form submission for adding a new employee
 app.post('/add-employee', async (req, res) => {
-    const { employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body; // Extract form fields
+    const { employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body; // Extract form fields
     try {
-        await employeeManagementToken.addEmployee(employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary); // Add the new employee
+        await EmployeeService.addEmployee( employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary); // Add the new employee
         res.redirect('/employees'); // Redirect to employee list after successful addition
     } catch (error) {
         console.error('Error adding new employee:', error);
@@ -161,7 +161,7 @@ app.post('/add-job-role', async (req, res) => {
     // Employee route
     app.get('/employees', async (req, res) => {
         try {
-            const employees = await employeeManagementToken.listAllEmployees();
+            const employees = await EmployeeService.getEmployees();
             res.render('layout', {
                 title: 'Employee List',
                 content: 'employee',  // This should match the employees.ejs file
@@ -215,11 +215,11 @@ app.post('/update-employee/:id', async (req, res) => {
     const { employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary } = req.body; // Extract form fields
 
     // Log the values being updated for debugging
-    console.log('Updating employee:', { id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary });
+    console.log('Updating employee:', { id, employee_first_name, employee_last_name, contact_info, employee_salary, employee_role_id });
 
     try {
         // Call your management token to update employee details
-        const updated = await employeeManagementToken.updateEmployee(employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary, id);
+        const updated = await EmployeeService.updateEmployee(employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary,  id);
         
         if (updated) {
             res.redirect(`/employee/${id}`); // Redirect to the employee details page after updating
@@ -279,12 +279,12 @@ import EmployeeService from '../test_main/services/EmployeeService.js';
 
  // Handle form submission for adding a new warehouse
 app.post('/add-warehouse', async (req, res) => {
-    const { warehouse_id, warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
+    const { warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
     try {
         // Log the inputs to debug
-        console.log('Adding warehouse:', { warehouse_id, warehouse_address, capacity, warehouse_type_id });
+        console.log('Adding warehouse:', {warehouse_address, capacity, warehouse_type_id });
 
-        await warehouseManagementToken.addWarehouse(warehouse_id, warehouse_address, capacity, warehouse_type_id);
+        await WarehouseServices.addWarehouse( warehouse_address, capacity, warehouse_type_id);
         res.redirect('/warehouses'); // Redirect to the warehouse list after adding
     } catch (error) {
         console.error('Error adding warehouse:', error);
@@ -292,24 +292,42 @@ app.post('/add-warehouse', async (req, res) => {
     }
 });
 
-    
-    // Route to render form for updating a warehouse
-app.get('/update-warehouse/:id', async (req, res) => {
-    const { id } = req.params; // Extract warehouse ID from the route parameters
-    try {
-        const warehouse = await warehouseManagementToken.findWarehouseById(id); // Fetch warehouse details by ID
-        if (warehouse) {
-            res.render('layout', { title: 'Update Warehouse', content: 'update-warehouse', warehouse }); // Render the layout with the add-warehouse content
+app.get('/update-warehouse-capacity/:id', async (req, res) => {
+    const warehouse_id = req.params.id;
+    const warehouse = await WarehouseServices.getWarehouseById(warehouse_id);
 
-            //res.render('update-warehouse', { warehouse }); // Render the update form with the warehouse details
-        } else {
-            res.status(404).send('Warehouse not found.');
-        }
-    } catch (error) {
-        console.error('Error fetching warehouse for update:', error);
-        res.status(500).send('Error fetching warehouse.');
+    if (warehouse) {
+        res.render('layout', { title: 'Update Warehouse Capacity', content: 'update-warehouse-capacity' ,warehouse}); // Render the layout with the add-warehouse content
+
+       // res.render('update-warehouse-capacity', { warehouse });
+    } else {
+        res.status(404).send('Warehouse not found');
     }
 });
+
+// POST route to handle the form submission
+app.post('/update-warehouse-capacity/:id', async (req, res) => {
+    const warehouse_id = req.params.id;
+    const new_capacity = req.body.new_capacity;
+
+    const updateSuccess = await WarehouseServices.updateWarehouseCapacity(warehouse_id, new_capacity);
+
+    if (updateSuccess) {
+        res.redirect('/warehouses'); // Redirect to a relevant page after success
+    } else {
+        res.status(500).send('Error updating warehouse capacity');
+    }
+});
+
+    // Route to render form for updating a warehouse
+// Assuming you have an Express router instance
+app.get('/update-warehouse/:id', async (req, res) => {
+    const warehouse_id = req.params.id;
+    res.render('layout', { title: 'Update Warehouse', content: 'update-warehouse', warehouse_id }); // Render the layout with the add-warehouse content
+
+    //res.render('update-warehouse', { warehouse_id });
+});
+
 
 // Handle form submission for updating a warehouse
 app.post('/update-warehouse/:id', async (req, res) => {
@@ -321,6 +339,56 @@ app.post('/update-warehouse/:id', async (req, res) => {
     } catch (error) {
         console.error('Error updating warehouse:', error);
         res.status(500).send('Error updating warehouse.');
+    }
+});
+
+app.get('/update-warehouse-location/:warehouse_id', async (req, res) => {
+    const warehouseId = req.params.warehouse_id;
+    const { section, aisle, rack, shelf, bin } = req.query; // Assuming location details are sent via query params
+
+    try {
+        // Retrieve the warehouse location ID based on the location details
+        const warehouseLocationId = await WarehouseServices.getWarehouseLocationId(warehouseId, section, aisle, rack, shelf, bin);
+
+        if (warehouseLocationId) {
+            // Render the form with the location details if found
+            res.render('layout', { 
+                title: 'Update Warehouse Location', 
+                content: 'update-warehouse-location',  
+                warehouse_id: warehouseId, 
+                location: { section, aisle, rack, shelf, bin, warehouse_location_id: warehouseLocationId } 
+            });
+        } else {
+            // Handle the case where no warehouse location was found
+            res.status(404).send(`No warehouse location found with the given details for warehouse ID: ${warehouseId}`);
+        }
+    } catch (error) {
+        // Handle any unexpected errors during the retrieval
+        console.error('Error retrieving warehouse location:', error);
+        res.status(500).send('Error retrieving warehouse location details');
+    }
+});
+
+
+// POST route to handle form submission and update warehouse location
+app.post('/update-warehouse-location/:warehouse_id', async (req, res) => {
+    const warehouseLocationId = req.params.warehouse_id;
+    const { section, aisle, rack, shelf, bin } = req.body;
+
+    try {
+        // Call your async function to update the warehouse location
+        const updateSuccessful = await WarehouseServices.updateWarehouseLocation(warehouseLocationId, section, aisle, rack, shelf, bin);
+
+        if (updateSuccessful) {
+            // Redirect to the list of warehouses after successful update
+            res.redirect('/warehouses');
+        } else {
+            // Handle the case where no warehouse location was found
+            res.status(404).send(`No warehouse location found with ID: ${warehouseLocationId}`);
+        }
+    } catch (error) {
+        // Handle any unexpected errors during the update
+        res.status(500).send('Error updating warehouse location');
     }
 });
 
@@ -519,9 +587,15 @@ app.post('/assign-parcel/:id', async (req, res) => {
     const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin, quantity);
     const message = success ? 'Parcel successfully assigned.' : 'Failed to assign parcel. Please check your inputs.';
 
-    // Re-render the form with the success or failure message
-    res.render('assign-parcel', { message, parcel: { parcel_id: parcelId, ...req.body } });
+    // Render the 'layout' template, injecting 'assign-parcel' content
+    res.render('layout', { 
+        title: 'Assign Parcel', 
+        content: 'assign-parcel', // This is the view/partial to be rendered inside layout
+        message, 
+        parcel: { parcel_id: parcelId, ...req.body } 
+    });
 });
+
 
 
 
@@ -612,6 +686,51 @@ app.post('/assign-parcel/:id', async (req, res) => {
             res.status(500).send('Error deleting parcel.');
         }
     });
+
+    // Route to fetch product details and render the assignment form
+app.get('/assign-product/:id', async (req, res) => {
+    const productId = req.params.id;
+
+    try {
+        // Fetch current product details from the database
+        const [product] = await pool.query(`
+            SELECT product_id, product_length, product_width, product_height, product_description 
+            FROM products 
+            WHERE product_id = ?;
+        `, [productId]);
+
+        if (product.length === 0) {
+            return res.status(404).send('Product not found'); // Handle case where product is not found
+        }
+
+        // Render the EJS file for assigning products with current product details
+        res.render('assign-product', { message: null, product: product[0] });
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route to handle the form submission for product assignment
+app.post('/assign-product/:id', async (req, res) => {
+    const productId = req.params.id; // Get the product ID from the URL
+    const { warehouse_id, section, aisle, rack, shelf, bin, quantity } = req.body;
+
+    const success = await InventoryService.assignProduct(productId, warehouse_id, section, aisle, rack, shelf, bin, quantity);
+    res.redirect('/product'); // Redirect to the home page after adding
+
+    const message = success ? 'Product successfully assigned.' : 'Failed to assign product. Please check your inputs.';
+
+    // Render the 'layout' template, injecting 'assign-product' content
+    res.render('layout', { 
+        title: 'Assign Product', 
+        content: 'assign-product', // This is the view/partial to be rendered inside layout
+        message, 
+        product: { product_id: productId, ...req.body } 
+    });
+});
+
+    
 
     app.get('/add-product', (req, res) => {
         res.render('layout', { title: 'Add Product', content: 'add-product' }); // Render the layout with the add-warehouse content
@@ -757,7 +876,7 @@ app.post('/assign-parcel/:id', async (req, res) => {
 // Customer route to list all customers
 app.get('/customers', async (req, res) => {
     try {
-        const customers = await customerManagementToken.listAllCustomers(); // Fetch all customers
+        const customers = await CustomerService.getCustomers(); // Fetch all customers
         res.render('layout', {
             title: 'Customer List',
             content: 'customer',  // This should match the customers.ejs file
@@ -795,7 +914,7 @@ app.get('/customers/:id', async (req, res) => {
 
 // Route to render form for adding a new customer
 app.get('/add-customer', (req, res) => {
-    res.render('add-customer'); // Render the form for adding a new customer
+    res.render('layout', { title: 'Add Customer', content: 'add-customer' }); // Render the layout with the add-warehouse content
 });
 import CustomerService from '../test_main/services/CustomerService.js';
 // Handle form submission for adding a new customer
@@ -852,7 +971,7 @@ app.post('/customers/:id', async (req, res) => {
     const customer_id = req.params.id;
     const { customer_first_name, customer_last_name, customer_email, customer_address } = req.body;
     try {
-        const updated = await customerManagementToken.updateCustomer(customer_id, customer_first_name, customer_last_name, customer_email, customer_address);
+        const updated = await CustomerService.updateCustomer(customer_id, customer_first_name, customer_last_name, customer_email, customer_address);
         if (updated) {
             res.redirect(`/customers/${customer_id}`); // Redirect to the customer's detail page after update
         } else {
@@ -901,7 +1020,7 @@ app.post('/delete-customer/:id', async (req, res) => {
 
 app.get('/shipments', async (req, res) => {
     try {
-        const shipments = await shipmentManagementToken.listAllShipment(); // Fetch all shipments
+        const shipments = await ShipmentService.getShipments(); // Fetch all shipments
         res.render('layout', {
             title: 'Shipment List',
             content: 'shipments', // This should match the shipments.ejs file
@@ -940,7 +1059,7 @@ app.get('/add-shipment', (req, res) => {
 app.post('/add-shipment', async (req, res) => {
     const { shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id } = req.body;
     try {
-        await shipmentManagementToken.addShipment(shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id);
+        await ShipmentService.addShipment( order_id, carrier_id, shipping_service_id, shipping_address,  estimated_delivery_date);
         res.redirect('/shipments'); // Redirect to the shipment list after adding
     } catch (error) {
         console.error('Error adding shipment:', error);
@@ -982,7 +1101,7 @@ app.post('/update-shipment/:id', async (req, res) => {
 app.post('/delete-shipment/:id', async (req, res) => {
     const shipment_id = req.params.id; // Extract shipment ID from the route parameters
     try {
-        await shipmentManagementToken.deleteShipment(shipment_id); // Call the delete function
+        await ShipmentService.removeShipment(shipment_id); // Call the delete function
         res.redirect('/shipments'); // Redirect to the shipment list after deletion
     } catch (error) {
         console.error('Error deleting shipment:', error);
@@ -1017,9 +1136,9 @@ app.get('/add-partner', (req, res) => {
 
 // Route to handle form submission for adding a new partner
 app.post('/add-partner', async (req, res) => {
-    const { carrier_id, carrier_name, shipping_service_id, carrier_contact_info } = req.body; // Extract form fields
+    const {  carrier_name, shipping_service_id, carrier_contact_info } = req.body; // Extract form fields
     try {
-        await carrierPartnerTokens.addCarrierPartner(carrier_id, carrier_name, shipping_service_id, carrier_contact_info); // Add the new partner
+        await CarrierService.addCarrier( carrier_name, shipping_service_id, carrier_contact_info); // Add the new partner
         res.redirect('/manage-partner'); // Redirect to partner management page after successful addition
     } catch (error) {
         console.error('Error adding new partner:', error);
@@ -1048,7 +1167,7 @@ app.post('/update-partner/:id', async (req, res) => {
     const { carrier_name, shipping_service_id, carrier_contact_info } = req.body; // Extract updated values
     const { id } = req.params; // Get the partner ID from the route
     try {
-        await carrierPartnerTokens.updateLogisticsPartner(carrier_name, shipping_service_id, carrier_contact_info, id); // Update the partner
+        await CarrierService.updateCarrier(carrier_name, shipping_service_id, carrier_contact_info, id); // Update the partner
         res.redirect(`/manage-partner`); // Redirect to the partner details page after update
     } catch (error) {
         console.error('Error updating partner:', error);
@@ -1057,6 +1176,7 @@ app.post('/update-partner/:id', async (req, res) => {
 });
 import CarrierService from '../test_main/services/CarrierService.js';
 import InventoryService from '../test_main/services/InventoryService.js';
+import ShipmentService from '../test_main/services/ShipmentService.js';
 // DELETE A PARTNER
 app.post('/delete-partner/:id', async (req, res) => {
     try {

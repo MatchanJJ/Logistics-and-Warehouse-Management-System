@@ -1,0 +1,21 @@
+
+</body>
+<div class="container">
+    <body>
+        <a href="/warehouses">
+            <img class="back" src="/back-button.png" alt="back">
+        </a>
+        <h1>Update Warehouse Capacity</h1>
+        <form action="/update-warehouse-capacity/<%= warehouse.warehouse_id %>" method="POST">
+            <label for="capacity">New Capacity:</label>
+            <input type="number" id="capacity" name="new_capacity" required>
+            <button type="submit" class="btn">Update Capacity</button>
+        </form>
+    
+        <h2>Current Warehouse Details</h2>
+        <p>Warehouse ID: <%= warehouse.warehouse_id %></p>
+        <p>Address: <%= warehouse.warehouse_address %></p>
+        <p>Total Capacity: <%= warehouse.total_capacity %></p>
+        <p>Current Capacity Used: <%= warehouse.current_capacity_used %></p>
+    </body>
+</div>

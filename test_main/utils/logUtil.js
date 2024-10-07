@@ -6,7 +6,7 @@ async function addCustomerLog(customer_id, log_description) {
     try {
         const newID = await idGen.generateID('customer_logs', 'customer_log_id', 'CSL');
         const [result] = await db.query(`
-            INSERT INTO customer_logs (customer_log_id, customer_id, employee_log_description)
+            INSERT INTO customer_logs (customer_log_id, customer_id, customer_log_description)
             VALUES (?, ?, ?);
         `, [newID, customer_id, log_description]);
 

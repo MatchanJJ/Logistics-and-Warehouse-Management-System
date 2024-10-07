@@ -7,17 +7,19 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Log Message</th>
+                <th>Log ID</th>
                 <th>Timestamp</th>
+                <th>Shipment ID</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
             <% shipmentLogs.forEach(log => { %>
                 <tr>
-                    <td><%= log.id %></td>
-                    <td><%= log.message %></td>
-                    <td><%= log.timestamp %></td>
+                    <td><%= log.shipment_log_id %></td>
+                    <td><%= log.date_time %></td>
+                    <td><%= log.shipment_id %></td>
+                    <td><%= log.shipment_log_description %></td>
                 </tr>
             <% }) %>
         </tbody>
