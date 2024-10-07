@@ -125,5 +125,7 @@ async function removeCustomer(customer_id) {
 export default {
     getCustomers,
     viewCustomerInfo,
-    addCustomer
+    addCustomer,
+    updateCustomer,
+    removeCustomer
 };

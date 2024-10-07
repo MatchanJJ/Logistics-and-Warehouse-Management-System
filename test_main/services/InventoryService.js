@@ -342,12 +342,10 @@ async function removeParcelWarehouseLocation(parcel_id, warehouse_id) {
 
 export default { 
     getInventory,
-    getProductInventoryID,
     assignProduct,
     updateProductStockQuantity,
     updateProductLocation,
     removeProductWarehouseLocation,
-    getParcelInventoryID,
     assignParcel,
     updateParcelStockQuantity,
     updateParcelLocation,
