@@ -34,7 +34,6 @@ async function getParcelInventoryLogs () {
 async function getProductInventoryLogs () {
     try {
         const [result] = await db.query('SELECT * FROM product_inventory_logs ORDER BY date_time DESC');
-        console.log('Query result:', result); // Log the result for debugging
         return result;
     } catch (error) {
         console.error('Error getting product_inventory_logs: ', error);

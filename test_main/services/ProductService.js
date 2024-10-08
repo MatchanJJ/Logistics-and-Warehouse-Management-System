@@ -57,8 +57,7 @@ async function viewProduct (product_id) {
             JOIN product_categories pc ON p.product_category_id = pc.product_category_id
             WHERE p.product_id = ?;
         `, [product_id]);
-
-        console.log(rows);
+         
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         console.error('Error finding product:', error);

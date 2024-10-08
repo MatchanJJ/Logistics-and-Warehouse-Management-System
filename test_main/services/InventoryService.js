@@ -103,7 +103,7 @@ async function assignProduct(product_id, warehouse_id, section, aisle, rack, she
             VALUES (?, ?, ?, ?, ?);
         `, [product_id, warehouse_id, warehouse_location_id, quantity, total_volume]);
 
-        console.log('Product assigned to warehouse:', result.insertId);
+        console.log('Product assigned to warehouse:', product_id);
         const log_message = `Product:${product_id} assigned to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
         logger.addProductInventoryLog(product_id, warehouse_id, log_message);
         return true;  // Return the result of the insert operation
