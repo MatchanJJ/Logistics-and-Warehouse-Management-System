@@ -104,7 +104,8 @@ async function addPostalOrder(order_id, parcel_id) {
             FROM parcels
             WHERE parcel_id = ?;
         `, [parcel_id]);
-        const { total_price } = parcel[0];
+        const total_price = parcel[0].parcel_unit_price;
+        console.log("price",total_price);
         const [result] = await db.query(`
             INSERT INTO postal_orders (order_id, parcel_id, total_price) 
             VALUES (?, ?, ?);
@@ -195,7 +196,7 @@ async function removeProductOrder(order_id, product_id) {
 // Add a new order
 async function addOrder(customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) {
     try {
-        const order_status_id = 'OST0000001'; // default starting order status
+        const order_status_id = 'OS001'; // default starting order status - change depend on the DM populate/ finalize soon
         const newID = await idGen.generateID('orders', 'order_id', 'ORD');
         const order_date_time = new Date();
         console.log(order_date_time);
@@ -206,9 +207,9 @@ async function addOrder(customer_id, item_id, item_quantity, shipping_service_id
         const log_message = `Added new order with ID ${newID}`;
         logger.addOrderLog(newID, log_message);
         if (result.affectedRows > 0) {
-            if (order_type_id === 'OTY0000001') {
+            if (order_type_id === 'OT001') {
                 await addPostalOrder(newID, item_id);
-            } else if (order_type_id === 'OTY0000002') {
+            } else if (order_type_id === 'OT002') {
                 await addProductOrder(newID, item_id, item_quantity);
             }
             console.log('Order added successfully.');

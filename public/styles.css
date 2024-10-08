@@ -96,10 +96,13 @@ main {
 /* Table Styles */
 table {
     width: 100%; /* Full width */
-    border-collapse: collapse; /* Merge borders */
+    border-collapse: separate; /* Allow rounded borders */
+    border-spacing: 0; /* Remove gaps between table cells */
     margin: 20px 0; /* Margin around the table */
     background: #fff; /* White background for the table */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    border-radius: 10px; /* Rounded corners for the whole table */
+    overflow: hidden; /* Ensure rounded corners work correctly */
 }
 
 table th,
@@ -111,8 +114,9 @@ table td {
 
 /* Header Styles */
 table th {
-    background: #494b4d; /* Blue background for header */
+    background: #494b4d; /* Dark gray background for header */
     color: #fff; /* White text color */
+    border-top: none; /* Remove border from the top */
 }
 
 /* Row Styles */
@@ -123,6 +127,25 @@ table tr:nth-child(even) {
 table tr:hover {
     background: #e0e0e0; /* Light gray for hovered rows */
 }
+
+/* Rounded corners for the header */
+thead th:first-child {
+    border-top-left-radius: 10px; /* Top left corner */
+}
+
+thead th:last-child {
+    border-top-right-radius: 10px; /* Top right corner */
+}
+
+/* Rounded corners for the last row */
+tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 10px; /* Bottom left corner */
+}
+
+tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 10px; /* Bottom right corner */
+}
+
 
 /* Button Styles */
 button {
@@ -310,7 +333,8 @@ label {
 }
 
 .form-group input[type="text"],
-.form-group input[type="number"] {
+.form-group input[type="number"], 
+.form-group input[type="decimal"] {
     width: 100%;
     padding: 10px;
     font-size: 16px;

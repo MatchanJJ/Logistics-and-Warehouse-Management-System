@@ -1143,7 +1143,7 @@ app.get('/add-shipment', (req, res) => {
 
 // Handle form submission for adding a new shipment
 app.post('/add-shipment', async (req, res) => {
-    const { shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id } = req.body;
+    const { order_id, carrier_id, shipping_service_id, shipping_address,  estimated_delivery_date } = req.body;
     try {
         await ShipmentService.addShipment( order_id, carrier_id, shipping_service_id, shipping_address,  estimated_delivery_date);
         res.redirect('/shipments'); // Redirect to the shipment list after adding
@@ -1432,7 +1432,7 @@ app.get('/add-postal-order', (req, res) => {
 app.post('/add-postal-order', async (req, res) => {
     const { postal_order_id, order_id, parcel_id, total_price } = req.body; // Extract form fields
     try {
-        await orderTokens.addPostalOrders(postal_order_id, order_id, parcel_id, total_price); // Add the new postal order to the database
+        await OrderService.addPostalOrder( order_id, parcel_id); // Add the new postal order to the database
         res.redirect('/postal-orders'); // Redirect back to postal orders list after successful addition
     } catch (error) {
         console.error('Error adding new postal order:', error);

@@ -62,7 +62,7 @@ async function getShipmentDetails(shipment_id) {
 // Add a new shipment for an order
 async function addShipment(order_id, carrier_id, shipping_service_id, shipping_address, estimated_delivery_date) {
     try {
-        const shipment_status_id = 'SST0000001';
+        const shipment_status_id = 'SS001'; //change depending on the populate id convention
         const newID = await idGen.generateID('shipments', 'shipment_id', 'SHI');
         const [result] = await db.query(`
             INSERT INTO shipments (shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, estimated_delivery_date, shipment_status_id)
