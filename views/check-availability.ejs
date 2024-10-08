@@ -10,8 +10,9 @@
             <tr>
                 <th>ID</th>
                 <th>Location</th>
-                <th>Capacity</th>
-                <th>Warehouse Type ID</th>
+                <th>Total Capacity</th>
+                <th>Warehouse Type Name</th>
+                <th>Capacity Used</th>
                 <th>Availability</th>
             </tr>
         </thead>
@@ -20,8 +21,9 @@
             <tr>
                 <td><%= warehouse.warehouse_id %></td>
                 <td><%= warehouse.warehouse_address %></td>
-                <td><%= warehouse.capacity %></td>
-                <td><%= warehouse.warehouse_type_id %></td>
+                <td><%= warehouse.total_capacity %></td>
+                <td><%= warehouse.warehouse_type_name %></td>
+                <td><%= warehouse.current_capacity_used %></td>
                 <td class="<%= warehouse.isAvailable === 'Available' ? 'available' : 'full' %>">
                     <%= warehouse.isAvailable %>
                 </td>                

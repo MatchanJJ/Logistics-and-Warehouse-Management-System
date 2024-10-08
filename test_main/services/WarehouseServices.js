@@ -342,18 +342,13 @@ async function getWarehouseById(warehouse_id) {
     } 
 }
 
-async function getWarehouseLocationId(warehouse_id, section, aisle, rack, shelf, bin) {
+async function getWarehouseLocationId(warehouse_id) {
     try {
         const [rows] = await db.query(`
             SELECT warehouse_location_id
             FROM warehouse_locations
             WHERE warehouse_id = ?
-              AND section = ?
-              AND aisle = ?
-              AND rack = ?
-              AND shelf = ?
-              AND bin = ?
-        `, [warehouse_id, section, aisle, rack, shelf, bin]);
+        `, [warehouse_id]);
 
         if (rows.length > 0) {
             return rows[0].warehouse_location_id; // Return the first matching warehouse location ID
