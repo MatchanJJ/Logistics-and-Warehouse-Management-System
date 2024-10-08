@@ -180,6 +180,51 @@ async function isEmpty(warehouse_id) {
     }
 };
 
+// is warehouse full
+async function isFull(warehouse_id) {
+    try {
+        const query = `
+            SELECT 
+                w.capacity AS total_capacity,
+                COALESCE(SUM(
+                    -- Calculate the volume of products
+                    CASE WHEN pi.product_id IS NOT NULL THEN 
+                        pi.quantity * (p.product_length * p.product_width * p.product_height)
+                    ELSE 0 END
+                    +
+                    -- Calculate the volume of parcels
+                    CASE WHEN pari.parcel_id IS NOT NULL THEN 
+                        pari.quantity * (par.parcel_length * par.parcel_width * par.parcel_height)
+                    ELSE 0 END
+                ), 0) AS current_capacity_used
+            FROM warehouses w
+            LEFT JOIN product_inventories pi ON w.warehouse_id = pi.warehouse_id
+            LEFT JOIN products p ON pi.product_id = p.product_id
+            LEFT JOIN parcel_inventories pari ON w.warehouse_id = pari.warehouse_id
+            LEFT JOIN parcels par ON pari.parcel_id = par.parcel_id
+            WHERE w.warehouse_id = ? 
+            GROUP BY w.warehouse_id;
+        `;
+        
+        const [result] = await db.query(query, [warehouse_id]);
+
+        if (result.length === 0) {
+            console.log(`No warehouse found with ID: ${warehouse_id}`);
+            return false;
+        }
+
+        const totalCapacity = result[0].total_capacity;
+        const currentCapacityUsed = result[0].current_capacity_used;
+
+        // Check if the warehouse is full
+        return currentCapacityUsed >= totalCapacity;
+    } catch (error) {
+        console.error('Error checking if warehouse is full:', error);
+        return false;
+    }
+};
+
+
 // add warehouse
 async function addWarehouse (warehouse_address, warehouse_capacity, warehouse_type_id) {
     try {
@@ -320,7 +365,7 @@ async function getWarehouseLocationId(warehouse_id, section, aisle, rack, shelf,
         console.error('Error retrieving warehouse location ID:', error);
         return null; // Return null in case of error
     }
-}
+};
 export default {
     addWarehouseLocation,
     updateWarehouseLocation,
@@ -328,6 +373,7 @@ export default {
     getWarehouses,
     viewWarehouse,
     isEmpty,
+    isFull,
     addWarehouse,
     removeWarehouse,
     updateWarehouseCapacity,
