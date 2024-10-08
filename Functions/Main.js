@@ -419,67 +419,76 @@ app.post('/update-warehouse/:id', async (req, res) => {
 });
 
 app.get('/update-warehouse-location/:warehouse_id', async (req, res) => {
-    const warehouseId = req.params.warehouse_id;
-    const { section, aisle, rack, shelf, bin } = req.query; // Assuming location details are sent via query params
+    const warehouseId = req.params.warehouse_id;  // warehouse_id from the URL
+    console.log("Warehouse ID:", warehouseId); // Debugging line to check the ID being passed
 
     try {
-        // Retrieve the warehouse location ID based on the location details
-        const warehouseLocationId = await WarehouseServices.getWarehouseLocationId(warehouseId, section, aisle, rack, shelf, bin);
+        // Retrieve the warehouse location ID based on the warehouse ID
+        const warehouseLocationId = await WarehouseServices.getWarehouseLocationId(warehouseId);
+        console.log("Warehouse Location ID:", warehouseLocationId); // Debugging line to check retrieved warehouse_location_id
 
         if (warehouseLocationId) {
-            // Render the form with the location details if found
+            // Render the view with the correct warehouse_location_id
             res.render('layout', { 
                 title: 'Update Warehouse Location', 
                 content: 'update-warehouse-location',  
-                warehouse_id: warehouseId, 
-                location: { section, aisle, rack, shelf, bin, warehouse_location_id: warehouseLocationId } 
+                warehouse_location_id: warehouseLocationId // Pass warehouse_location_id to the EJS template
             });
         } else {
-            // Handle the case where no warehouse location was found
             res.status(404).send(`No warehouse location found with the given details for warehouse ID: ${warehouseId}`);
         }
     } catch (error) {
-        // Handle any unexpected errors during the retrieval
         console.error('Error retrieving warehouse location:', error);
         res.status(500).send('Error retrieving warehouse location details');
     }
 });
 
 
-// POST route to handle form submission and update warehouse location
-app.post('/update-warehouse-location/:warehouse_id', async (req, res) => {
-    const warehouseLocationId = req.params.warehouse_id;
+app.post('/update-warehouse-location/:warehouse_location_id', async (req, res) => {
+    const warehouseLocationId = req.params.warehouse_location_id;  // Use the warehouse_location_id from the URL
     const { section, aisle, rack, shelf, bin } = req.body;
-
+    console.log("passed", warehouseLocationId);
     try {
-        // Call your async function to update the warehouse location
+        // Call your async function to update the warehouse location using warehouse_location_id
         const updateSuccessful = await WarehouseServices.updateWarehouseLocation(warehouseLocationId, section, aisle, rack, shelf, bin);
 
         if (updateSuccessful) {
             // Redirect to the list of warehouses after successful update
             res.redirect('/warehouses');
         } else {
-            // Handle the case where no warehouse location was found
             res.status(404).send(`No warehouse location found with ID: ${warehouseLocationId}`);
         }
     } catch (error) {
-        // Handle any unexpected errors during the update
+        console.error('Error updating warehouse location:', error);
         res.status(500).send('Error updating warehouse location');
     }
 });
 
+
+
 // Route to check warehouse availability
 app.get('/check-availability', async (req, res) => {
     try {
-        const warehouses = await warehouseManagementToken.listAllWarehouse(); // Get the list of all warehouses
+        const warehouses = await WarehouseServices.getWarehouses(); // Get the list of all warehouses
         const warehouseAvailability = [];
 
         // Check availability for each warehouse
         for (const warehouse of warehouses) {
-            const isAvailable = await warehouseManagementToken.checkWarehouseAvailability(warehouse.warehouse_id);
+            const isEmptyResult = await WarehouseServices.isEmpty(warehouse.warehouse_id);
+            const isFullResult = await WarehouseServices.isFull(warehouse.warehouse_id);
+
+            let availabilityStatus;
+            if (isEmptyResult) {
+                availabilityStatus = 'Available';
+            } else if (isFullResult) {
+                availabilityStatus = 'Full';
+            } else {
+                availabilityStatus = 'Available';  // You can customize this label
+            }
+
             warehouseAvailability.push({
                 ...warehouse,
-                isAvailable: isAvailable ? 'Available' : 'Full'
+                isAvailable: availabilityStatus
             });
         }
 
