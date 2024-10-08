@@ -77,7 +77,7 @@ async function getInventory () {
 // assign product to warehouse and warehouse location
 async function assignProduct(product_id, warehouse_id, section, aisle, rack, shelf, bin, quantity) {
     try {
-        if (whs.isFull(warehouse_id)) {
+        if (await whs.isFull(warehouse_id)) {
             console.log(`Warehouse:${warehouse_id} is full. Cannot proceed to assignment.`)
             return false;
         }
@@ -220,7 +220,12 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
 // assign parcel to warehouse and warehouse location
 async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf, bin) {
     try {
-        if (whs.isFull(warehouse_id)) {
+        const [rows] = await db.query (`SELECT * FROM parcel_inventories WHERE parcel_id = ?;`,[parcel_id]);
+        if (rows.length > 0) {
+            console.log(`Parcel ${parcel_id} is already assigned to a warehouse.`);
+            return false;
+        }
+        if (await whs.isFull(warehouse_id)) {
             console.log(`Warehouse:${warehouse_id} is full. Cannot proceed to assignment.`)
             return false;
         }

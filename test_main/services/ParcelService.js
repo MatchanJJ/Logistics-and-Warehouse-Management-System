@@ -50,7 +50,7 @@ async function viewParcel (parcel_id) {
             JOIN parcel_categories pc ON p.parcel_category_id = pc.parcel_category_id
             WHERE p.parcel_id = ?;
         `, [parcel_id]);
-        
+
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         console.error('Error finding parcel:', error);
