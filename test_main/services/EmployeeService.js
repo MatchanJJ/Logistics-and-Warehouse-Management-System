@@ -80,9 +80,9 @@ async function assignJobRole (employee_role_id, employee_id) {
             [employee_role_id, employee_id]
         );
         if (result.affectedRows > 0) {
-            console.log(`Employee with ID ${newID} assigned to role with ID ${employee_id}.`);
+            console.log(`Employee with ID ${employee_id} assigned to role with ID ${employee_role_id}.`);
             const log_message = `Assigned new role to employee with role_id ${employee_role_id}.`;
-            logger.addEmployeeLog(newID, log_message);
+            logger.addEmployeeLog(employee_id, log_message);
             return true;
         } else {
             console.log('Failed to assign job to employee.');
@@ -155,6 +155,7 @@ async function removeEmployee (employee_id) {
 
 // Assign employee to a warehouse
 async function assignEmployeeToWarehouse(warehouse_id, employee_id) {
+    
     try {
         const [result] = await db.query(`
             INSERT INTO warehouse_employees (warehouse_id, employee_id) 

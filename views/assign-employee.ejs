@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Employee Job Role and Warehouse</title>
+</head>
+<a href="/employees">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+<div class="container">
+    <body>
+        
+        <h1>Assign Employee Job Role and Warehouse</h1>
+    
+        <% if (message) { %>
+            <div>
+                <strong><%= message %></strong>
+            </div>
+        <% } %>
+    
+        <!-- Show the current employee details -->
+        <div>
+            <p><strong>Employee:</strong> <%= employee.employee_name %> (ID: <%= employee.employee_id %>)</p>
+        </div>
+    
+        <!-- Form for assigning employee role and warehouse -->
+        <form action="/assign-employee/<%= employee.employee_id %>" method="POST">
+            <!-- Hidden input to include the employee_id in the POST request -->
+            <input type="hidden" name="employee_id" value="<%= employee.employee_id %>">
+    
+            <div>
+                <label for="employee_role_id">Select Job Role:</label>
+                <select id="employee_role_id" name="employee_role_id" required>
+                    <% jobRoles.forEach(role => { %>
+                        <option value="<%= role.employee_role_id %>">
+                            <%= role.role_name %> (ID: <%= role.employee_role_id %>)
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+    
+            <div>
+                <label for="warehouse_id">Assign to Warehouse:</label>
+                <select id="warehouse_id" name="warehouse_id" required>
+                    <% warehouses.forEach(warehouse => { %>
+                        <option value="<%= warehouse.warehouse_id %>">
+                            <%= warehouse.warehouse_name %> (ID: <%= warehouse.warehouse_id %>)
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+    
+            <button type="submit">Assign Employee</button>
+
+        </form>
+        <a href="/manage-employee/<%= employee.employee_id %>"><button>Update</button></a> 
+
+        <a href="/">Go Back</a>
+    </body>
+    
+</div>
+</html>

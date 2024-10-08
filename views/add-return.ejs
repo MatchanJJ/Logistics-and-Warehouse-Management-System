@@ -1,0 +1,25 @@
+
+<body>
+    <div class="container">
+        <h1>Add a Return</h1>
+        
+        <form action="/add-return" method="POST">
+            <div class="form-group">
+                <label for="order_id">Order ID:</label>
+                <input type="text" id="order_id" name="order_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="return_reason">Return Reason:</label>
+                <textarea id="return_reason" name="return_reason" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="return_date">Return Date:</label>
+                <input type="date" id="return_date" name="return_date" required>
+            </div>
+
+            <button type="submit">Submit Return</button>
+        </form>
+    </div>
+</body>

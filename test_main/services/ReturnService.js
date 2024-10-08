@@ -1,5 +1,5 @@
 import db from '../DBconnection/DBConnection.js';
-import idGen from '../utils/logUtil.js';
+import idGen from '../utils/idGenerator.js';
 import logger from '../utils/logUtil.js';
 import archiver from '../utils/archiveUtil.js';
 
