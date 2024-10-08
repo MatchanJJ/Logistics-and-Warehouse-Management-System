@@ -68,7 +68,7 @@ async function addParcel (parcel_category_id, parcel_description, parcel_unit_pr
         );
         if (result.affectedRows > 0) {
             console.log('Parcel inserted with ID:', newID);
-            const log_message = `Parcel inserted with ID ${newID}.`;
+            const log_message = `Parcel record added to database.`;
             logger.addParcelInventoryLog(newID, null, log_message);
             return true;
         } else {

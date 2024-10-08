@@ -12,10 +12,11 @@ async function addWarehouseLocation(warehouse_id, section, aisle, rack, shelf, b
             `INSERT INTO warehouse_locations (warehouse_location_id, warehouse_id, section, aisle, rack, shelf, bin) VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [newID, warehouse_id, section, aisle, rack, shelf, bin]
         );
-        console.log('New warehouse location added:', result.insertId);
+        console.log('New warehouse location added:', newID);
         return newID;
     } catch (error) {
         console.error('Error adding warehouse location:', error);
+        return null;
     }
 };
 

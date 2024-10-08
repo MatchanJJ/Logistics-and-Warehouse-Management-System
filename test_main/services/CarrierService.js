@@ -32,11 +32,14 @@ async function addCarrier(carrier_name, shipping_service_id, carrier_contact_inf
         );
         if (result.affectedRows > 0) {
             console.log('Added new carrier:', newID);
+            return true;
         } else {
             console.log('Failed to add new carrier.');
+            return false;
         }
     } catch (error) {
-        console.error(error);
+        console.error('Failed to add carrier:', error);
+        return false;
     }
 };
 
@@ -49,11 +52,14 @@ async function updateCarrier(carrier_name, shipping_service_id, carrier_contact_
         );
         if (result.affectedRows > 0) {
             console.log("Updated carrier data at carrier_id: ", carrier_id);
+            return true;
         } else {
             console.log("Carrier_id does not exist or some other error");
+            return false;
         }
     } catch (error) {
-        console.error(error);
+        console.error('Error updating carrier:', error);
+        return false;
     }
 };
 
@@ -73,12 +79,15 @@ async function removeCarrier(carrier_id) {
             );
             if (result.affectedRows > 0) {
                 console.log('Carrier successfully deleted.');
+                return true;
             } else {
                 console.log('No carrier found with the given ID.');
+                return false;
             }
         }
     } catch (error) {
         console.error('Error deleting carrier:', error);
+        return false
     }
 };
 

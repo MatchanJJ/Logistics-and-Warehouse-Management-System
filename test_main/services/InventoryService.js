@@ -70,6 +70,7 @@ async function getInventory () {
         return rows;
     } catch (error) {
         console.error('Error fetching inventory: ',error);
+        return [];
     }
 };
 
@@ -213,7 +214,7 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
 };
 
 // assign parcel to warehouse and warehouse location
-async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf, bin, quantity) {
+async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf, bin) {
     try {
         // Fetch parcel dimensions from the parcels table
         const [parcel] = await db.query(`
@@ -226,6 +227,8 @@ async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf
             console.error('Parcel not found');
             return false;  // Return or handle the case when the parcel doesn't exist
         }
+
+        const quantity = 1;
 
         const { parcel_length, parcel_width, parcel_height } = parcel[0];
         
@@ -241,8 +244,8 @@ async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf
             VALUES (?, ?, ?, ?, ?);
         `, [parcel_id, warehouse_id, warehouse_location_id, quantity, total_volume]);
 
-        console.log('Parcel assigned to warehouse:', result.insertId);
-        const log_message = `Parcel: ${parcel_id} to warehouse:${warehouse_id}, located at ${warehouse_location_id}`;
+        console.log('Parcel assigned to warehouse:', warehouse_id);
+        const log_message = `Parcel:${parcel_id} assigned to warehouse:${warehouse_id}, located at warehouse_location:${warehouse_location_id}`;
         logger.addParcelInventoryLog(parcel_id, warehouse_id, log_message);
         return true;  // Return the result of the insert operation
     } catch (error) {
