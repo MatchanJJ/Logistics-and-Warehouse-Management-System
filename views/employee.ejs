@@ -9,6 +9,7 @@
 <h2>Employee List</h2>
 <a href="/add-employee" class="btn">Add New Employee</a>
 <a href="/manage-job-roles" class="btn">Manage Job Role</a>
+
 <table>
     <thead>
         <tr>
@@ -30,6 +31,8 @@
             <td><%= employee.salary %></td>
             <td>
                 <a href="/update-employee/<%= employee.employee_id %>"><button>Update</button></a> 
+                <a href="/assign-employee/<%= employee.employee_id %>"><button>Assign</button></a> 
+
                 <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>

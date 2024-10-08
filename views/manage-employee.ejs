@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link your CSS file -->
+</head>
+<a href="/employees">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+<body>
+    
+    <div class="container">
+        <% if (employees.length > 0) { %>
+            <h2>Employee Details</h2>
+            <table>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Current Warehouse ID</th>
+                </tr>
+                <tr>
+                    <td><%= employees[0].employee_id %></td>
+                    <td><%= employees[0].warehouse_id || 'Not Assigned' %></td>
+                </tr>
+            </table>
+        
+            <% if (!employees[0].warehouse_id) { %>
+                <div class="alert">
+                    Employee is not assigned to any warehouse. Cannot update warehouse assignment.
+                </div>
+                <button disabled>Transfer Employee</button>
+            <% } else { %>
+                <h3>Transfer Employee</h3>
+                <form action="/transfer" method="POST">
+                    <input type="hidden" name="employee_id" value="<%= employees[0].employee_id %>">
+                    <input type="hidden" name="current_warehouse_id" value="<%= employees[0].warehouse_id %>">
+                    <label for="new_warehouse_id">Select New Warehouse:</label>
+                    <select name="new_warehouse_id" id="new_warehouse_id" required>
+                        <% warehouses.forEach(function(warehouse) { %>
+                            <option value="<%= warehouse.warehouse_id %>"><%= warehouse.warehouse_id %></option>
+                        <% }); %>
+                    </select>
+                    <button type="submit">Transfer</button>
+                </form>
+            <% } %>
+        <% } else { %>
+            <h2>No Employee Found</h2>
+        <% } %>
+        
+    </div>
+</body>
+</html>

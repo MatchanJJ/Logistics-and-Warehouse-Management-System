@@ -191,6 +191,82 @@ app.post('/add-job-role', async (req, res) => {
     });
     
 
+    app.get('/assign-employee/:id', async (req, res) => {
+        const employeeId = req.params.id; // Get the employee ID from the URL
+    
+        try {
+            // Fetch the current employee details
+            const [employee] = await pool.query(`
+                SELECT e.employee_id, CONCAT(e.employee_first_name, " ", e.employee_last_name) AS employee_name, e.employee_role_id, we.warehouse_id
+                FROM employees e
+                LEFT JOIN warehouse_employees we ON e.employee_id = we.employee_id
+                WHERE e.employee_id = ?;
+            `, [employeeId]);
+    
+            if (employee.length === 0) {
+                return res.status(404).send('Employee not found');
+            }
+    
+            // Fetch job roles and warehouses from the database
+            const [jobRoles] = await pool.query('SELECT employee_role_id, role_name FROM employee_roles');
+            const [warehouses] = await pool.query('SELECT warehouse_id FROM warehouses');
+    
+            // Render the page with the current employee, job roles, and warehouses
+            res.render('layout', {
+                title: 'Assign Employee',
+                content: 'assign-employee',
+                employee: employee[0],  // Send employee object
+                jobRoles,
+                warehouses,
+                message: null
+            });
+        } catch (error) {
+            console.error('Error fetching employee details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+    app.post('/assign-employee/:id', async (req, res) => {
+        const employeeId = req.params.id; // Get the employee ID from the URL
+        const { employee_role_id, warehouse_id } = req.body; // Extract form data
+    
+        try {
+            // Assign job role and warehouse to the employee
+            const roleSuccess = await EmployeeService.assignJobRole(employee_role_id, employeeId);
+            const warehouseSuccess = await EmployeeService.assignEmployeeToWarehouse(warehouse_id, employeeId);
+    
+            let message = 'Employee successfully assigned!';
+            if (!roleSuccess || !warehouseSuccess) {
+                message = 'Failed to assign employee to the job role or warehouse.';
+            }
+    
+            // Fetch updated employee details after assigning role and warehouse
+            const [employee] = await pool.query(`
+                SELECT e.employee_id, CONCAT(e.employee_first_name, " ", e.employee_last_name) AS employee_name, e.employee_role_id, we.warehouse_id
+                FROM employees e
+                LEFT JOIN warehouse_employees we ON e.employee_id = we.employee_id
+                WHERE e.employee_id = ?;
+            `, [employeeId]);
+    
+            // Fetch job roles and warehouses again to render the updated form
+            const [jobRoles] = await pool.query('SELECT employee_role_id, role_name FROM employee_roles');
+            const [warehouses] = await pool.query('SELECT warehouse_id FROM warehouses');
+    
+            // Render the page again with updated employee details and a message
+            res.render('layout', {
+                title: 'Assign Employee',
+                content: 'assign-employee',
+                employee: employee[0],  // Send the updated employee object
+                jobRoles,
+                warehouses,
+                message
+            });
+        } catch (error) {
+            console.error('Error assigning employee:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+        
+
 
 
  // Route for updating an employee (form rendering)
@@ -583,8 +659,9 @@ app.get('/assign-parcel/:id', async (req, res) => {
 app.post('/assign-parcel/:id', async (req, res) => {
     const parcelId = req.params.id; // Get the parcel ID from the URL
     const { warehouse_id, section, aisle, rack, shelf, bin, quantity } = req.body;
+    console.log(quantity);
 
-    const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin, quantity);
+    const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin);
     const message = success ? 'Parcel successfully assigned.' : 'Failed to assign parcel. Please check your inputs.';
 
     // Render the 'layout' template, injecting 'assign-parcel' content
@@ -1985,3 +2062,149 @@ app.get('/order-archives', async (req, res) => {
         res.status(500).send('Error fetching customer archives');
     }
 });
+
+app.get('/manage-employee/:id', async (req, res) => {
+    const employeeId = req.params.id; // Get the employee ID from the route parameter
+
+    try {
+        // Fetch the specific employee by ID
+        const [employee] = await pool.query('SELECT employee_id, warehouse_id FROM warehouse_employees WHERE employee_id = ?', [employeeId]);
+
+        // Fetch all available warehouses
+        const [warehouses] = await pool.query('SELECT warehouse_id FROM warehouses');
+
+        // Check if the employee exists
+        if (employee.length === 0) {
+            return res.render('layout', { title: 'Manage Employee', content: 'manage-employee', employees: [], warehouses: [], message: `Employee with ID ${employeeId} not found.` });
+        }
+
+        // Check if the employee is not assigned to any warehouse (warehouse_id is null or undefined)
+        if (!employee[0].warehouse_id) {
+            return res.render('layout', { title: 'Manage Employee', content: 'manage-employee', employees: employee, warehouses, message: `Employee ${employeeId} is not assigned to any warehouse.` });
+        }
+
+        // Render the manage-employee page if everything is fine
+        res.render('layout', { title: 'Manage Employee', content: 'manage-employee', employees: employee, warehouses, message: null });
+    } catch (error) {
+        console.error('Error fetching employee or warehouses:', error);
+        res.render('layout', { title: 'Manage Employee', content: 'manage-employee', employees: [], warehouses: [], message: 'An error occurred while fetching employee data.' });
+    }
+});
+
+
+
+// POST route to handle transferring an employee to another warehouse
+app.post('/transfer', async (req, res) => {
+    const { employee_id, current_warehouse_id, new_warehouse_id } = req.body;
+
+    const success = await EmployeeService.updateEmployeeWarehouse(current_warehouse_id, new_warehouse_id, employee_id);
+    const message = success
+        ? `Employee ${employee_id} successfully transferred to warehouse ${new_warehouse_id}.`
+        : `Failed to transfer employee ${employee_id}.`;
+
+    res.redirect(`/employees`);
+});
+
+// POST route to handle removing an employee from a warehouse
+app.post('/remove', async (req, res) => {
+    const { employee_id, warehouse_id } = req.body;
+
+    const success = await EmployeeService.removeEmployeeFromWarehouse(warehouse_id, employee_id);
+    const message = success
+        ? `Employee ${employee_id} successfully removed from warehouse ${warehouse_id}.`
+        : `Failed to remove employee ${employee_id}.`;
+
+    res.redirect(`/employees`);
+});
+
+// GET route to render the form for adding a return
+app.get('/add-return', (req, res) => {
+    res.render('layout', { title: 'Add Retrun', content: 'add-return'});
+
+});
+// POST route to handle the form submission and add a return
+app.post('/add-return', async (req, res) => {
+    const { order_id, return_reason, return_date } = req.body; // Destructure form inputs from the request body
+
+    try {
+        // Call the addReturn function to insert the new return entry
+        const success = await ReturnService.addReturn(order_id, return_reason, return_date);
+
+        res.redirect('/returns')
+    } catch (error) {
+        console.error('Error processing return:', error);
+
+        // If an error occurs, render the form with an error message
+        res.render('layout', { title: 'Add Retrun', content: 'add-return'});
+    }
+});
+
+app.get('/return/:id', async (req, res) => {
+    const { id } = req.params; // Extract employee ID from the route parameters
+    try {
+        const returnDetails = await ReturnService.viewReturn(id); // Fetch employee details by ID
+        if (returnDetails) {
+            res.render('layout', { title: 'View Return', content: 'view-return', returnDetails }); // Render the layout with the add-warehouse content
+            //res.render('view-employee', { employee }); // Render the employee details page
+        } else {
+            res.status(404).send('Return not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching return:', error);
+        res.status(500).send('Error fetching return.');
+    }
+});
+
+// GET route to render the update return status form
+// GET route to display the update return form
+app.get('/update-return/:id', async (req, res) => {
+    const returnId = req.params.id;
+
+    try {
+        // Fetch return data by ID
+        const returnData = await ReturnService.viewReturn(returnId);
+
+        if (!returnData) {
+            return res.render('layout', { 
+                title: 'Update Return Status', 
+                content: 'update-return', 
+                message: `Return with ID ${returnId} not found.`
+            });
+        }
+
+        // Render the form with return data
+        res.render('layout', { 
+            title: 'Update Return Status', 
+            content: 'update-return', 
+            returnData 
+        });
+    } catch (error) {
+        console.error('Error fetching return data:', error);
+        res.render('layout', { 
+            title: 'Update Return Status', 
+            content: 'update-return', 
+            message: 'An error occurred while fetching the return data.' 
+        });
+    }
+});
+
+
+// POST route to update return status
+// POST route to handle updating the return status
+app.post('/update-return-status', async (req, res) => {
+    const { return_id, new_status_id } = req.body;
+
+    try {
+        // Call function to update the return status
+        await ReturnService.updateReturnStatus(return_id, new_status_id);
+
+        res.redirect(`/returns`);
+    } catch (error) {
+        console.error('Error updating return status:', error);
+
+        // In case of error, show the error message
+        res.redirect(`/update-return/${return_id}?message=${encodeURIComponent('An error occurred while updating the status.')}`);
+    }
+});
+
+

@@ -1,33 +1,41 @@
-<body>
+
     <a href="/">
         <img class="home" src="/home-button.png" alt="home">
     </a>
     <a href="/return-logs">
         <img class="home" src="/log.png" alt="log">
     </a>
-    
-    <h1>All Returns</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Return ID</th>
-                <th>Order ID</th>
-                <th>Return Reason</th>
-                <th>Return Date</th>
-                <th>Return Status ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% returns.forEach(returnItem => { %>
+    <h2>All Returns</h2>
+    <a href="/add-return" class="btn">Add New Return</a>
+
+
+        <table>
+            <thead>
                 <tr>
-                    <td><%= returnItem.return_id %></td>
-                    <td><%= returnItem.order_id %></td>
-                    <td><%= returnItem.return_reason %></td>
-                    <td><%= returnItem.return_date %></td>
-                    <td><%= returnItem.return_status_id %></td>
+                    <th>Return ID</th>
+                    <th>Order ID</th>
+                    <th>Return Reason</th>
+                    <th>Return Status Name</th>
+                    <th>Return Date</th>
+                    <th>Actions</th>
+
                 </tr>
-            <% }) %>
-        </tbody>
-    </table>
-</body>
-</html>
+            </thead>
+            <tbody>
+                <% returns.forEach(returnItem => { %>
+                    <tr onclick="window.location.href='/return/<%= returnItem.return_id %>'" style="cursor: pointer;">
+                        <td><%= returnItem.return_id %></td>
+                        <td><%= returnItem.order_id %></td>
+                        <td><%= returnItem.return_reason %></td>
+                        <td><%= returnItem.return_status_name %></td>
+                        <td><%= returnItem.return_date %></td>
+                        <td> 
+                            <a href="/update-return/<%= returnItem.return_id %>"><button>Update</button></a>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    
+    

@@ -157,6 +157,7 @@ async function removeEmployee (employee_id) {
 
 // assign employee to warehouse
 async function assignEmployeeToWarehouse(warehouse_id, employee_id) {
+    
     try {
         // Check if the employee is already assigned to a warehouse
         const [rows] = await db.query(`

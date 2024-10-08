@@ -1,0 +1,38 @@
+
+<body>
+    <a href="/returns">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
+
+    <div class="container">
+        <h1>Return Details</h1>
+
+        <% if (returnDetails) { %> 
+            <table class="return-details-table">
+                <tr>
+                    <th>Return ID:</th>
+                    <td><%= returnDetails.return_id %></td>
+                </tr>
+                <tr>
+                    <th>Order ID:</th>
+                    <td><%= returnDetails.order_id %></td>
+                </tr>
+                <tr>
+                    <th>Return Reason:</th>
+                    <td><%= returnDetails.return_reason %></td>
+                </tr>
+                <tr>
+                    <th>Return Date:</th>
+                    <td><%= returnDetails.return_date %></td>
+                </tr>
+                <tr>
+                    <th>Return Status:</th>
+                    <td><%= returnDetails.return_status_id %></td>
+                </tr>
+            </table>
+        <% } else { %>
+            <p>No return found with the provided ID.</p>
+        <% } %>
+            </div>
+</body>
+</html>
