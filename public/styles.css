@@ -90,6 +90,7 @@ body {
 /* Main content area */
 main {
     padding: 20px; /* Padding for main content */
+    min-height: calc(100vh - 100px);
 }
 
 /* Table Styles */
@@ -151,12 +152,13 @@ div.error {
 
 /* Footer Styles */
 footer {
+   
     text-align: center; /* Centered text */
     padding: 10px 0; /* Padding for footer */
     background-color: #24252A;
     color: #fff; /* White text color */
     position: relative; /* Position relative for footer */
-    bottom: 0; /* Stick to the bottom */
+    margin-top: auto;
     width: 100%; /* Full width */
 }
 
