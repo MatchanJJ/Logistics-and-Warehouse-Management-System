@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 </head>
 <body>
+    <a href="/employees">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
     <main>
         <!-- Wrapping all content in one div container -->
         <div class="container"> 
@@ -46,11 +49,6 @@
                 <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
                     <button type="submit" class="btn delete-btn">Delete Employee</button>
                 </form>
-            </div>
-
-            <!-- Back button to go back to employee list -->
-            <a href="/employees" class="btn">Back to Employee List</a>
-        </div>
     </main>
 
 </body>

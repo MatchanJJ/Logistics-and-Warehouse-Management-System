@@ -647,8 +647,8 @@ app.get('/assign-parcel/:id', async (req, res) => {
             return res.status(404).send('Parcel not found'); // Handle case where parcel is not found
         }
 
-        // Render the EJS file for assigning parcels with current parcel details
-        res.render('assign-parcel', { message: null, parcel: parcel[0] });
+        res.render('layout', { title: 'Assign Parcel', content: 'assign-parcel' , message: null, parcel: parcel[0]}); // Render the layout with the add-warehouse content
+       // res.render('assign-parcel', { message: null, parcel: parcel[0] });
     } catch (error) {
         console.error('Error fetching parcel details:', error);
         res.status(500).send('Internal Server Error');
@@ -780,8 +780,8 @@ app.get('/assign-product/:id', async (req, res) => {
             return res.status(404).send('Product not found'); // Handle case where product is not found
         }
 
-        // Render the EJS file for assigning products with current product details
-        res.render('assign-product', { message: null, product: product[0] });
+        res.render('layout', { title: 'Assign Product', content: 'assign-product' , message: null, product: product[0]}); // Render the layout with the add-warehouse content
+        //res.render('assign-product', { message: null, product: product[0] });
     } catch (error) {
         console.error('Error fetching product details:', error);
         res.status(500).send('Internal Server Error');
