@@ -139,7 +139,7 @@ CREATE TABLE orders (
     order_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     order_status_id VARCHAR(10),
     shipping_service_id VARCHAR(10),
-    shipping_address TEXT NOT NULL,
+    delivery_address TEXT NOT NULL,
     shipping_receiver VARCHAR(255),
     order_type_id VARCHAR(10),
     order_total_amount DECIMAL(10, 2) NOT NULL,
@@ -177,15 +177,15 @@ CREATE TABLE carriers (
 );
 
 CREATE TABLE shipments (
-    shipment_id VARCHAR(10) PRIMARY KEY,
-    order_id VARCHAR(10),
-    carrier_id VARCHAR(10),
+    shipment_id VARCHAR(10) UNIQUE,
+    order_id VARCHAR(10) NOT NULL,
+    carrier_id VARCHAR(10) NOT NULL,
     shipping_service_id VARCHAR(10),
     current_location TEXT,
-    shipping_address TEXT,
     shipment_date TIMESTAMP,
     estimated_delivery_date DATE,
     shipment_status_id VARCHAR(10),
+    PRIMARY KEY (order_id, carrier_id),
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (carrier_id) REFERENCES carriers(carrier_id),
     FOREIGN KEY (shipping_service_id) REFERENCES shipping_services(shipping_service_id),
