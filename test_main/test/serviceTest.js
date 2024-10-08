@@ -5,13 +5,18 @@ import LogService from '../services/LogService.js';
 import InventoryService from '../services/InventoryService.js';
 //import ParcelService from '../services/ParcelService.js';
 import ProductService from '../services/ProductService.js';
-
+import WarehouseServices from '../services/WarehouseServices.js';
 
 //await ProductService.addProduct('PC1', 'A4 OPPO', 'OPPO', 'OPPO inc', 'Solid Phone stats etc', 12000, 0.1, 10, 10, 3, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'TRUE', 'FALSE');
 
-await ProductService.removeProduct('PRDLoH3yDe');
+//await InventoryService.assignProduct('P002', )
 
-console.log(InventoryService.getInventory());
-console.log(ProductService.getProducts());
+//console.log(InventoryService.getInventory());
+//console.log(ProductService.getProducts());
 //console.log(LogService.getParcelInventoryLogs());
-console.log(LogService.getProductInventoryLogs());
+//console.log(LogService.getProductInventoryLogs());
+
+console.log(WarehouseServices.isFull('W001'));
+
+console.log(WarehouseServices.isEmpty('WHR0DPvVDa'));
+console.log(WarehouseServices.isEmpty('W001'));
