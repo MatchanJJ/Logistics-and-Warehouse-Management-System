@@ -80,8 +80,14 @@ async function updateReturnStatus(return_id, new_status_id) {
 async function getAllReturns() {
     try {
         const [rows] = await db.query(`
-            SELECT *
-            FROM returns;
+            SELECT 
+                r.return_id,
+                r.order_id,
+                r.return_reason,
+                rs.return_status_name,
+                r.return_date
+                FROM returns r
+                JOIN return_status rs ON r.return_status_id = rs.return_status_id;
         `);
 
         return rows; // Return all the rows fetched from the database

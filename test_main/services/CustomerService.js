@@ -48,7 +48,7 @@ async function addCustomer(customer_first_name, customer_last_name, customer_ema
         if (result.affectedRows > 0) {
             console.log(`Customer added with ID ${newID}.`);
             const log_message = `Added new customer.`;
-            logger.addCustomerLog(newID, log_message);
+            await logger.addCustomerLog(newID, log_message);
             return true;
         } else {
             console.log('Failed to add customer.');
@@ -71,8 +71,8 @@ async function updateCustomer(customer_id, customer_first_name, customer_last_na
 
         if (result.affectedRows > 0) {
             console.log(`Customer with ID ${customer_id} successfully updated.`);
-            const log_message = `Update customer details.`;
-            logger.addCustomerLog(customer_id, log_message);
+            const log_message = `Updated customer details.`;
+            await logger.addCustomerLog(customer_id, log_message);
             return true;
         } else {
             console.log(`No customer found with ID ${customer_id}.`);
@@ -106,7 +106,7 @@ async function removeCustomer(customer_id) {
             if (result.affectedRows > 0) {
                 console.log(`Customer with ID ${customer_id} successfully removed.`);
                 const log_message = "Archived and removed customer data.";
-                logger.addCustomerLog(customer_id, log_message);
+                await logger.addCustomerLog(customer_id, log_message);
                 return true;
             } else {
                 console.log(`No customer found with ID ${customer_id}.`);
