@@ -29,10 +29,6 @@
         <label for="bin">Bin:</label>
         <input type="text" name="bin" value="<%= parcel.bin || '' %>" required>
     </div>
-    <div>
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" value="<%= parcel.quantity || '' %>" required>
-    </div>
     <button type="submit">Assign Parcel</button>
 </form>
 <% if (message) { %>

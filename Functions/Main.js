@@ -661,7 +661,7 @@ app.post('/assign-parcel/:id', async (req, res) => {
     const { warehouse_id, section, aisle, rack, shelf, bin, quantity } = req.body;
     console.log(quantity);
 
-    const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin, quantity);
+    const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin);
     const message = success ? 'Parcel successfully assigned.' : 'Failed to assign parcel. Please check your inputs.';
 
     // Render the 'layout' template, injecting 'assign-parcel' content
@@ -1971,7 +1971,7 @@ app.get('/returns', async (req, res) => {
     } catch (error) {
         res.status(500).send('Error fetching returns');
     }
-});F
+});
 // return logs
 app.get('/return-logs', async (req, res) => {
     try {
@@ -2138,3 +2138,73 @@ app.post('/add-return', async (req, res) => {
         res.render('layout', { title: 'Add Retrun', content: 'add-return'});
     }
 });
+
+app.get('/return/:id', async (req, res) => {
+    const { id } = req.params; // Extract employee ID from the route parameters
+    try {
+        const returnDetails = await ReturnService.viewReturn(id); // Fetch employee details by ID
+        if (returnDetails) {
+            res.render('layout', { title: 'View Return', content: 'view-return', returnDetails }); // Render the layout with the add-warehouse content
+            //res.render('view-employee', { employee }); // Render the employee details page
+        } else {
+            res.status(404).send('Return not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching return:', error);
+        res.status(500).send('Error fetching return.');
+    }
+});
+
+// GET route to render the update return status form
+// GET route to display the update return form
+app.get('/update-return/:id', async (req, res) => {
+    const returnId = req.params.id;
+
+    try {
+        // Fetch return data by ID
+        const returnData = await ReturnService.viewReturn(returnId);
+
+        if (!returnData) {
+            return res.render('layout', { 
+                title: 'Update Return Status', 
+                content: 'update-return', 
+                message: `Return with ID ${returnId} not found.`
+            });
+        }
+
+        // Render the form with return data
+        res.render('layout', { 
+            title: 'Update Return Status', 
+            content: 'update-return', 
+            returnData 
+        });
+    } catch (error) {
+        console.error('Error fetching return data:', error);
+        res.render('layout', { 
+            title: 'Update Return Status', 
+            content: 'update-return', 
+            message: 'An error occurred while fetching the return data.' 
+        });
+    }
+});
+
+
+// POST route to update return status
+// POST route to handle updating the return status
+app.post('/update-return-status', async (req, res) => {
+    const { return_id, new_status_id } = req.body;
+
+    try {
+        // Call function to update the return status
+        await ReturnService.updateReturnStatus(return_id, new_status_id);
+
+        res.redirect(`/returns`);
+    } catch (error) {
+        console.error('Error updating return status:', error);
+
+        // In case of error, show the error message
+        res.redirect(`/update-return/${return_id}?message=${encodeURIComponent('An error occurred while updating the status.')}`);
+    }
+});
+
+

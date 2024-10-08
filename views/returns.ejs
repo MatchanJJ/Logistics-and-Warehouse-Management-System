@@ -15,18 +15,24 @@
                     <th>Return ID</th>
                     <th>Order ID</th>
                     <th>Return Reason</th>
+                    <th>Return Status Name</th>
                     <th>Return Date</th>
-                    <th>Return Status ID</th>
+                    <th>Actions</th>
+
                 </tr>
             </thead>
             <tbody>
                 <% returns.forEach(returnItem => { %>
-                    <tr>
+                    <tr onclick="window.location.href='/return/<%= returnItem.return_id %>'" style="cursor: pointer;">
                         <td><%= returnItem.return_id %></td>
                         <td><%= returnItem.order_id %></td>
                         <td><%= returnItem.return_reason %></td>
+                        <td><%= returnItem.return_status_name %></td>
                         <td><%= returnItem.return_date %></td>
-                        <td><%= returnItem.return_status_id %></td>
+                        <td> 
+                            <a href="/update-return/<%= returnItem.return_id %>"><button>Update</button></a>
+                            </form>
+                        </td>
                     </tr>
                 <% }) %>
             </tbody>
