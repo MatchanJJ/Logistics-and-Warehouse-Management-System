@@ -77,6 +77,10 @@ async function getInventory () {
 // assign product to warehouse and warehouse location
 async function assignProduct(product_id, warehouse_id, section, aisle, rack, shelf, bin, quantity) {
     try {
+        if (whs.isFull(warehouse_id)) {
+            console.log(`Warehouse:${warehouse_id} is full. Cannot proceed to assignment.`)
+            return false;
+        }
         // Fetch product dimensions from the products table
         const [product] = await db.query(`
             SELECT product_length, product_width, product_height 
@@ -216,6 +220,10 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
 // assign parcel to warehouse and warehouse location
 async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf, bin) {
     try {
+        if (whs.isFull(warehouse_id)) {
+            console.log(`Warehouse:${warehouse_id} is full. Cannot proceed to assignment.`)
+            return false;
+        }
         // Fetch parcel dimensions from the parcels table
         const [parcel] = await db.query(`
             SELECT parcel_length, parcel_width, parcel_height 
