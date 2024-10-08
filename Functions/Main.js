@@ -18,13 +18,14 @@
     import ArchiveService from '../test_main/services/ArchiveService.js';
     import ReturnService from '../test_main/services/ReturnService.js';
     import OrderService from '../test_main/services/OrderService.js';
+    import StatAndCatService from '../test_main/services/StatusAndCategoriesService.js';
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
     // Initialize Express
     const app = express();
-    const port = 8080;
+    const port = 6969;
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use((req, res, next) => {
@@ -1468,7 +1469,7 @@ app.get('/manage-status-and-category', (req, res) => {
 // Order Status Management
 app.get('/manage-order-status', async (req, res) => {
     try {
-        const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses();
+        const orderStatuses = await StatAndCatService.getOrderStatus();
         res.render('layout', { title: 'Manage Order Status', content: 'manage-order-status', orderStatuses});
         //res.render('manage-order-status', { orderStatuses });
     } catch (error) {
@@ -1491,7 +1492,7 @@ app.get('/manage-shipment-status', async (req, res) => {
 // Return Status Management
 app.get('/manage-return-status', async (req, res) => {
     try {
-        const returnStatuses = await statusAndCategoriesManagementToken.getReturnStatuses();
+        const returnStatuses = await StatAndCatService.getReturnStatus();
         res.render('layout', { title: 'Manage Return Status', content: 'manage-return-status', returnStatuses });
         //res.render('manage-return-status', { returnStatuses });
     } catch (error) {
@@ -1514,19 +1515,6 @@ app.get('/manage-order-types', async (req, res) => {
 
 
 
-
-//ORDERS
-// Route to display the manage-order-status page
-app.get('/manage-order-status', async (req, res) => {
-    try {
-        const orderStatuses = await statusAndCategoriesManagementToken.getOrderStatuses(); // Fetch statuses from DB
-        res.render('manage-order-status', { orderStatuses });
-    } catch (error) {
-        console.error('Error fetching order statuses:', error);
-        res.status(500).send('Error fetching order statuses.');
-    }
-});
-
 // Route to display the add-order-status form
 app.get('/add-order-status', (req, res) => {
     res.render('layout', { title: 'Add New Order Status', content: 'add-order-status' });
@@ -1537,7 +1525,7 @@ app.get('/add-order-status', (req, res) => {
 app.post('/add-order-status', async (req, res) => {
     const { order_status_id, order_status_name } = req.body;
     try {
-        await statusAndCategoriesManagementToken.insertOrderStatus(order_status_id, order_status_name);
+        await StatAndCatService.addOrderStatus( order_status_name);
         res.redirect('/manage-order-status');
     } catch (error) {
         console.error('Error adding new order status:', error);
@@ -1580,7 +1568,7 @@ app.post('/update-order-status/:id', async (req, res) => {
 app.post('/delete-order-status/:id', async (req, res) => {
     const order_status_id = req.params.id;
     try {
-        await statusAndCategoriesManagementToken.deleteOrderStatus(order_status_id);
+        await StatAndCatService.removeOrderStatus(order_status_id);
         res.redirect('/manage-order-status');
     } catch (error) {
         console.error('Error deleting order status:', error);
@@ -1599,7 +1587,7 @@ app.get('/add-return-status', (req, res) => {
 app.post('/add-return-status', async (req, res) => {
     const { return_status_id, return_status_name } = req.body;
     try {
-        await statusAndCategoriesManagementToken.insertReturnStatus(return_status_id, return_status_name);
+        await StatAndCatService.addReturnStatus(return_status_name);
         res.redirect('/manage-return-status');
     } catch (error) {
         console.error('Error adding new return status:', error);
@@ -1642,7 +1630,7 @@ app.post('/update-return-status/:id', async (req, res) => {
 app.post('/delete-return-status/:id', async (req, res) => {
     const return_status_id = req.params.id;
     try {
-        await statusAndCategoriesManagementToken.deleteReturnStatus(return_status_id);
+        await StatAndCatService.removeReturnStatus(return_status_id);
         res.redirect('/manage-return-status');
     } catch (error) {
         console.error('Error deleting return status:', error);
@@ -1732,7 +1720,7 @@ app.post('/delete-warehouse-type/:id', async (req, res) => {
 // GET route to display all product categories
 app.get('/manage-product-categories', async (req, res) => {
     try {
-        const productCategories = await statusAndCategoriesManagementToken.getProductCategories(); // Fetch product categories
+        const productCategories = await StatAndCatService.getProductCategories(); // Fetch product categories
         res.render('layout', { title: 'Manage Product Categories', content: 'manage-product-categories', productCategories });
         //res.render('manage-product-categories', { productCategories });
     } catch (error) {
@@ -1752,7 +1740,7 @@ app.get('/add-product-category', (req, res) => {
 app.post('/add-product-category', async (req, res) => {
     const { product_category_id, product_category_name } = req.body;
     try {
-        await statusAndCategoriesManagementToken.insertProductCategory(product_category_id, product_category_name); // Insert product category
+        await StatAndCatService.addProductCategory( product_category_name); // Insert product category
         res.redirect('/manage-product-categories');
     } catch (error) {
         console.error('Error adding product category:', error);
@@ -1795,7 +1783,7 @@ app.post('/update-product-category/:id', async (req, res) => {
 app.post('/delete-product-category/:id', async (req, res) => {
     const product_category_id = req.params.id;
     try {
-        await statusAndCategoriesManagementToken.deleteProductCategory(product_category_id); // Delete product category
+        await StatAndCatService.removeProductCategory(product_category_id); // Delete product category
         res.redirect('/manage-product-categories');
     } catch (error) {
         console.error('Error deleting product category:', error);
@@ -1808,7 +1796,7 @@ app.post('/delete-product-category/:id', async (req, res) => {
 // Display all parcel categories
 app.get('/manage-parcel-categories', async (req, res) => {
     try {
-        const parcelCategories = await statusAndCategoriesManagementToken.getParcelCategories();
+        const parcelCategories = await StatAndCatService.getParcelCategories();
         res.render('layout', { title: 'Manage Parcel Categoeies', content: 'manage-parcel-categories', parcelCategories });
         //res.render('manage-parcel-categories', { parcelCategories });
     } catch (error) {
@@ -1825,9 +1813,9 @@ app.get('/add-parcel-category', (req, res) => {
 
 // Handle the form submission to add a new parcel category
 app.post('/add-parcel-category', async (req, res) => {
-    const { parcel_category_id, parcel_category_name } = req.body;
+    const { parcel_category_name } = req.body;
     try {
-        const result = await statusAndCategoriesManagementToken.insertParcelCategory(parcel_category_id, parcel_category_name);
+        const result = await StatAndCatService.addParcelCategory(parcel_category_name);
         if (result) {
             res.redirect('/manage-parcel-categories');
         } else {
@@ -1875,11 +1863,12 @@ app.post('/update-parcel-category/:id', async (req, res) => {
 app.post('/delete-parcel-category/:id', async (req, res) => {
     const parcelCategoryId = req.params.id;
     try {
-        const result = await statusAndCategoriesManagementToken.deleteParcelCategory(parcelCategoryId);
+        const result = await StatAndCatService.removeParcelCategory(parcelCategoryId);
         if (result) {
             res.redirect('/manage-parcel-categories');
-        } else {
-            res.status(404).send('Parcel category not found.');
+        } else{
+            res.redirect('/manage-parcel-categories');
+
         }
     } catch (error) {
         console.error('Error deleting parcel category:', error);

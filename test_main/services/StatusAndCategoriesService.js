@@ -65,6 +65,7 @@ async function getOrderStatus() {
 async function addOrderStatus(order_status_name) {
     try {
             const newID = await idGen.generateID('order_status', 'order_status_id', 'STS');
+            console.log(newID);
             const [result] = await db.query(`
                     INSERT INTO order_status (order_status_id, order_status_name) 
                     VALUES (?, ?);
@@ -167,18 +168,19 @@ async function getParcelCategories() {
 
 // Add a new parcel category
 async function addParcelCategory(parcel_category_name) {
-    try {
-            const newID = await idGen.generateID('parcel_categories', 'parcel_category_id', 'PAR');
-            const [result] = await db.query(`
-                    INSERT INTO parcel_categories (parcel_category_id, parcel_category_name) 
-                    VALUES (?, ?);
-                    `, [newID, parcel_category_name]);
-            return result.affectedRows > 0;
-    } catch (error) {
-            console.error('Error adding parcel category:', error);
-            return false;
-    }
-};
+        try {
+                const newID = await idGen.generateID('parcel_categories', 'parcel_category_id', 'PAR');
+                const [result] = await db.query(`
+                        INSERT INTO parcel_categories (parcel_category_id, parcel_category_name) 
+                        VALUES (?, ?);
+                        `, [newID, parcel_category_name]);
+    
+                return result.affectedRows > 0;
+        } catch (error) {
+                console.error('Error adding parcel category:', error);
+                return false;
+        }
+    };
 
 // Remove a parcel category if it's not used in parcels table
 async function removeParcelCategory(parcel_category_id) {
@@ -361,7 +363,7 @@ async function removeShipmentStatus(shipment_status_id) {
     }
 };
 
-const token_manager = {
+const StatAndCatService = {
     getEmployeeRoles,
     addEmployeeRole,
     removeEmployeeRole,
@@ -384,4 +386,4 @@ const token_manager = {
     addShipmentStatus,
     removeShipmentStatus
 };
-export default token_manager;
+export default StatAndCatService;
