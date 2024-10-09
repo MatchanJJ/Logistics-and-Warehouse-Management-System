@@ -78,7 +78,7 @@ async function addShipment(order_id, carrier_id, shipping_service_id) {
 
         const shipment_id = await idGen.generateID('shipments', 'shipment_id', 'SHI');
 
-        const shipment_status_id = 'SST0000001'; // Default is in-transit
+        const shipment_status_id = 'SST0000002'; // Default is in-transit
         const current_location = 'exiting warehouse';
         const shipment_date = new Date();
         const estimated_delivery_date = new Date();
@@ -120,16 +120,27 @@ async function shipmentDelivered(shipment_id) {
     try {
         // Fetch the order_id associated with the shipment
         const [shipment] = await db.query(`
-            SELECT order_id FROM shipments WHERE shipment_id = ?;
+            SELECT order_id, shipment_status_id FROM shipments WHERE shipment_id = ?;
         `, [shipment_id]);
 
         if (shipment.length === 0) {
             console.log(`Shipment ${shipment_id} not found.`);
             return false;
         }
+        const shipmemt_status_id = shipment[0].shipmemt_status_id;
+        // check if it is failed or returned
+        if (shipmemt_status_id === 'SST0000004' || shipmemt_status_id === 'SST0000005') {
+            console.log('Shipment failed or is returned, cannot deliver');
+            return false;
+        }
+        // check if shipment is already delivered
+        if (shipmemt_status_id === 'SST0000003') {
+            console.log('Shipment is already delivered.');
+            return false;
+        }
 
         const order_id = shipment[0].order_id;
-        const new_shipment_status_id = 'SST0000002'; // ID for 'delivered' status
+        const new_shipment_status_id = 'SST0000003'; // ID for 'delivered' status
 
         // Update the shipment status
         const [result] = await db.query(`
@@ -175,13 +186,13 @@ async function returnShipment(shipment_id, return_reason) {
         const { order_id, shipment_status_id } = shipment[0];
 
         // Check if the shipment status is 'delivered'
-        if (shipment_status_id !== 'SST0000002') { // Assuming 'SST0000002' is the ID for 'delivered'
-            console.log(`Shipment ${shipment_id} is not delivered. Cannot proceed with return.`);
+        if (shipment_status_id !== 'SST0000003' || shipment_status_id !== 'SST000004') { 
+            console.log(`Shipment ${shipment_id} is not delivered or is not failed. Cannot proceed with return.`);
             return false;
         }
 
         // Update the shipment status to 'returned'
-        const new_shipment_status_id = 'SST0000003'; // Assuming 'SST0000003' is the ID for 'returned'
+        const new_shipment_status_id = 'SST0000005'; 
         const [updateResult] = await db.query(`
             UPDATE shipments
             SET shipment_status_id = ?
@@ -232,6 +243,29 @@ async function updateShipmentCurrentLocation(shipment_id, new_current_location) 
         }
     } catch (error) {
         console.error('Error updating shipment current location:', error);
+        return false;
+    }
+};
+
+// update shipment status to fail
+async function shipmentFailed(shipment_id) {
+    try {
+        // fail the shipment
+        const [result] = await db.query(`
+            UPDATE shipments SET shipment_status = 'SST0000004' WHERE shipment_id = ?;
+        `, [shipment_id]);
+
+        if (result.affectedRows > 0) {
+            console.log(`Shipment ${shipment_id} failed.`);
+            const log_message = `Shipment ${shipment_id} failed.`;
+            await logger.addShipmentLog(shipment_id, log_message);
+            return true;
+        } else {
+            console.log(`Shipment ${shipment_id} not found.`);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error failing shipmment:', error);
         return false;
     }
 };
@@ -287,6 +321,7 @@ export default {
     addShipment,
     shipmentDelivered,
     returnShipment,
+    shipmentFailed,
     updateShipmentCurrentLocation,
     removeShipment
 };

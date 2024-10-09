@@ -381,7 +381,7 @@ async function cancelOrder(order_id) {
         `, [order_id, order_id]);
 
         // Update the order status to canceled
-        await updateOrderStatus(order_id, 'cancelled');
+        await updateOrderStatus(order_id, 'cancelled'); // change
 
         // Update item inventories
         for (const itemOrder of itemOrders) {
@@ -442,8 +442,8 @@ async function shipOrder(order_id, carrier_id, shipping_service_id) {
 
         const order_status_id = order[0].order_status_id;
 
-        if (order_status_id !== 'OST0000001') { // Assuming 'OST0000001' is the ID for 'picked'
-            console.log(`Order ${order_id} is not in 'picked' status. Cannot ship.`);
+        if (order_status_id !== 'OST0000003') {
+            console.log(`Order ${order_id} is not packed. Cannot ship.`);
             return false;
         }
 
