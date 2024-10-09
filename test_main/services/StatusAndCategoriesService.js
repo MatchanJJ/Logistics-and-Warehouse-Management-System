@@ -169,7 +169,8 @@ async function getParcelCategories() {
 // Add a new parcel category
 async function addParcelCategory(parcel_category_name) {
         try {
-                const newID = await idGen.generateID('parcel_categories', 'parcel_category_id', 'PAR');
+                const newID = await idGen.generateID('parcel_categories', 'parcel_category_id', 'PCT');
+                console.log(newID);
                 const [result] = await db.query(`
                         INSERT INTO parcel_categories (parcel_category_id, parcel_category_name) 
                         VALUES (?, ?);
