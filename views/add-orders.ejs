@@ -9,14 +9,12 @@
             <label for="customer_id">Customer ID:</label>
             <input type="text" id="customer_id" name="customer_id" required>
     
-            <label for="item_quantity">Item Quantity:</label>
-            <input type="text" id="item_quantity" name="item_quantity" required>
     
             <label for="shipping_service_id">Shipping Service:</label>
             <select id="shipping_service_id" name="shipping_service_id" required>
                 <option value="">Select Shipping Service</option>
                 <% shippingServices.forEach(function(service) { %>
-                    <option value="<%= service.id %>">
+                    <option value="<%= service.shipping_service_id %>">
                         <%= service.shipping_service_name %>
                     </option>
                 <% }) %>
@@ -27,16 +25,7 @@
     
             <label for="shipping_receiver">Shipping Receiver:</label>
             <input type="text" id="shipping_receiver" name="shipping_receiver" required>
-    
-            <label for="order_type_id">Order Type ID:</label>
-            <select id="order_type_id" name="order_type_id" required>
-                <option value="OT001">Postal</option>
-                <option value="OT002">Product</option>
-            </select>
-    
-            <label for="order_total_amount">Order Total Amount:</label>
-            <input type="text" id="order_total_amount" name="order_total_amount" required>
-    
+
             <button type="submit">Add Order</button>
         </form>
     </div>

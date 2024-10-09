@@ -844,3 +844,84 @@ select:focus {
     background-color: white; /* Keep background white */
     color: black; /* Set dropdown text color to black */
 }
+
+.order-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px; /* Larger font for emphasis */
+}
+
+.order-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-options {
+    width: 90%;
+    max-width: 600px; /* Responsive max width */
+}
+
+.container {
+    background-color: #ffffff; /* White background for the containers */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px;
+    margin-bottom: 20px; /* Space between containers */
+}
+
+.update-status-container {
+    display: flex; /* Enable flexbox for the container */
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center text */
+}
+
+.update-status {
+    margin-top: 15px; /* Space above the button */
+}
+.ship-order-container {
+    padding: 20px;
+}
+
+.btn {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for larger clickable area */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.ship-order-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align form elements */
+}
+
+.ship-order-form label {
+    margin-bottom: 5px; /* Spacing below label */
+    font-weight: bold;
+}
+
+.carrier-select {
+    width: 100%; /* Full width for select */
+    padding: 10px;
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 15px; /* Space below select */
+}
+
+.ship-order {
+    background-color: #28a745; /* Bootstrap success color */
+}
+
+.ship-order:hover {
+    background-color: #218838; /* Darker green on hover */
+}

@@ -26,7 +26,7 @@ CREATE TABLE employee_roles (
 CREATE TABLE warehouses (
     warehouse_id VARCHAR(10) PRIMARY KEY,
     warehouse_address VARCHAR(250) NOT NULL,
-    capacity FLOAT(6, 2) NOT NULL,
+    capacity DOUBLE NOT NULL,
     warehouse_type_id VARCHAR(10),
     FOREIGN KEY (warehouse_type_id) REFERENCES warehouse_types(warehouse_type_id)
 );

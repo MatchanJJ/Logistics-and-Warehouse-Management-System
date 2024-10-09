@@ -870,7 +870,7 @@ app.post('/update-parcel-location/:id', async (req, res) => {
     app.post('/delete-parcel/:id', async (req, res) => {
         const parcel_id = req.params.id; // Extract parcel ID from the route parameters
         try {
-            await ParcelServiceToken.removeParcel(parcel_id); // Call the delete function
+            await ParcelServiceToken.removeParcel()
             res.redirect('/parcel'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting parcel.');
@@ -1564,7 +1564,7 @@ app.post('/delete-partner/:id', async (req, res) => {
 });
 app.get('/orders', async (req, res) => {
     try {
-        const orders = await OrderService.getOrders(); //update this function when get order is created
+        const orders = await OrderService.getOrders(); 
         res.render('layout', {
             title: 'Order Management',
             content: 'orders', // Specify the content to include
@@ -1721,9 +1721,9 @@ app.get('/add-product-order', (req, res) => {
 });
 // Handle form submission for adding a new product order
 app.post('/add-product-order', async (req, res) => {
-    const { product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price } = req.body;
+    const {  order_id, product_id, product_quantity } = req.body;
     try {
-        await orderTokens.addProductOrders(product_order_id, order_id, product_id, product_quantity, product_unit_price, total_price); // Add the new product order
+        await OrderService.addProductOrder( order_id, product_id, product_quantity); // Add the new product order
         res.redirect('/product-orders'); // Redirect to product orders management after successful addition
     } catch (error) {
         console.error('Error adding new product order:', error);
@@ -2256,8 +2256,8 @@ app.get('/add-orders', async (req, res) => {
 
 // Route to handle form submission
 app.post('/add-orders', async (req, res) => {
-    const { customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount } = req.body;
-    const success = await OrderService.addOrder(customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount);
+    const {customer_id, shipping_service_id, shipping_address, shipping_receiver} = req.body;
+    const success = await OrderService.addOrder(customer_id, shipping_service_id, shipping_address, shipping_receiver);
 
     if (success) {
         res.redirect('/orders'); // Redirect to the orders page or wherever you want
@@ -2596,4 +2596,124 @@ app.post('/delete-postal-order', async (req, res) => {
     }
 });
 
+app.get('/order-options/:order_id', async (req, res) => {
+    const { order_id } = req.params; // Get the order_id from the URL parameters
 
+    try {
+        // Fetch order details from the database
+        const [order] = await pool.query(`SELECT * FROM orders WHERE order_id = ?`, [order_id]);
+
+        if (order.length === 0) {
+            return res.status(404).send(`Order ${order_id} not found.`);
+        }
+
+        // Fetch all current carriers
+        const [carriers] = await pool.query(`SELECT * FROM carriers`); // Adjust the query based on your database schema
+
+        // Render the layout with order and carrier data
+        res.render('layout', {
+            title: 'Order Options',
+            content: 'order-options',
+            orders: order[0],
+            carriers: carriers // Pass the carriers to the EJS template
+        });
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/ship-order/:order_id', async (req, res) => {
+    const { order_id } = req.params; // Get the order_id from the URL parameters
+    const { carrier_id } = req.body; // Get the carrier_id from the request body
+
+    try {
+        // Call the shipOrder function with the extracted order_id and carrier_id
+        const shipmentSuccess = await OrderService.shipOrder(order_id, carrier_id);
+
+        if (shipmentSuccess) {
+            // Redirect to orders page or display success message
+            res.redirect('/orders'); // Adjust this route as needed
+        } else {
+            // Handle failure in shipment creation
+            res.status(400).send(`Failed to ship order ${order_id}. Please try again.`);
+        }
+    } catch (error) {
+        console.error('Error shipping order:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// GET route to display the update order status form
+// GET route to display the update order status form
+app.get('/edit-order-status/:order_id', async (req, res) => {
+    const { order_id } = req.params; // Get the order_id from the URL parameters
+
+    try {
+        // Fetch order details from the database
+        const [order] = await pool.query(`SELECT * FROM orders WHERE order_id = ?`, [order_id]);
+
+        if (order.length === 0) {
+            return res.status(404).send(`Order ${order_id} not found.`);
+        }
+
+        // Fetch all order statuses from the database
+        const [statuses] = await pool.query(`SELECT * FROM order_status`);
+
+        res.render('layout', {
+            title: 'Update Order Status',
+            content: 'edit-order-status',
+            order: order[0],
+            statuses: statuses // Pass the statuses to the template
+        });
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+// POST route to update the order status
+app.post('/edit-order-status/:order_id', async (req, res) => {
+    const { order_id } = req.params; // Get the order_id from the URL parameters
+    const { new_order_status_id } = req.body; // Get the new order status from the request body
+
+    try {
+        const updateSuccess = await OrderService.updateOrderStatus(order_id, new_order_status_id);
+
+        if (updateSuccess) {
+            // Redirect to the order options page or display success message
+            res.redirect('/orders'); // Adjust this route as needed
+        } else {
+            // Handle failure in updating order status
+            res.status(400).send(`Failed to update status for order ${order_id}. Please try again.`);
+        }
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// POST route to remove an order
+app.post('/remove-order/:order_id', async (req, res) => {
+    const { order_id } = req.params; // Get order_id from URL parameters
+
+    const success = await OrderService.removeOrder(order_id); // Call the removeOrder function
+    if (success) {
+        res.redirect('/orders'); // Redirect to orders page if successful
+    } else {
+        res.status(500).send('Error removing order'); // Send error response if removal failed
+    }
+});
+
+// POST route to cancel an order
+app.post('/cancel-order/:order_id', async (req, res) => {
+    const { order_id } = req.params; // Get order_id from URL parameters
+
+    const success = await OrderService.cancelOrder(order_id); // Call the cancelOrder function
+    if (success) {
+        res.redirect('/orders'); // Redirect to orders page if successful
+    } else {
+        res.status(500).send('Error canceling order'); // Send error response if cancellation failed
+    }
+});

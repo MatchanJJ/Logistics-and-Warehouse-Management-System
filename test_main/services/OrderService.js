@@ -425,7 +425,7 @@ async function shipOrder(order_id, carrier_id) {
 
         const order_status_id = order[0].order_status_id;
 
-        if (order_status_id !== 'OST0000003') {
+        if (order_status_id !== 'STSlbMJ7yb') {
             console.log(`Order ${order_id} is not packed. Cannot ship.`);
             return false;
         }

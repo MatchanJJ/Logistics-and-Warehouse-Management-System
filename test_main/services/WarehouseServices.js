@@ -250,6 +250,7 @@ async function addWarehouse (warehouse_address, warehouse_capacity, warehouse_ty
 
 // update warehouse capacity
 async function updateWarehouseCapacity(warehouse_id, new_capacity) {
+    console.log(new_capacity);
     try {
         const [result] = await db.query (`
             UPDATE warehouses

@@ -1,0 +1,23 @@
+<a href="/orders">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+<link rel="stylesheet" href="/styles.css">
+
+<h2>Update Order Status</h2>
+
+<div class="home-container">
+    <main>
+        <form method="POST" action="/edit-order-status/<%= order.order_id %>" class="update-order-status-form">
+            <input type="hidden" name="order_id" value="<%= order.order_id %>">
+            <label for="new_order_status_id">Select New Status:</label>
+            <select name="new_order_status_id" required>
+                <option value="" disabled selected>Select a new status</option>
+                <!-- Dynamically render order status options -->
+                <% statuses.forEach(function(status) { %>
+                    <option value="<%= status.order_status_id %>"><%= status.order_status_name %></option>
+                <% }); %>
+            </select>
+            <button type="submit">Update Status</button>
+        </form>
+    </main>
+</div>

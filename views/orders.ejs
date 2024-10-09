@@ -28,11 +28,12 @@
                         <th>Shipping Receiver</th>
                         <th>Order Total Amount</th>
                         <th>Shipping Service Name</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% orders.forEach(order => { %>
-                        <tr>
+                        <tr onclick="window.location.href='/order-options/<%= order.order_id %>' " style="cursor: pointer;">
                             <td><%= order.order_id %></td>
                             <td><%= order.customer_id %></td>
                             <td><%= order.order_date_time %></td>
@@ -42,6 +43,16 @@
                             <td><%= order.shipping_receiver %></td>
                             <td><%= order.order_total_amount %></td>
                             <td><%= order.shipping_service_name %></td>
+                            <td>
+                                <!-- Form for removing an order -->
+                                <form method="POST" action="/remove-order/<%= order.order_id %>" style="display:inline;">
+                                    <button type="submit">Remove</button>
+                                </form>
+                                <!-- Form for canceling an order -->
+                                <form method="POST" action="/cancel-order/<%= order.order_id %>" style="display:inline;">
+                                    <button type="submit">Cancel</button>
+                                </form>
+                            </td>
                         </tr>
                     <% }) %>
                 </tbody>
