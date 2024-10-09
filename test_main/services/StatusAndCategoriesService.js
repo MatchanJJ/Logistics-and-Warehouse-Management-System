@@ -338,6 +338,16 @@ async function addShipmentStatus(shipment_status_name) {
             return false;
     }
 };
+async function updateShipmentStatus(shipment_status_id, shipment_status_name) {
+    try {       
+            const [result] = await db.query(`UPDATE shipment_status SET shipment_status_name = ? WHERE shipment_status_id = ?  `, [shipment_status_name,  shipment_status_id]);
+
+            return result.affectedRows > 0;
+    } catch (error) {
+            console.error('Error updating shipment status:', error);
+            return false;
+    }
+};
 
 // Remove a shipment status if it's not used in shipments table
 async function removeShipmentStatus(shipment_status_id) {
@@ -385,6 +395,7 @@ const StatAndCatService = {
     removeReturnStatus,
     getShipmentStatus,
     addShipmentStatus,
-    removeShipmentStatus
+    removeShipmentStatus,
+    updateShipmentStatus
 };
 export default StatAndCatService;

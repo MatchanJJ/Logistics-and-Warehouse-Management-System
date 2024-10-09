@@ -6,17 +6,23 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Archive Message</th>
-                <th>Date Archived</th>
+                <th>Archive ID</th>
+                <th>Customer ID</th>
+                <th>Customer First Name</th>
+                <th>Customer Last Name</th>
+                <th>Customer Email</th>
+                <th>Customer Address</th>
             </tr>
         </thead>
         <tbody>
             <% customerArchives.forEach(archive => { %>
                 <tr>
-                    <td><%= archive.id %></td>
-                    <td><%= archive.message %></td>
-                    <td><%= archive.date_archived %></td>
+                    <td><%= archive.archive_id %></td>
+                    <td><%= archive.customer_id %></td>
+                    <td><%= archive.customer_first_name %></td>
+                    <td><%= archive.customer_last_name %></td>
+                    <td><%= archive.customer_email %></td>
+                    <td><%= archive.customer_address %></td>
                 </tr>
             <% }) %>
         </tbody>

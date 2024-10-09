@@ -23,7 +23,7 @@
                             <td>
                                 <a href="/update-order-status/<%= status.order_status_id %>"><button>Update</button></a> 
                                 <form action="/delete-order-status/<%= status.order_status_id %>" method="POST" style="display:inline;">
-                                    <button type="submit">Delete</button>
+                                    <button type="submit" onclick="return confirm('Are you sure you want to remove this order status?')">Delete</button>
                                 </form>
                             </td>
                         </tr>

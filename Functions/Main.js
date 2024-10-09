@@ -1639,21 +1639,6 @@ app.post('/update-product-order/:id', async (req, res) => {
     }
 });
 
-// Delete Product Order Route
-app.post('/delete-product-order/:id', async (req, res) => {
-    const product_order_id = req.params.id;
-    try {
-        const result = await orderTokens.deleteProductOrder(product_order_id); // Ensure you have this function to handle deletion
-        if (result) {
-            res.redirect('/manage-product-orders'); // Redirect to product orders management after deletion
-        } else {
-            res.status(404).send('Product order not found.');
-        }
-    } catch (error) {
-        console.error('Error deleting product order:', error);
-        res.status(500).send('Error deleting product order.');
-    }
-});
 
 // Display the form for adding a new postal order
 app.get('/add-postal-order', (req, res) => {
@@ -2457,5 +2442,60 @@ app.post('/shipment-status/remove/:id', async (req, res) => {
         res.redirect('/manage-shipment-status');
     } else {
         res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
+    }
+});
+app.get('/delete-product-order/:id', async (req, res) => {
+    res.render('layout', { title: 'Add Shipment Status', content: 'add-shipment-status' }); // Render the layout with the add-warehouse content
+});
+//app.post('/delete-product-order/:id', async (req, res) => {
+//    const {order_id } = req.params.id;
+//    const [product_id] = await pool.query(`SELECT product_id FROM product_orders WHERE order_id = ?;`, [product_id]);
+//    const success = await OrderService.removeProductOrder(order_id,product_id);
+//
+//    if (success) {
+//        res.redirect('/product-orders');
+//    } else {
+//        res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
+//    }
+//});
+app.post('/delete-customer/:id', async (req, res) => {
+    const {customer_id } = req.params.id;
+    const success = await CustomerService.removeCustomer(customer_id);
+
+    if (success) {
+        res.redirect('/customers');
+    } else {
+        res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
+    }
+});
+
+app.get('/update-shipment-status/:id', async (req, res) => {
+    const shipment_status_id = req.params.id;
+    try {
+        const [rows] = await pool.query("SELECT * FROM shipment_status WHERE shipment_status_id = ?",[shipment_status_id]);
+        if (rows.length > 0) {
+            res.render('layout', { title: 'Update Shipment ', content: 'edit-shipment-status', shipmentStatus: rows[0] });
+            //res.render('update-parcel-category', { parcelCategory });
+        } else {
+            res.status(404).send('Parcel category not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching parcel category:', error);
+        res.status(500).send('Error fetching parcel category.');
+    }
+});
+
+// POST route to handle the form submission for updating shipment status
+app.post('/update-shipment-status/:id', async (req, res) => {
+    const shipment_status_id = req.params.id;
+    const { shipment_status_name } = req.body;
+
+
+    try {
+        await StatAndCatService.updateShipmentStatus(shipment_status_id, shipment_status_name);
+        res.redirect('/manage-shipment-status'); // Redirect after successful update
+    } catch (error) {
+        console.error('Error updating parcel category:', error);
+        res.status(500).send('Error updating parcel category.');
     }
 });

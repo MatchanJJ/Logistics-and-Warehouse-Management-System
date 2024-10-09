@@ -40,7 +40,7 @@
                         <a href="/edit-parcel-prompt/<%= parcel.parcel_id %>"><button>Edit</button></a> 
                         <a href="/assign-parcel/<%= parcel.parcel_id %>"><button>Assign Parcel</button></a> 
                         <form action="/delete-parcel/<%= parcel.parcel_id %>" method="POST" style="display:inline;">
-                            <button type="submit">Delete</button>
+                            <button type="submit"onclick="return confirm('Are you sure you want to remove this parcel?')">Delete</button>
                         </form>
                     </td>
                 </tr>
