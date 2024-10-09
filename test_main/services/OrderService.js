@@ -6,60 +6,34 @@ import InventoryService from './InventoryService.js';
 import ShipmentService from './ShipmentService.js';
 
 // get orders
-async function getOrders () {
+async function getOrders () { 
     try {
         const [rows] = await db.query (
-            `(
-            SELECT
-                o.order_id AS order_id,
-                CONCAT(c.customer_first_name, ' ', c.customer_last_name) AS customer_name,
-                os.order_status_name AS order_status,
-                s.shipping_service_name AS shipping_service,
-                o.shipping_address AS shipping_address, 
-                o.shipping_receiver AS shipping_receiver,
-                ot.order_type_name AS order_type,
-                p.product_unit_price AS unit_price,
-                'product' AS item_type,
-                o.order_total_amount AS total_amount,
-                GROUP_CONCAT(p.product_name SEPARATOR ', ') AS order_items,
-                SUM(po.product_quantity) AS total_quantity,
-                pc.product_category_name AS category
-            FROM orders o
-            JOIN customers c ON o.customer_id = c.customer_id
-            JOIN order_status os ON o.order_status_id = os.order_status_id
-            JOIN shipping_services s ON o.shipping_service_id = s.shipping_service_id
-            JOIN order_types ot ON o.order_type_id = ot.order_type_id
-            JOIN product_orders po ON o.order_id = po.order_id
-            JOIN products p ON po.product_id = p.product_id
-            JOIN product_categories pc ON p.product_category_id = pc.product_category_id
-            GROUP BY o.order_id
-        )
-        UNION ALL
-        (
-            SELECT
-                o.order_id AS order_id,
-                CONCAT(c.customer_first_name, ' ', c.customer_last_name) AS customer_name,
-                os.order_status_name AS order_status,
-                s.shipping_service_name AS shipping_service,
-                o.shipping_address AS shipping_address,
-                o.shipping_receiver AS shipping_receiver,
-                ot.order_type_name AS order_type,
-                par.parcel_unit_price AS unit_price,
-                'parcel' AS item_type,
-                o.order_total_amount AS total_amount,
-                GROUP_CONCAT(par.parcel_description SEPARATOR ', ') AS order_items,
-                1 AS total_quantity,
-                parc.parcel_category_name AS category
-            FROM orders o
-            JOIN customers c ON o.customer_id = c.customer_id
-            JOIN order_status os ON o.order_status_id = os.order_status_id
-            JOIN shipping_services s ON o.shipping_service_id = s.shipping_service_id
-            JOIN order_types ot ON o.order_type_id = ot.order_type_id
-            JOIN postal_orders po ON o.order_id = po.order_id
-            JOIN parcels par ON po.parcel_id = par.parcel_id
-            JOIN parcel_categories parc ON par.parcel_category_id = parc.parcel_category_id
-            GROUP BY o.order_id 
-            );`
+            `SELECT 
+                o.order_id,
+                o.customer_id,
+                o.order_date_time,
+                o.order_status_id,
+                o.shipping_service_id,
+                o.delivery_address,
+                o.shipping_receiver,
+                o.order_type_id,
+                o.order_total_amount,
+                po.parcel_id,
+                po.total_price AS postal_total_price,
+                prod.product_id,
+                prod.product_quantity,
+                prod.total_price AS product_total_price,
+                s.shipping_service_name
+            FROM 
+                orders o
+            LEFT JOIN 
+                postal_orders po ON o.order_id = po.order_id
+            LEFT JOIN 
+                product_orders prod ON o.order_id = prod.order_id
+            LEFT JOIN 
+                shipping_services s ON o.shipping_service_id = s.shipping_service_id;
+            `
         );
         return rows;
     } catch(error) {
@@ -241,30 +215,24 @@ async function removeProductOrder(order_id, product_id) {
 };
 
 // Add a new order
-async function addOrder(customer_id, item_id, item_quantity, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) {
+async function addOrder(customer_id, shipping_service_id, shipping_address, shipping_receiver) {
     try {
-        const order_status_id = 'OS001'; // default starting order status - change depend on the DM populate/ finalize soon
+        const order_status_id = 'OST0000001'; // default starting order status - change depend on the DM populate/ finalize soon
         const newID = await idGen.generateID('orders', 'order_id', 'ORD');
         const order_date_time = new Date();
-        console.log(order_date_time);
         const [result] = await db.query(`
-            INSERT INTO orders (order_id, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?);
-        `, [newID, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver, order_type_id, order_total_amount]);
-        const log_message = `Added new order with ID ${newID}`;
-        await logger.addOrderLog(newID, log_message);
+            INSERT INTO orders (order_id, customer_id, order_date_time, order_status_id, shipping_service_id, delivery_address, shipping_receiver) 
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        `, [newID, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver]);
         if (result.affectedRows > 0) {
-            if (order_type_id === 'OT001') {
-                await addPostalOrder(newID, item_id);
-            } else if (order_type_id === 'OT002') {
-                await addProductOrder(newID, item_id, item_quantity);
-            }
-            console.log('Order added successfully.');
+            const log_message = `Added new order with ID ${newID}`;
+            await logger.addOrderLog(newID, log_message);
             return true;
         } else {
-            console.log('Failed to add order.');
+            console.log('Error adding order.');
             return false;
         }
+        
     } catch (error) {
         console.error('Error adding order:', error);
         return false;

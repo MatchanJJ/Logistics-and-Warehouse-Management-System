@@ -25,7 +25,7 @@
 
     // Initialize Express
     const app = express();
-    const port = 8080;
+    const port = 3000;
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use((req, res, next) => {
