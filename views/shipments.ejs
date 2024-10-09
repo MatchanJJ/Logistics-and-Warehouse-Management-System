@@ -9,11 +9,6 @@
 </a>
 <h2>Shipment List</h2>
 
-<!-- Buttons to add a new shipment -->
-<div>
-    <a href="/add-shipment" class="btn">Add Shipment</a>
-</div>
-
 <table>
     <thead>
         <tr>
@@ -26,7 +21,6 @@
             <th>Estimated Delivery Date</th>
             <th>Shipping Service</th>
             <th>Shipment Status</th>
-            <th>Actions</th> <!-- Added actions column -->
         </tr>
     </thead>
     <tbody>
@@ -41,12 +35,6 @@
             <td><%= shipment.estimated_delivery_date %></td>
             <td><%= shipment.shipping_service %></td>
             <td><%= shipment.shipment_status %></td>
-            <td>
-                <a href="/update-shipment/<%= shipment.shipment_id %>" class="btn">Update</a> 
-                <form action="/delete-shipment/<%= shipment.shipment_id %>" method="POST" style="display:inline;">
-                    <button type="submit" class="btn" style="background-color: red;">Delete</button>
-                </form>
-            </td>
         </tr>
         <% }) %>
     </tbody>

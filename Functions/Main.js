@@ -1288,6 +1288,27 @@ app.get('/shipment-actions/:id', async (req, res) => {
         res.render('layout', { title: 'Shipment Actions', content: 'shipment-actions', shipment_id });
 
 });
+
+// GET route to render the form to update the current location of a shipment
+app.get('/shipment-update-current-location/:id', (req, res) => {
+    const shipment_id = req.params.id;
+    res.render('layout', { title: 'Update Shipment Location', content: 'update-shipment-location', shipment_id });
+});
+
+// POST route to handle the form submission and update the current location
+app.post('/shipment-update-current-location/:id', async (req, res) => {
+    const shipment_id = req.params.id;
+    const new_current_location = req.body.new_current_location;
+
+    const success = await ShipmentService.updateShipmentCurrentLocation(shipment_id, new_current_location);
+
+    if (success) {
+        res.redirect(`/shipments`);
+    } else {
+        res.status(500).send('Failed to update shipment location');
+    }
+});
+
 app.get('/shipment-deliver/:id', async (req, res) => {
     const shipment_id = req.params.id; // Extract shipment ID from the route parameters
     try {
@@ -1304,6 +1325,18 @@ app.get('/shipment-remove/:id', async (req, res) => {
     const shipment_id = req.params.id; // Extract shipment ID from the route parameters
     try {
         await ShipmentService.removeShipment(shipment_id);
+        res.redirect('/shipments'); // Redirect to the shipment list after adding
+    } catch (error) {
+        console.error('Error adding shipment:', error);
+        res.status(500).send('Error adding shipment.');
+    }
+        //res.render('layout', { title: 'Shipment Actions', content: 'shipment-actions', shipment_id });
+
+});
+app.get('/shipment-failed/:id', async (req, res) => {
+    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
+    try {
+        await ShipmentService.shipmentFailed(shipment_id);
         res.redirect('/shipments'); // Redirect to the shipment list after adding
     } catch (error) {
         console.error('Error adding shipment:', error);
