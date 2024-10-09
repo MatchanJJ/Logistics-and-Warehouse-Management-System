@@ -22,13 +22,20 @@
         </div>
 
         <div class="form-group">
-            <label for="employee_role_id">Role ID:</label>
-            <input type="text" id="employee_role_id" name="employee_role_id">
+            <label for="employee_role_id">Role:</label>
+            <select id="employee_role_id" name="employee_role_id" required>
+                <option value="">Select Role</option>
+                <% roles.forEach(function(role) { %>
+                    <option value="<%= role.employee_role_id %>">
+                        <%= role.role_name %>
+                    </option>
+                <% }) %>
+            </select>
         </div>
 
         <div class="form-group">
             <label for="employee_salary">Salary:</label>
-            <input type="text" id="employee_salary" name="employee_salary">
+            <input type="text" id="employee_salary" name="employee_salary" required>
         </div>
 
         <div class="form-group">

@@ -18,8 +18,15 @@
         </div>
 
         <div class="form-group">
-            <label for="warehouse_type_id">Warehouse Type ID:</label>
-            <input type="text" id="warehouse_type_id" name="warehouse_type_id" required class="form-control">
+            <label for="warehouse_type_id">Warehouse Type:</label>
+            <select id="warehouse_type_id" name="warehouse_type_id" required class="form-control">
+                <option value="">Select Warehouse Type</option>
+                <% warehouseTypes.forEach(function(warehouseType) { %>
+                    <option value="<%= warehouseType.warehouse_type_id %>">
+                        <%= warehouseType.warehouse_type_name %>
+                    </option>
+                <% }); %>
+            </select>
         </div>
 
         <div class="form-group">

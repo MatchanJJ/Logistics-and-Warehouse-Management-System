@@ -832,3 +832,15 @@ select:focus {
     border-color: #5b9bd5;
     box-shadow: 0 0 5px rgba(91, 155, 213, 0.5);
 }
+
+.form-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white; /* Keep background white */
+    color: black; /* Set dropdown text color to black */
+}
