@@ -85,7 +85,7 @@ async function archiveOrder(order_id) {
 
         const [result] = await db.query(`
             INSERT INTO order_archives (archive_id, order_id, customer_id, order_date_time, order_status_id, shipping_address, shipping_receiver, shipping_service_id, order_total_amount)
-            SELECT ?, order_id, customer_id, order_date_time, order_status_id, shipping_address, shipping_receiver, shipping_service_id, order_total_amount
+            SELECT ?, order_id, customer_id, order_date_time, order_status_id, delivery_address, shipping_receiver, shipping_service_id, order_total_amount
             FROM orders
             WHERE order_id = ?;
         `, [archiveID, order_id]);
