@@ -5,9 +5,9 @@ import archiver from '../utils/archiveUtil.js';
 import InventoryService from './InventoryService.js';
 import ShipmentService from './ShipmentService.js';
 
-// get orders
-async function viewOrders (order_id) { 
-    try { //chatgpt WHERE CLAUSE
+// get all orders
+async function getOrders (order_id) { 
+    try {
         const [rows] = await db.query (
             `SELECT 
                 o.order_id,
@@ -17,20 +17,10 @@ async function viewOrders (order_id) {
                 o.shipping_service_id,
                 o.delivery_address,
                 o.shipping_receiver,
-                o.order_type_id,
                 o.order_total_amount,
-                po.parcel_id,
-                po.total_price AS postal_total_price,
-                prod.product_id,
-                prod.product_quantity,
-                prod.total_price AS product_total_price,
                 s.shipping_service_name
             FROM 
                 orders o
-            LEFT JOIN 
-                postal_orders po ON o.order_id = po.order_id
-            LEFT JOIN 
-                product_orders prod ON o.order_id = prod.order_id
             LEFT JOIN 
                 shipping_services s ON o.shipping_service_id = s.shipping_service_id;
             `
