@@ -93,13 +93,24 @@ async function listAllOrders() {
 // LIST ALL PRODUCT ORDERS
 async function listAllProductOrders() {
     try {
-        const [productOrders] = await pool.query("SELECT * FROM product_orders");
+        const [productOrders] = await pool.query(`
+            SELECT 
+                po.order_id,
+                po.product_id,
+                p.product_unit_price,
+                po.product_quantity,
+                po.total_price
+            FROM 
+                product_orders po
+            JOIN 
+                products p ON po.product_id = p.product_id;
+            `);
         return productOrders; // Return all product orders
     } catch (error) {
         console.error('Error fetching product orders:', error);
-        throw error; // Rethrow the error for handling in the calling context
+        return [];
     }
-}
+};
 
 // LIST ALL PARCEL ORDERS
 async function listAllPostalOrders() {

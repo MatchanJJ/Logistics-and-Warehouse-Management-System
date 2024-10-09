@@ -5,9 +5,9 @@ import archiver from '../utils/archiveUtil.js';
 import InventoryService from './InventoryService.js';
 import ShipmentService from './ShipmentService.js';
 
-// get orders
-async function viewOrders (order_id) { 
-    try { //chatgpt WHERE CLAUSE
+// get all orders
+async function getOrders (order_id) { 
+    try {
         const [rows] = await db.query (
             `SELECT 
                 o.order_id,
@@ -17,20 +17,10 @@ async function viewOrders (order_id) {
                 o.shipping_service_id,
                 o.delivery_address,
                 o.shipping_receiver,
-                o.order_type_id,
                 o.order_total_amount,
-                po.parcel_id,
-                po.total_price AS postal_total_price,
-                prod.product_id,
-                prod.product_quantity,
-                prod.total_price AS product_total_price,
                 s.shipping_service_name
             FROM 
                 orders o
-            LEFT JOIN 
-                postal_orders po ON o.order_id = po.order_id
-            LEFT JOIN 
-                product_orders prod ON o.order_id = prod.order_id
             LEFT JOIN 
                 shipping_services s ON o.shipping_service_id = s.shipping_service_id;
             `
@@ -225,6 +215,7 @@ async function addOrder(customer_id, shipping_service_id, shipping_address, ship
             VALUES (?, ?, ?, ?, ?, ?, ?);
         `, [newID, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver]);
         if (result.affectedRows > 0) {
+            console.log('Added new order.')
             const log_message = `Added new order with ID ${newID}`;
             await logger.addOrderLog(newID, log_message);
             return true;
@@ -434,7 +425,48 @@ async function shipOrder(order_id, carrier_id) {
         console.error('Error shipping order:', error);
         return false;
     }
-}
+};
+// list all product orders
+async function listAllProductOrders() {
+    try {
+        const [productOrders] = await pool.query(`
+            SELECT 
+                po.order_id,
+                po.product_id,
+                p.product_unit_price,
+                po.product_quantity,
+                po.total_price
+            FROM 
+                product_orders po
+            JOIN 
+                products p ON po.product_id = p.product_id;
+            `);
+        return productOrders; // Return all product orders
+    } catch (error) {
+        console.error('Error fetching product orders:', error);
+        return [];
+    }
+};
+
+// list all parcel orders
+async function listAllParcelOrders() {
+    try {
+        const [parcelOrders] = await pool.query(`
+            SELECT 
+                po.order_id,
+                po.parcel_id,
+                p.parcel_unit_price,
+                po.total_price
+            FROM 
+                postal_orders po
+            JOIN 
+                parcels p ON po.parcel_id = p.parcel_id;
+            `);
+    } catch (error) {
+        console.error('Error fetching parcel orders:', error);
+        return [];
+    }
+};
 
 
 export default {
@@ -448,5 +480,7 @@ export default {
     updateOrderStatus,
     removeOrder,
     cancelOrder,
-    shipOrder
+    shipOrder,
+    listAllParcelOrders,
+    listAllProductOrders
 };
