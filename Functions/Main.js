@@ -604,26 +604,6 @@ app.get('/inventories', async (req, res) => {
     
 
     // Handle the form submission for adding a new parcel
-    // Example handler for adding a parcel category
-app.post('/add-parcel-category', async (req, res) => {
-    console.log(req.body);
-    const { parcel_category_id, parcel_category_name } = req.body; // Ensure these values are being captured
-
-    try {
-        // Log the values to see what's being passed
-        console.log('Adding Parcel Category:', parcel_category_id, parcel_category_name);
-        
-        const result = await statusAndCategoriesManagementToken.insertParcelCategory(parcel_category_id, parcel_category_name);
-        if (result) {
-            res.redirect('/manage-parcel-categories'); // Redirect after successful addition
-        } else {
-            res.status(400).send('Failed to add parcel category.');
-        }
-    } catch (error) {
-        console.error('Error adding parcel category:', error);
-        res.status(500).send('Error adding parcel category.');
-    }
-});
 
 app.get('/view-parcel/:parcel_id', async (req, res) => {
     const parcelId = req.params.parcel_id;
