@@ -62,8 +62,19 @@ async function getShipmentDetails(shipment_id) {
 };
 
 // add new shipment for order
-async function addShipment(order_id, carrier_id, shipping_service_id) {
+async function addShipment(order_id, carrier_id) {
     try {
+        // check if they have matching shipping services
+        const [order_carrier_ss] = await db.query(`
+            SELECT o.shipping_service_id 
+            FROM orders o 
+            JOIN carriers c ON o.shipping_service_id = c.shipping_service_id
+        `);
+        
+        if (order_carrier_ss.length < 1) {
+            console.log('Cannot assign order to carrier since both do not have the same shipping service.');
+            return false;
+        }        
         // Check if the order already has a shipment
         const [existingShipments] = await db.query(`
             SELECT COUNT(*) AS count
@@ -78,7 +89,7 @@ async function addShipment(order_id, carrier_id, shipping_service_id) {
 
         const shipment_id = await idGen.generateID('shipments', 'shipment_id', 'SHI');
 
-        const shipment_status_id = 'SST0000001'; // Default is in-transit
+        const shipment_status_id = 'SST0000002'; // Default is in-transit
         const current_location = 'exiting warehouse';
         const shipment_date = new Date();
         const estimated_delivery_date = new Date();
@@ -120,11 +131,22 @@ async function shipmentDelivered(shipment_id) {
     try {
         // Fetch the order_id associated with the shipment
         const [shipment] = await db.query(`
-            SELECT order_id FROM shipments WHERE shipment_id = ?;
+            SELECT order_id, shipment_status_id FROM shipments WHERE shipment_id = ?;
         `, [shipment_id]);
 
         if (shipment.length === 0) {
             console.log(`Shipment ${shipment_id} not found.`);
+            return false;
+        }
+        const shipmemt_status_id = shipment[0].shipmemt_status_id;
+        // check if it is failed or returned
+        if (shipmemt_status_id === 'SST0000004' || shipmemt_status_id === 'SST0000005') {
+            console.log('Shipment failed or is returned, cannot deliver');
+            return false;
+        }
+        // check if shipment is already delivered
+        if (shipmemt_status_id === 'SST0000003') {
+            console.log('Shipment is already delivered.');
             return false;
         }
 
@@ -236,6 +258,29 @@ async function updateShipmentCurrentLocation(shipment_id, new_current_location) 
     }
 };
 
+// update shipment status to fail
+async function shipmentFailed(shipment_id) {
+    try {
+        // fail the shipment
+        const [result] = await db.query(`
+            UPDATE shipments SET shipment_status = 'SST0000004' WHERE shipment_id = ?;
+        `, [shipment_id]);
+
+        if (result.affectedRows > 0) {
+            console.log(`Shipment ${shipment_id} failed.`);
+            const log_message = `Shipment ${shipment_id} failed.`;
+            await logger.addShipmentLog(shipment_id, log_message);
+            return true;
+        } else {
+            console.log(`Shipment ${shipment_id} not found.`);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error failing shipmment:', error);
+        return false;
+    }
+};
+
 // Remove shipment
 async function removeShipment(shipment_id) {
     try {
@@ -287,6 +332,7 @@ export default {
     addShipment,
     shipmentDelivered,
     returnShipment,
+    shipmentFailed,
     updateShipmentCurrentLocation,
     removeShipment
 };
