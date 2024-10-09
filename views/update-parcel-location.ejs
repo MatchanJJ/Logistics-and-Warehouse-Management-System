@@ -1,0 +1,30 @@
+<!-- views/update-parcel-location.ejs -->
+<a href="/edit-parcel-prompt/<%= parcel.parcel_id %>">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+
+<h2>Update Parcel Location</h2>
+
+<div class="container">
+    <form action="/update-parcel-location/<%= parcel.parcel_id %>" method="POST">
+        <label for="warehouse_id">Warehouse ID:</label>
+        <input type="text" id="warehouse_id" name="warehouse_id" required>
+        
+        <label for="section">Section:</label>
+        <input type="text" id="section" name="section" required>
+
+        <label for="aisle">Aisle:</label>
+        <input type="text" id="aisle" name="aisle" required>
+
+        <label for="rack">Rack:</label>
+        <input type="text" id="rack" name="rack" required>
+
+        <label for="shelf">Shelf:</label>
+        <input type="text" id="shelf" name="shelf" required>
+
+        <label for="bin">Bin:</label>
+        <input type="text" id="bin" name="bin" required>
+
+        <button type="submit">Update Parcel Location</button>
+    </form>
+</div>

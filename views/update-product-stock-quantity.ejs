@@ -1,0 +1,18 @@
+<!-- views/update-product-stock-quantity.ejs -->
+<a href="/product">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+
+<h2>Update Product Stock Quantity</h2>
+
+<div class="container">
+    <form action="/update-product-stock-quantity/<%= product.product_id %>" method="POST">
+        <label for="warehouse_id">Warehouse ID:</label>
+        <input type="text" id="warehouse_id" name="warehouse_id" required>
+
+        <label for="new_quantity">New Quantity:</label>
+        <input type="text" id="new_quantity" name="new_quantity" required>
+
+        <button type="submit">Update Stock</button>
+    </form>
+</div>

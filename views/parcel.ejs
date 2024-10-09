@@ -37,7 +37,7 @@
                     <td><%= parcel.parcel_width %></td>
                     <td><%= parcel.parcel_height %></td>
                     <td>
-                        <a href="/edit-parcel/<%= parcel.parcel_id %>"><button>Edit</button></a> 
+                        <a href="/edit-parcel-prompt/<%= parcel.parcel_id %>"><button>Edit</button></a> 
                         <a href="/assign-parcel/<%= parcel.parcel_id %>"><button>Assign Parcel</button></a> 
                         <form action="/delete-parcel/<%= parcel.parcel_id %>" method="POST" style="display:inline;">
                             <button type="submit">Delete</button>

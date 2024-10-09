@@ -702,8 +702,85 @@ app.post('/assign-parcel/:id', async (req, res) => {
         }
     });
 
+    // Serve the edit parcel prompt page
+app.get('/edit-parcel-prompt/:id', async (req, res) => {
+    const parcel_id = req.params.id;
+
+    // Fetch parcel details if needed
+    try {
+        const parcel = await parcelManagementToken.findParcel(parcel_id);
+        res.render('layout', { title: 'Edit Parcel Option', content: 'edit-parcel-option' , parcel}); // Render the layout with the add-warehouse content
+    } catch (error) {
+        console.error('Error fetching parcel:', error);
+        res.status(500).send('Error fetching parcel.');
+    }
+});
+
+// GET route to display the update parcel stock quantity form
+app.get('/update-parcel-stock-quantity/:id', async (req, res) => {
+    const parcel_id = req.params.id;
+    
+    try {
+        const parcel = await parcelManagementToken.findParcel(parcel_id);
+        res.render('layout', { title: 'Update Parcel Stock Quantity', content: 'update-parcel-stock-quantity' , parcel}); // Render the layout with the add-warehouse content
+    } catch (error) {
+        console.error('Error fetching parcel details:', error);
+        res.status(500).send('Error fetching parcel details.');
+    }
+});
+
+// POST route to handle updating parcel stock quantity
+app.post('/update-parcel-stock-quantity/:id', async (req, res) => {
+    const parcel_id = req.params.id;
+    const { warehouse_id, new_quantity } = req.body;
+
+    try {
+        const updated = await InventoryService.updateParcelStockQuantity(parcel_id, warehouse_id, new_quantity);
+        if (updated) {
+            res.redirect('/parcel');  // Redirect to the parcel listing page after a successful update
+        } else {
+            res.status(500).send('Error updating parcel stock quantity.');
+        }
+    } catch (error) {
+        console.error('Error updating stock quantity:', error);
+        res.status(500).send('Error updating parcel stock quantity.');
+    }
+});
+
+// GET route to display the update parcel location form
+app.get('/update-parcel-location/:id', async (req, res) => {
+    const parcel_id = req.params.id;
+    
+    try {
+        const parcel = await parcelManagementToken.findParcel(parcel_id);  // Fetch parcel details if necessary
+        res.render('layout', { title: 'Update Parcel Location', content: 'update-parcel-location' , parcel}); // Render the layout with the add-warehouse content
+    } catch (error) {
+        console.error('Error fetching parcel details:', error);
+        res.status(500).send('Error fetching parcel details.');
+    }
+});
+
+// POST route to handle updating parcel location
+app.post('/update-parcel-location/:id', async (req, res) => {
+    const parcel_id = req.params.id;
+    const { warehouse_id, section, aisle, rack, shelf, bin } = req.body;
+
+    try {
+        const updated = await InventoryService.updateParcelLocation(parcel_id, warehouse_id, section, aisle, rack, shelf, bin);
+        if (updated) {
+            res.redirect('/parcel');  // Redirect to the parcel listing page after a successful update
+        } else {
+            res.status(500).send('Error updating parcel location.');
+        }
+    } catch (error) {
+        console.error('Error updating parcel location:', error);
+        res.status(500).send('Error updating parcel location.');
+    }
+});
+
+
     // Handle the form submission for updating a parcel
-    app.post('/edit-parcel/:id', async (req, res) => {
+    app.post('/edit-parcel-option/:id', async (req, res) => {
         const parcel_id = req.params.id; 
         const { 
             parcel_category_id, 
@@ -856,6 +933,95 @@ app.post('/assign-product/:id', async (req, res) => {
             res.status(500).send('Internal server error');
         }
     });
+
+// GET route to display the stock quantity update form
+app.get('/update-product-stock-quantity/:id', async (req, res) => {
+    const product_id = req.params.id;
+    try {
+        const product = await ProductServiceToken.viewProduct(product_id);
+        if (product) {
+            res.render('layout', { title: 'Update Product Stock Quantity', content: 'update-product-stock-quantity',product }); // Render the layout with the add-warehouse content
+        } else {
+            res.status(404).send('Product not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching product for stock quantity update:', error);
+        res.status(500).send('Error fetching product.');
+    }
+});
+
+// POST route to handle stock quantity update form submission
+app.post('/update-product-stock-quantity/:id', async (req, res) => {
+    const product_id = req.params.id;
+    const { warehouse_id, new_quantity } = req.body;
+
+    try {
+        const updated = await InventoryService.updateProductStockQuantity(product_id, warehouse_id, new_quantity);
+        if (updated) {
+            res.redirect(`/product`);
+        } else {
+            res.status(404).send('Product or Warehouse not found.');
+        }
+    } catch (error) {
+        console.error('Error updating product stock quantity:', error);
+        res.status(500).send('Error updating stock quantity.');
+    }
+});
+
+// GET route to display the location update form
+app.get('/update-product-location/:id', async (req, res) => {
+    const product_id = req.params.id;
+    try {
+        const product = await ProductServiceToken.viewProduct(product_id);
+        if (product) {
+            res.render('layout', { title: 'Edit Product Location', content: 'update-product-location',product }); // Render the layout with the add-warehouse content
+           // res.render('update-product-location', { product });
+        } else {
+            res.status(404).send('Product not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching product for location update:', error);
+        res.status(500).send('Error fetching product.');
+    }
+});
+
+// POST route to handle location update form submission
+app.post('/update-product-location/:id', async (req, res) => {
+    const product_id = req.params.id;
+    const { warehouse_id, section, aisle, rack, shelf, bin } = req.body;
+
+    try {
+        const updated = await InventoryService.updateProductLocation(product_id, warehouse_id, section, aisle, rack, shelf, bin);
+        if (updated) {
+            res.redirect(`/product`);
+        } else {
+            res.status(404).send('Product or Warehouse not found.');
+        }
+    } catch (error) {
+        console.error('Error updating product location:', error);
+        res.status(500).send('Error updating location.');
+    }
+});
+
+
+    // Route to show the prompt for editing a product
+app.get('/edit-product-option/:id', async (req, res) => {
+    const product_id = req.params.id; // Extract product ID from the route parameters
+    try {
+        const product = await ProductServiceToken.viewProduct(product_id); // Fetch product details
+        if (product) {
+            res.render('layout', { title: 'Edit Product Option', content: 'edit-product-option',product }); // Render the layout with the add-warehouse content
+
+            //res.render('edit-product-option', { product });  // Render the prompt view with product data
+        } else {
+            res.status(404).send('Product not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching product for edit prompt:', error);
+        res.status(500).send('Error retrieving product for editing.');
+    }
+});
+
 
     // Route for editing a product (render form with existing data)
     app.get('/edit-product/:id', async (req, res) => {

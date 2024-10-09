@@ -1,4 +1,4 @@
-<a href="/parcel">
+<a href="/edit-parcel-prompt/<%= parcel.parcel_id %>">
     <img class="back" src="/back-button.png" alt="back">
 </a>
 <h2>Edit Parcel</h2>
@@ -6,7 +6,7 @@
 
 <!-- Use a card or container-like div to wrap the form -->
 <div class="form-wrapper">
-    <form action="/edit-parcel/<%= parcel.parcel_id %>" method="POST" class="form-container">
+    <form action="/edit-parcel-option/<%= parcel.parcel_id %>" method="POST" class="form-container">
         <!-- Parcel Category ID -->
         <div class="form-group">
             <label for="parcel_category_id">Parcel Category ID:</label>
