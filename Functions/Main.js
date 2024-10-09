@@ -92,7 +92,7 @@ app.get('/add-job-role', (req, res) => {
 app.post('/add-job-role', async (req, res) => {
     const { employee_role_id, role_name } = req.body; // Extract form fields
     try {
-        await employeeManagementToken.addJobRole(employee_role_id, role_name); // Add the new job role
+        await StatAndCatService.addEmployeeRole(role_name); // Add the new job role
         res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful addition
     } catch (error) {
         console.error('Error adding job role:', error);
@@ -1710,16 +1710,6 @@ app.get('/manage-order-status', async (req, res) => {
     }
 });
 
-// Shipment Status Management
-app.get('/manage-shipment-status', async (req, res) => {
-    try {
-        const shipmentStatuses = await statusAndCategoriesManagementToken.getShipmentStatuses();
-        res.render('manage-shipment-status', { shipmentStatuses });
-    } catch (error) {
-        console.error('Error fetching shipment statuses:', error);
-        res.status(500).send('Error fetching shipment statuses.');
-    }
-});
 
 // Return Status Management
 app.get('/manage-return-status', async (req, res) => {
@@ -2438,3 +2428,34 @@ app.post('/update-return-status', async (req, res) => {
 });
 
 
+app.get('/manage-shipment-status', async (req, res) => {
+    const shipmentStatuses = await StatAndCatService.getShipmentStatus();
+    res.render('layout', { title: 'Manage Shipment Status', content: 'manage-shipment-status', shipmentStatuses }); // Render the layout with the add-warehouse content
+});
+app.get('/add-shipment-status', async (req, res) => {
+    res.render('layout', { title: 'Add Shipment Status', content: 'add-shipment-status' }); // Render the layout with the add-warehouse content
+});
+
+
+
+app.post('/add-shipment-status', async (req, res) => {
+    const { shipment_status_name } = req.body;
+    const success = await StatAndCatService.addShipmentStatus(shipment_status_name);
+
+    if (success) {
+        res.redirect('/manage-shipment-status');
+    } else {
+        res.status(500).send('Failed to add shipment status');
+    }
+});
+
+app.post('/shipment-status/remove/:id', async (req, res) => {
+    const shipment_status_id = req.params.id;
+    const success = await StatAndCatService.removeShipmentStatus(shipment_status_id);
+
+    if (success) {
+        res.redirect('/manage-shipment-status');
+    } else {
+        res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
+    }
+});

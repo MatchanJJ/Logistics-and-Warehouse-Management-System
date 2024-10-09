@@ -17,7 +17,7 @@ async function addEmployeeRole(employee_role_name) {
     try {
             const newID = await idGen.generateID('employee_roles', 'employee_role_id', 'ROL');
             const [result] = await db.query(`
-                    INSERT INTO employee_roles (employee_role_id, employee_role_name) 
+                    INSERT INTO employee_roles (employee_role_id, role_name) 
                     VALUES (?, ?);
                     `, [newID, employee_role_name]);
             return result.affectedRows > 0;
