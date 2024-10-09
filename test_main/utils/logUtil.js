@@ -259,12 +259,13 @@ async function addWarehouseLog(warehouse_id, log_description) {
 // get most recent warehouse change time
 async function returnRecentTimeWarehouse (warehouse_id) {
     try {
-        const result = await db.query(
+        const [result] = await db.query(
             'SELECT date_time FROM warehouse_logs WHERE warehouse_id = ? ORDER BY date_time DESC LIMIT 1',
             [warehouse_id]
         );
-        if (result.rows.length > 0) {
-            return result.rows[0].date_time;
+        if (result.length > 0) {
+            console.log(result);
+            return result[0].date_time;
         } else {
             console.log(`No entries found for the given warehouse: ${warehouse_id}`);
             return null;

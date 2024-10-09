@@ -19,6 +19,7 @@
     import ReturnService from '../test_main/services/ReturnService.js';
     import OrderService from '../test_main/services/OrderService.js';
     import StatAndCatService from '../test_main/services/StatusAndCategoriesService.js';
+    import logUtil from '../test_main/utils/logUtil.js';
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -91,7 +92,7 @@ app.get('/add-job-role', (req, res) => {
 app.post('/add-job-role', async (req, res) => {
     const { employee_role_id, role_name } = req.body; // Extract form fields
     try {
-        await employeeManagementToken.addJobRole(employee_role_id, role_name); // Add the new job role
+        await StatAndCatService.addEmployeeRole(role_name); // Add the new job role
         res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful addition
     } catch (error) {
         console.error('Error adding job role:', error);
@@ -356,7 +357,7 @@ import EmployeeService from '../test_main/services/EmployeeService.js';
 
  // Handle form submission for adding a new warehouse
 app.post('/add-warehouse', async (req, res) => {
-    const { warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
+    const { warehouse_id, warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
     try {
         // Log the inputs to debug
         console.log('Adding warehouse:', {warehouse_address, capacity, warehouse_type_id });
@@ -1266,21 +1267,106 @@ app.get('/shipments', async (req, res) => {
 });
 
 // Route to view a specific shipment by ID
-app.get('/shipment/:id', async (req, res) => {
+//app.get('/shipment/:id', async (req, res) => {
+//    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
+//    try {
+//        const shipment = await shipmentManagementToken.findShipmentById(shipment_id); // Fetch shipment details
+//        if (shipment) {
+//            res.render('layout', { title: 'Shipment Details', content: 'view-shipment', shipment });
+//            //res.render('view-shipment', { shipment }); // Render the view-shipment.ejs template
+//        } else {
+//            res.status(404).send('Shipment not found.');
+//        }
+//    } catch (error) {
+//        console.error('Error fetching shipment:', error);
+//        res.status(500).send('Error fetching shipment.');
+//    }
+//});
+app.get('/shipment-actions/:id', async (req, res) => {
     const shipment_id = req.params.id; // Extract shipment ID from the route parameters
-    try {
-        const shipment = await shipmentManagementToken.findShipmentById(shipment_id); // Fetch shipment details
-        if (shipment) {
-            res.render('layout', { title: 'Shipment Details', content: 'view-shipment', shipment });
-            //res.render('view-shipment', { shipment }); // Render the view-shipment.ejs template
-        } else {
-            res.status(404).send('Shipment not found.');
-        }
-    } catch (error) {
-        console.error('Error fetching shipment:', error);
-        res.status(500).send('Error fetching shipment.');
+
+        res.render('layout', { title: 'Shipment Actions', content: 'shipment-actions', shipment_id });
+
+});
+
+// GET route to render the form to update the current location of a shipment
+app.get('/shipment-update-current-location/:id', (req, res) => {
+    const shipment_id = req.params.id;
+    res.render('layout', { title: 'Update Shipment Location', content: 'update-shipment-location', shipment_id });
+});
+
+// POST route to handle the form submission and update the current location
+app.post('/shipment-update-current-location/:id', async (req, res) => {
+    const shipment_id = req.params.id;
+    const new_current_location = req.body.new_current_location;
+
+    const success = await ShipmentService.updateShipmentCurrentLocation(shipment_id, new_current_location);
+
+    if (success) {
+        res.redirect(`/shipments`);
+    } else {
+        res.status(500).send('Failed to update shipment location');
     }
 });
+
+app.get('/shipment-deliver/:id', async (req, res) => {
+    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
+    try {
+        await ShipmentService.shipmentDelivered(shipment_id);
+        res.redirect('/shipments'); // Redirect to the shipment list after adding
+    } catch (error) {
+        console.error('Error adding shipment:', error);
+        res.status(500).send('Error adding shipment.');
+    }
+        //res.render('layout', { title: 'Shipment Actions', content: 'shipment-actions', shipment_id });
+
+});
+app.get('/shipment-remove/:id', async (req, res) => {
+    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
+    try {
+        await ShipmentService.removeShipment(shipment_id);
+        res.redirect('/shipments'); // Redirect to the shipment list after adding
+    } catch (error) {
+        console.error('Error adding shipment:', error);
+        res.status(500).send('Error adding shipment.');
+    }
+        //res.render('layout', { title: 'Shipment Actions', content: 'shipment-actions', shipment_id });
+
+});
+app.get('/shipment-failed/:id', async (req, res) => {
+    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
+    try {
+        await ShipmentService.shipmentFailed(shipment_id);
+        res.redirect('/shipments'); // Redirect to the shipment list after adding
+    } catch (error) {
+        console.error('Error adding shipment:', error);
+        res.status(500).send('Error adding shipment.');
+    }
+        //res.render('layout', { title: 'Shipment Actions', content: 'shipment-actions', shipment_id });
+
+});
+
+// GET route to render the return form
+app.get('/shipment-return/:id', (req, res) => {
+    const shipment_id = req.params.id;
+    res.render('layout', { title: 'Return Shipment', content: 'return-shipment', shipment_id });
+});
+
+// POST route to handle the return shipment action
+app.post('/shipment-return/:id', async (req, res) => {
+    const shipment_id = req.params.id;
+    const return_reason = req.body.return_reason;
+
+    const success = await ShipmentService.returnShipment(shipment_id, return_reason);
+
+    if (success) {
+        res.redirect(`/shipments`);
+    } else {
+        res.status(500).send('Failed to return shipment');
+    }
+});
+
+
 
 // Route to render form for adding a new shipment
 app.get('/add-shipment', (req, res) => {
@@ -1624,16 +1710,6 @@ app.get('/manage-order-status', async (req, res) => {
     }
 });
 
-// Shipment Status Management
-app.get('/manage-shipment-status', async (req, res) => {
-    try {
-        const shipmentStatuses = await statusAndCategoriesManagementToken.getShipmentStatuses();
-        res.render('manage-shipment-status', { shipmentStatuses });
-    } catch (error) {
-        console.error('Error fetching shipment statuses:', error);
-        res.status(500).send('Error fetching shipment statuses.');
-    }
-});
 
 // Return Status Management
 app.get('/manage-return-status', async (req, res) => {
@@ -2352,3 +2428,34 @@ app.post('/update-return-status', async (req, res) => {
 });
 
 
+app.get('/manage-shipment-status', async (req, res) => {
+    const shipmentStatuses = await StatAndCatService.getShipmentStatus();
+    res.render('layout', { title: 'Manage Shipment Status', content: 'manage-shipment-status', shipmentStatuses }); // Render the layout with the add-warehouse content
+});
+app.get('/add-shipment-status', async (req, res) => {
+    res.render('layout', { title: 'Add Shipment Status', content: 'add-shipment-status' }); // Render the layout with the add-warehouse content
+});
+
+
+
+app.post('/add-shipment-status', async (req, res) => {
+    const { shipment_status_name } = req.body;
+    const success = await StatAndCatService.addShipmentStatus(shipment_status_name);
+
+    if (success) {
+        res.redirect('/manage-shipment-status');
+    } else {
+        res.status(500).send('Failed to add shipment status');
+    }
+});
+
+app.post('/shipment-status/remove/:id', async (req, res) => {
+    const shipment_status_id = req.params.id;
+    const success = await StatAndCatService.removeShipmentStatus(shipment_status_id);
+
+    if (success) {
+        res.redirect('/manage-shipment-status');
+    } else {
+        res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
+    }
+});

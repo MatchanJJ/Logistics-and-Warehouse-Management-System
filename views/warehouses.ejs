@@ -39,7 +39,7 @@
                 <td><%= warehouse.current_capacity_used %></td>
                 <td><%= warehouse.total_capacity - warehouse.current_capacity_used %></td>
                 <td><%= warehouse.warehouse_type_name %></td>
-                <td>Waiting</td>
+                <td><%= timestamp %></td>
                 <td>
                     <a href="/update-warehouse/<%= warehouse.warehouse_id %>" class="btn">Update</a> 
                     <form action="/delete-warehouse/<%= warehouse.warehouse_id %>" method="POST" style="display:inline;">

@@ -197,13 +197,13 @@ async function returnShipment(shipment_id, return_reason) {
         const { order_id, shipment_status_id } = shipment[0];
 
         // Check if the shipment status is 'delivered'
-        if (shipment_status_id !== 'SST0000003' || shipment_status_id !== 'SST000004') { 
-            console.log(`Shipment ${shipment_id} is not delivered or is not failed. Cannot proceed with return.`);
+        if (shipment_status_id !== 'SST0000003') { // Assuming 'SST0000002' is the ID for 'delivered'
+            console.log(`Shipment ${shipment_id} is not delivered. Cannot proceed with return.`);
             return false;
         }
 
         // Update the shipment status to 'returned'
-        const new_shipment_status_id = 'SST0000005'; 
+        const new_shipment_status_id = 'SST0000005'; // Assuming 'SST0000003' is the ID for 'returned'
         const [updateResult] = await db.query(`
             UPDATE shipments
             SET shipment_status_id = ?
