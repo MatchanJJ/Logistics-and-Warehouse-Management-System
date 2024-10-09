@@ -39,11 +39,12 @@ body {
       background-color: #24252A;
   }
 
+  .logo {
+    width: 150px;  /* Set desired width */
+    height:auto;  /* Maintain aspect ratio */
+    cursor: pointer;
+}
   
-  .logo{
-      cursor: pointer;
-  }
-
   .back{
     cursor: pointer;
     width: 32px;  

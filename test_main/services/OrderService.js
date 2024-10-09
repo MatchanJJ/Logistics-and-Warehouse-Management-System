@@ -361,62 +361,62 @@ async function removeOrder(order_id) {
     }
 ;}
 
-async function removeOrder(order_id) {
-    try {
-        // Check the order status
-        const [rows] = await db.query(`
-            SELECT order_status_id FROM orders WHERE order_id = ?;
-        `, [order_id]);
-
-        if (rows.length === 0) {
-            console.log('Order not found.');
-            return false;
-        }
-
-        const { order_status_id } = rows[0];
-
-        // if order is not cancelled or delivered
-        if (order_status_id !== 'OST0000006' || order_status_id !== 'OST0000005') {
-            console.log('Order cannot be removed unless it is returned or delivered.');
-            return false;
-        }
-
-        if (await archiver.archiveOrder(order_id)) {
-            const [orderType] = await db.query(`
-                SELECT order_type_id FROM orders WHERE order_id = ?;
-            `, [order_id]);
-            const { order_type_id } = orderType[0];
-
-            // Remove associated product or postal order
-            if (order_type_id === 'postal') {
-                await removePostalOrder(order_id);
-            } else if (order_type_id === 'product') {
-                await removeProductOrder(order_id);
-            }
-
-            // Remove the order itself
-            const [result] = await db.query(`
-                DELETE FROM orders WHERE order_id = ?;
-            `, [order_id]);
-
-            if (result.affectedRows > 0) {
-                console.log(`Order ${order_id} successfully removed.`);
-                const log_message = `Order ${order_id} removed and archived.`;
-                await logger.addOrderLog(order_id, log_message);
-                return true;
-            } else {
-                console.log('Error removing order.')
-                return false;
-            }
-        } else {
-            console.log('Error archiving order.')
-            return false;
-        }
-    } catch (error) {
-        console.error('Error removing order:', error);
-        return false;
-    }
-};
+//async function removeOrder(order_id) {
+//    try {
+//        // Check the order status
+//        const [rows] = await db.query(`
+//            SELECT order_status_id FROM orders WHERE order_id = ?;
+//        `, [order_id]);
+//
+//        if (rows.length === 0) {
+//            console.log('Order not found.');
+//            return false;
+//        }
+//
+//        const { order_status_id } = rows[0];
+//
+//        // if order is not cancelled or delivered
+//        if (order_status_id !== 'OST0000006' || order_status_id !== 'OST0000005') {
+//            console.log('Order cannot be removed unless it is returned or delivered.');
+//            return false;
+//        }
+//
+//        if (await archiver.archiveOrder(order_id)) {
+//            const [orderType] = await db.query(`
+//                SELECT order_type_id FROM orders WHERE order_id = ?;
+//            `, [order_id]);
+//            const { order_type_id } = orderType[0];
+//
+//            // Remove associated product or postal order
+//            if (order_type_id === 'postal') {
+//                await removePostalOrder(order_id);
+//            } else if (order_type_id === 'product') {
+//                await removeProductOrder(order_id);
+//            }
+//
+//            // Remove the order itself
+//            const [result] = await db.query(`
+//                DELETE FROM orders WHERE order_id = ?;
+//            `, [order_id]);
+//
+//            if (result.affectedRows > 0) {
+//                console.log(`Order ${order_id} successfully removed.`);
+//                const log_message = `Order ${order_id} removed and archived.`;
+//                await logger.addOrderLog(order_id, log_message);
+//                return true;
+//            } else {
+//                console.log('Error removing order.')
+//                return false;
+//            }
+//        } else {
+//            console.log('Error archiving order.')
+//            return false;
+//        }
+//    } catch (error) {
+//        console.error('Error removing order:', error);
+//        return false;
+//    }
+//};
 
 // cancel order
 async function cancelOrder(order_id) {
