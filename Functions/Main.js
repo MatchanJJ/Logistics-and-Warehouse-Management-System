@@ -2447,17 +2447,29 @@ app.post('/shipment-status/remove/:id', async (req, res) => {
 app.get('/delete-product-order/:id', async (req, res) => {
     res.render('layout', { title: 'Add Shipment Status', content: 'add-shipment-status' }); // Render the layout with the add-warehouse content
 });
-//app.post('/delete-product-order/:id', async (req, res) => {
-//    const {order_id } = req.params.id;
-//    const [product_id] = await pool.query(`SELECT product_id FROM product_orders WHERE order_id = ?;`, [product_id]);
-//    const success = await OrderService.removeProductOrder(order_id,product_id);
-//
-//    if (success) {
-//        res.redirect('/product-orders');
-//    } else {
-//        res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
-//    }
-//});
+
+app.post('/delete-product-order', async (req, res) => {
+    const { order_id, product_id } = req.body;
+
+    // Check if both order_id and product_id are provided
+    if (!order_id || !product_id) {
+        return res.status(400).json({ message: 'Unassigned product to order.' });
+    }
+
+    try {
+        // Call the removeProductOrder function
+        const success = await removeProductOrder(order_id, product_id);
+
+        if (success) {
+            return res.status(200).json({ message: 'Product successfully unassigned from order.' });
+        } else {
+            return res.status(404).json({ message: 'No matching product order found to remove.' });
+        }
+    } catch (error) {
+        console.error('Error in /remove-product-order:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+});
 app.post('/delete-customer/:id', async (req, res) => {
     const {customer_id } = req.params.id;
     const success = await CustomerService.removeCustomer(customer_id);
@@ -2499,3 +2511,28 @@ app.post('/update-shipment-status/:id', async (req, res) => {
         res.status(500).send('Error updating parcel category.');
     }
 });
+
+app.post('/delete-postal-order', async (req, res) => {
+    const { order_id, parcel_id } = req.body;
+
+    // Check if both order_id and parcel_id are provided
+    if (!order_id || !parcel_id) {
+        return res.status(400).json({ message: 'Unassigned parcel to order' });
+    }
+
+    try {
+        // Call the removePostalOrder function
+        const success = await OrderService.removePostalOrder(order_id, parcel_id);
+
+        if (success) {
+            return res.status(200).json({ message: 'Parcel successfully unassigned from order.' });
+        } else {
+            return res.status(404).json({ message: 'No matching postal order found to remove.' });
+        }
+    } catch (error) {
+        console.error('Error in /remove-postal-order:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+

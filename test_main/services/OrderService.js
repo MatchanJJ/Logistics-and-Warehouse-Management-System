@@ -202,7 +202,7 @@ async function removeProductOrder(order_id, product_id) {
         `, [order_id, product_id]);
         if (result.affectedRows > 0) {
             console.log('Unassigned product to order.')
-            const log_message = `Unassigned product ${parcel_id} from order ${order_id}.`;
+            const log_message = `Unassigned product ${product_id} from order ${order_id}.`;
             await logger.addOrderLog(order_id, log_message);
             return true;
         } else {
