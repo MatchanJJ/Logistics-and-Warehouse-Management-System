@@ -31,7 +31,7 @@
     </thead>
     <tbody>
         <% shipments.forEach(shipment => { %>
-        <tr onclick="window.location.href='/shipment/<%= shipment.shipment_id %>'" style="cursor: pointer;">
+        <tr onclick="window.location.href='/shipment-actions/<%= shipment.shipment_id %>'" style="cursor: pointer;">
             <td><%= shipment.shipment_id %></td>
             <td><%= shipment.order_id %></td>
             <td><%= shipment.carrier_id %></td>

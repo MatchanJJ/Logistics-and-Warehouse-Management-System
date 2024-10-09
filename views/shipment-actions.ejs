@@ -1,0 +1,22 @@
+<a href="/shipments">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+
+<link rel="stylesheet" href="/styles.css">
+
+<h2>Shipment Actions</h2>
+
+<div class="home-container">
+    <body>
+    <main>
+        <div class="grid-container">
+            <!-- Use the shipment_id in the URL parameters -->
+            <a href="/shipment-deliver/<%= shipment_id %>">Delivered</a>
+            <a href="/shipment-return/<%= shipment_id %>">Return</a>
+            <a href="/shipment-remove/<%= shipment_id %>">Remove</a>
+            <a href="/shipment-failed/<%= shipment_id %>">Failed</a>
+            <a href="/shipment-update-current-location/<%= shipment_id %>">Update Location</a>
+        </div>
+    </main>
+    </body>
+</div>
