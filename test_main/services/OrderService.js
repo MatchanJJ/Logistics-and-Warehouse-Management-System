@@ -6,8 +6,8 @@ import InventoryService from './InventoryService.js';
 import ShipmentService from './ShipmentService.js';
 
 // get orders
-async function getOrders () { 
-    try {
+async function viewOrders (order_id) { 
+    try { //chatgpt WHERE CLAUSE
         const [rows] = await db.query (
             `SELECT 
                 o.order_id,
@@ -438,7 +438,7 @@ async function shipOrder(order_id, carrier_id) {
 
 
 export default {
-    getOrders,
+    viewOrders,
     getOrderData,
     addPostalOrder,
     addProductOrder,

@@ -1508,7 +1508,7 @@ app.post('/delete-partner/:id', async (req, res) => {
 });
 app.get('/orders', async (req, res) => {
     try {
-        const orders = await OrderService.getOrders(); // Fetch all orders
+        const orders = await OrderService.viewOrders(); //update this function when get order is created
         res.render('layout', {
             title: 'Order Management',
             content: 'orders', // Specify the content to include
@@ -1849,7 +1849,7 @@ app.post('/delete-return-status/:id', async (req, res) => {
 // Route to display the manage-warehouse-types page
 app.get('/manage-warehouse-types', async (req, res) => {
     try {
-        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes(); // Fetch warehouse types
+        const warehouseTypes = await StatAndCatService.getWarehouseTypes(); // Fetch warehouse types
         res.render('layout', { title: 'Manage Warehouse Types', content: 'manage-warehouse-types', warehouseTypes });
         //res.render('manage-warehouse-types', { warehouseTypes });
     } catch (error) {
@@ -1866,9 +1866,9 @@ app.get('/add-warehouse-type', (req, res) => {
 
 // Route to handle the form submission for adding a new warehouse type
 app.post('/add-warehouse-type', async (req, res) => {
-    const { warehouse_type_id, warehouse_type_name } = req.body;
+    const { warehouse_type_name } = req.body;
     try {
-        await statusAndCategoriesManagementToken.insertWarehouseType(warehouse_type_id, warehouse_type_name);
+        await StatAndCatService.addWarehouseType( warehouse_type_name);
         res.redirect('/manage-warehouse-types');
     } catch (error) {
         console.error('Error adding warehouse type:', error);
@@ -1911,7 +1911,7 @@ app.post('/update-warehouse-type/:id', async (req, res) => {
 app.post('/delete-warehouse-type/:id', async (req, res) => {
     const warehouse_type_id = req.params.id;
     try {
-        await statusAndCategoriesManagementToken.deleteWarehouseType(warehouse_type_id);
+        await StatAndCatService.removeWarehouseType(warehouse_type_id);
         res.redirect('/manage-warehouse-types');
     } catch (error) {
         console.error('Error deleting warehouse type:', error);

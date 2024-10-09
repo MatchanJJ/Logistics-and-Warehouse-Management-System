@@ -374,6 +374,66 @@ async function removeShipmentStatus(shipment_status_id) {
     }
 };
 
+async function getWarehouseTypes() {
+        try {
+            const [result] = await db.query("SELECT * FROM warehouse_types");
+            return result; // Return the result
+        } catch (error) {
+            console.error('Error listing warehouses:', error);
+            throw error; // Rethrow to handle in the calling function
+        }
+    };
+
+async function addWarehouseType( warehouse_type_name) {
+        const newID = await idGen.generateID('warehouse_types', 'warehouse_type_id', 'WTY');
+
+        try {
+            const [result] = await db.query(
+                "INSERT INTO warehouse_types (warehouse_type_id, warehouse_type_name) VALUES (?, ?)",
+                [ newID, warehouse_type_name]
+            );
+            console.log('Warehouse type added with ID:', result.insertId);
+        } catch (error) {
+            console.error('Error adding warehouse type:', error);
+            throw error; // Rethrow to handle in the calling function
+        }
+    };
+
+    async function updateWarehouseType(warehouse_type_id, warehouse_type_name) {
+        try {       
+                const [result] = await db.query(`UPDATE warehouse_types SET warehouse_type_name = ? WHERE warehouse_type_id = ?  `, [shipment_status_name,  shipment_status_id]);
+    
+                return result.affectedRows > 0;
+        } catch (error) {
+                console.error('Error updating warehouse type name:', error);
+                return false;
+        }
+    };
+
+    async function removeWarehouseType(warehouse_type_id) {
+        try {
+                // Check if status is used in shipments table
+                const [warehouse] = await db.query(`
+                        SELECT warehouse_id FROM warehouses WHERE warehouse_type_id = ?;
+                        `, [warehouse_type_id]);
+    
+                if (warehouse.length > 0) {
+                        console.log(`Cannot remove warehouse type ${warehouse}. It's used in warehouse.`);
+                        return false;
+                }
+    
+                // Remove the shipment status if not used
+                const [result] = await db.query(`
+                        DELETE FROM warehouse_types WHERE warehouse_type_id = ?;
+                        `, [warehouse_type_id]);
+    
+                return result.affectedRows > 0;
+        } catch (error) {
+                console.error('Error removing warehouse type:', error);
+                return false;
+        }
+    };
+
 const StatAndCatService = {
     getEmployeeRoles,
     addEmployeeRole,
@@ -396,6 +456,10 @@ const StatAndCatService = {
     getShipmentStatus,
     addShipmentStatus,
     removeShipmentStatus,
-    updateShipmentStatus
+    updateShipmentStatus,
+    getWarehouseTypes,
+    updateWarehouseType,
+    removeWarehouseType,
+    addWarehouseType
 };
 export default StatAndCatService;

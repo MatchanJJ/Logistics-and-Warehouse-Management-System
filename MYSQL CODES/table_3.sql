@@ -142,7 +142,6 @@ CREATE TABLE orders (
     delivery_address TEXT NOT NULL,
     shipping_receiver VARCHAR(255),
     order_type_id VARCHAR(10),
-    order_total_amount DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
     FOREIGN KEY (order_status_id) REFERENCES order_status(order_status_id),
     FOREIGN KEY (shipping_service_id) REFERENCES shipping_services(shipping_service_id),
