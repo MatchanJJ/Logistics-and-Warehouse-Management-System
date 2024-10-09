@@ -1508,7 +1508,7 @@ app.post('/delete-partner/:id', async (req, res) => {
 });
 app.get('/orders', async (req, res) => {
     try {
-        const orders = await OrderService.getOrders(); // Fetch all orders
+        const orders = await OrderService.viewOrders(); //update this function when get order is created
         res.render('layout', {
             title: 'Order Management',
             content: 'orders', // Specify the content to include
@@ -1639,21 +1639,6 @@ app.post('/update-product-order/:id', async (req, res) => {
     }
 });
 
-// Delete Product Order Route
-app.post('/delete-product-order/:id', async (req, res) => {
-    const product_order_id = req.params.id;
-    try {
-        const result = await orderTokens.deleteProductOrder(product_order_id); // Ensure you have this function to handle deletion
-        if (result) {
-            res.redirect('/manage-product-orders'); // Redirect to product orders management after deletion
-        } else {
-            res.status(404).send('Product order not found.');
-        }
-    } catch (error) {
-        console.error('Error deleting product order:', error);
-        res.status(500).send('Error deleting product order.');
-    }
-});
 
 // Display the form for adding a new postal order
 app.get('/add-postal-order', (req, res) => {
@@ -1864,7 +1849,7 @@ app.post('/delete-return-status/:id', async (req, res) => {
 // Route to display the manage-warehouse-types page
 app.get('/manage-warehouse-types', async (req, res) => {
     try {
-        const warehouseTypes = await statusAndCategoriesManagementToken.getWarehouseTypes(); // Fetch warehouse types
+        const warehouseTypes = await StatAndCatService.getWarehouseTypes(); // Fetch warehouse types
         res.render('layout', { title: 'Manage Warehouse Types', content: 'manage-warehouse-types', warehouseTypes });
         //res.render('manage-warehouse-types', { warehouseTypes });
     } catch (error) {
@@ -1881,9 +1866,9 @@ app.get('/add-warehouse-type', (req, res) => {
 
 // Route to handle the form submission for adding a new warehouse type
 app.post('/add-warehouse-type', async (req, res) => {
-    const { warehouse_type_id, warehouse_type_name } = req.body;
+    const { warehouse_type_name } = req.body;
     try {
-        await statusAndCategoriesManagementToken.insertWarehouseType(warehouse_type_id, warehouse_type_name);
+        await StatAndCatService.addWarehouseType( warehouse_type_name);
         res.redirect('/manage-warehouse-types');
     } catch (error) {
         console.error('Error adding warehouse type:', error);
@@ -1926,7 +1911,7 @@ app.post('/update-warehouse-type/:id', async (req, res) => {
 app.post('/delete-warehouse-type/:id', async (req, res) => {
     const warehouse_type_id = req.params.id;
     try {
-        await statusAndCategoriesManagementToken.deleteWarehouseType(warehouse_type_id);
+        await StatAndCatService.removeWarehouseType(warehouse_type_id);
         res.redirect('/manage-warehouse-types');
     } catch (error) {
         console.error('Error deleting warehouse type:', error);
@@ -2459,3 +2444,95 @@ app.post('/shipment-status/remove/:id', async (req, res) => {
         res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
     }
 });
+app.get('/delete-product-order/:id', async (req, res) => {
+    res.render('layout', { title: 'Add Shipment Status', content: 'add-shipment-status' }); // Render the layout with the add-warehouse content
+});
+
+app.post('/delete-product-order', async (req, res) => {
+    const { order_id, product_id } = req.body;
+
+    // Check if both order_id and product_id are provided
+    if (!order_id || !product_id) {
+        return res.status(400).json({ message: 'Unassigned product to order.' });
+    }
+
+    try {
+        // Call the removeProductOrder function
+        const success = await removeProductOrder(order_id, product_id);
+
+        if (success) {
+            return res.status(200).json({ message: 'Product successfully unassigned from order.' });
+        } else {
+            return res.status(404).json({ message: 'No matching product order found to remove.' });
+        }
+    } catch (error) {
+        console.error('Error in /remove-product-order:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+app.post('/delete-customer/:id', async (req, res) => {
+    const {customer_id } = req.params.id;
+    const success = await CustomerService.removeCustomer(customer_id);
+
+    if (success) {
+        res.redirect('/customers');
+    } else {
+        res.status(500).send(`Failed to remove shipment status ${shipment_status_id}. It might be in use.`);
+    }
+});
+
+app.get('/update-shipment-status/:id', async (req, res) => {
+    const shipment_status_id = req.params.id;
+    try {
+        const [rows] = await pool.query("SELECT * FROM shipment_status WHERE shipment_status_id = ?",[shipment_status_id]);
+        if (rows.length > 0) {
+            res.render('layout', { title: 'Update Shipment ', content: 'edit-shipment-status', shipmentStatus: rows[0] });
+            //res.render('update-parcel-category', { parcelCategory });
+        } else {
+            res.status(404).send('Parcel category not found.');
+        }
+    } catch (error) {
+        console.error('Error fetching parcel category:', error);
+        res.status(500).send('Error fetching parcel category.');
+    }
+});
+
+// POST route to handle the form submission for updating shipment status
+app.post('/update-shipment-status/:id', async (req, res) => {
+    const shipment_status_id = req.params.id;
+    const { shipment_status_name } = req.body;
+
+
+    try {
+        await StatAndCatService.updateShipmentStatus(shipment_status_id, shipment_status_name);
+        res.redirect('/manage-shipment-status'); // Redirect after successful update
+    } catch (error) {
+        console.error('Error updating parcel category:', error);
+        res.status(500).send('Error updating parcel category.');
+    }
+});
+
+app.post('/delete-postal-order', async (req, res) => {
+    const { order_id, parcel_id } = req.body;
+
+    // Check if both order_id and parcel_id are provided
+    if (!order_id || !parcel_id) {
+        return res.status(400).json({ message: 'Unassigned parcel to order' });
+    }
+
+    try {
+        // Call the removePostalOrder function
+        const success = await OrderService.removePostalOrder(order_id, parcel_id);
+
+        if (success) {
+            return res.status(200).json({ message: 'Parcel successfully unassigned from order.' });
+        } else {
+            return res.status(404).json({ message: 'No matching postal order found to remove.' });
+        }
+    } catch (error) {
+        console.error('Error in /remove-postal-order:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+

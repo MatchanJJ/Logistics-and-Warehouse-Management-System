@@ -6,8 +6,8 @@ import InventoryService from './InventoryService.js';
 import ShipmentService from './ShipmentService.js';
 
 // get orders
-async function getOrders () { 
-    try {
+async function viewOrders (order_id) { 
+    try { //chatgpt WHERE CLAUSE
         const [rows] = await db.query (
             `SELECT 
                 o.order_id,
@@ -202,7 +202,7 @@ async function removeProductOrder(order_id, product_id) {
         `, [order_id, product_id]);
         if (result.affectedRows > 0) {
             console.log('Unassigned product to order.')
-            const log_message = `Unassigned product ${parcel_id} from order ${order_id}.`;
+            const log_message = `Unassigned product ${product_id} from order ${order_id}.`;
             await logger.addOrderLog(order_id, log_message);
             return true;
         } else {
@@ -480,7 +480,7 @@ async function listAllParcelOrders() {
 
 
 export default {
-    getOrders,
+    viewOrders,
     getOrderData,
     addPostalOrder,
     addProductOrder,

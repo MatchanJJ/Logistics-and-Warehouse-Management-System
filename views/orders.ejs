@@ -20,36 +20,40 @@
                 <thead>
                     <tr>
                         <th>Order ID</th>
-                        <th>Customer Name</th>
-                        <th>Order Status</th>
-                        <th>Shipping Service</th>
-                        <th>Shipping Address</th>
+                        <th>Customer ID</th>
+                        <th>Order Timestamp</th>
+                        <th>Order Status ID</th>
+                        <th>Shipping Service ID</th>
+                        <th>Delivery Address</th>
                         <th>Shipping Receiver</th>
-                        <th>Order Type</th>
-                        <th>Unit Price</th>
-                        <th>Item Type</th>
-                        <th>Total Amount</th>
-                        <th>Order Items</th>
-                        <th>Total Quantity</th>
-                        <th>Category</th>
+                        <th>Order Type ID</th>
+                        <th>Order Total Amount</th>
+                        <th>Parcel ID</th>
+                        <th>Parcel Total Price</th>
+                        <th>Product ID</th>
+                        <th>Product Quantity</th>
+                        <th>Product Total Price</th>
+                        <th>Shipping Service Name</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% orders.forEach(order => { %>
                         <tr>
                             <td><%= order.order_id %></td>
-                            <td><%= order.customer_name %></td>
-                            <td><%= order.order_status %></td>
-                            <td><%= order.shipping_service %></td>
-                            <td><%= order.shipping_address %></td>
+                            <td><%= order.customer_id %></td>
+                            <td><%= order.order_date_time %></td>
+                            <td><%= order.order_status_id %></td>
+                            <td><%= order.shipping_service_id %></td>
+                            <td><%= order.delivery_address %></td>
                             <td><%= order.shipping_receiver %></td>
-                            <td><%= order.order_type %></td>
-                            <td><%= order.unit_price %></td>
-                            <td><%= order.item_type %></td>
-                            <td><%= order.total_amount %></td>
-                            <td><%= order.order_items %></td>
-                            <td><%= order.total_quantity %></td>
-                            <td><%= order.category %></td>
+                            <td><%= order.order_type_id %></td>
+                            <td><%= order.order_total_amount %></td>
+                            <td><%= order.parcel_id %></td>
+                            <td><%= order.postal_total_price %></td>
+                            <td><%= order.product_id %></td>
+                            <td><%= order.product_quantity %></td>
+                            <td><%= order.product_total_price %></td>
+                            <td><%= order.shipping_service_name %></td>
                         </tr>
                     <% }) %>
                 </tbody>

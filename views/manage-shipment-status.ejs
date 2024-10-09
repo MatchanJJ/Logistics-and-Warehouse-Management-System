@@ -1,7 +1,5 @@
 
 <body>
-    <h1>Manage Shipment Statuses</h1>
-
     <!-- Back Button -->
     <a href="/manage-status-and-category">
         <img class="back" src="/back-button.png" alt="back">
@@ -9,9 +7,9 @@
 
     <!-- Display Existing Shipment Statuses -->
     <h2>Current Shipment Statuses</h2>
-        <a href="/add-shipment-status" class="btn">Add New Shipment Status</a>
-
-        <div class="container">
+    
+    <div class="container">
+            <a href="/add-shipment-status" class="btn">Add New Shipment Status</a>
 
             <table>
                 <thead>
@@ -27,8 +25,10 @@
                             <td><%= status.shipment_status_id %></td>
                             <td><%= status.shipment_status_name %></td>
                             <td>
+                                <a href="/update-shipment-status/<%= status.shipment_status_id %>"><button>Update</button></a> 
+
                                 <form action="/shipment-status/remove/<%= status.shipment_status_id %>" method="POST">
-                                    <button type="submit" onclick="return confirm('Are you sure you want to remove this status?')">Remove</button>
+                                    <button type="submit" onclick="return confirm('Are you sure you want to remove this shipment status?')">Remove</button>
                                 </form>
                             </td>
                         </tr>

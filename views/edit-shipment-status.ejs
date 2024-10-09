@@ -1,0 +1,21 @@
+<!-- Back Button -->
+<a href="/manage-shipment-status">
+    <img class="back" src="/back-button.png" alt="back">
+</a>
+
+<body>
+    <div class="container">
+        <h2>Edit Shipment Status</h2>
+
+
+        <!-- Form to Edit Shipment Status -->
+        <form action="/update-shipment-status/<%= shipmentStatus.shipment_status_id %>" method="POST">
+            <label for="shipment_status_name">Shipment Status Name:</label>
+            <input type="text" id="shipment_status_name" name="shipment_status_name" value="<%= shipmentStatus.shipment_status_name %>" required>
+    
+            <button type="submit">Update Status</button>
+        </form>
+    </div>
+    
+</body>
+
