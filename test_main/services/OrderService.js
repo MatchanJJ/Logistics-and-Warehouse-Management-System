@@ -225,6 +225,7 @@ async function addOrder(customer_id, shipping_service_id, shipping_address, ship
             VALUES (?, ?, ?, ?, ?, ?, ?);
         `, [newID, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver]);
         if (result.affectedRows > 0) {
+            console.log('Added new order.')
             const log_message = `Added new order with ID ${newID}`;
             await logger.addOrderLog(newID, log_message);
             return true;
@@ -434,7 +435,48 @@ async function shipOrder(order_id, carrier_id) {
         console.error('Error shipping order:', error);
         return false;
     }
-}
+};
+// list all product orders
+async function listAllProductOrders() {
+    try {
+        const [productOrders] = await pool.query(`
+            SELECT 
+                po.order_id,
+                po.product_id,
+                p.product_unit_price,
+                po.product_quantity,
+                po.total_price
+            FROM 
+                product_orders po
+            JOIN 
+                products p ON po.product_id = p.product_id;
+            `);
+        return productOrders; // Return all product orders
+    } catch (error) {
+        console.error('Error fetching product orders:', error);
+        return [];
+    }
+};
+
+// list all parcel orders
+async function listAllParcelOrders() {
+    try {
+        const [parcelOrders] = await pool.query(`
+            SELECT 
+                po.order_id,
+                po.parcel_id,
+                p.parcel_unit_price,
+                po.total_price
+            FROM 
+                postal_orders po
+            JOIN 
+                parcels p ON po.parcel_id = p.parcel_id;
+            `);
+    } catch (error) {
+        console.error('Error fetching parcel orders:', error);
+        return [];
+    }
+};
 
 
 export default {
@@ -448,5 +490,7 @@ export default {
     updateOrderStatus,
     removeOrder,
     cancelOrder,
-    shipOrder
+    shipOrder,
+    listAllParcelOrders,
+    listAllProductOrders
 };
