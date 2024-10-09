@@ -11,7 +11,7 @@
 <div class="container">
     <body>
         
-        <h1>Assign Employee Job Role and Warehouse</h1>
+        <h1>Assign Employee to Warehouse</h1>
     
         <% if (message) { %>
             <div>
@@ -30,19 +30,9 @@
             <input type="hidden" name="employee_id" value="<%= employee.employee_id %>">
     
             <div>
-                <label for="employee_role_id">Select Job Role:</label>
-                <select id="employee_role_id" name="employee_role_id" required>
-                    <% jobRoles.forEach(role => { %>
-                        <option value="<%= role.employee_role_id %>">
-                            <%= role.role_name %> (ID: <%= role.employee_role_id %>)
-                        </option>
-                    <% }); %>
-                </select>
-            </div>
-    
-            <div>
                 <label for="warehouse_id">Assign to Warehouse:</label>
                 <select id="warehouse_id" name="warehouse_id" required>
+                    <option value="">Select Warehouse</option>
                     <% warehouses.forEach(warehouse => { %>
                         <option value="<%= warehouse.warehouse_id %>">
                             <%= warehouse.warehouse_name %> (ID: <%= warehouse.warehouse_id %>)
@@ -54,9 +44,8 @@
             <button type="submit">Assign Employee</button>
 
         </form>
-        <a href="/manage-employee/<%= employee.employee_id %>"><button>Update</button></a> 
+        <a href="/manage-employee/<%= employee.employee_id %>"><button>Transfer</button></a> 
 
-        <a href="/">Go Back</a>
     </body>
     
 </div>

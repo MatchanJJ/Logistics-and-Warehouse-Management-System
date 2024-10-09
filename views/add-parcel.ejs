@@ -7,9 +7,18 @@
     <div class="form-wrapper">
         <h2>Add Parcel</h2>
         <form action="/add-parcel" method="POST" class="form-container">
+            
+            <!-- Parcel Category as Dropdown -->
             <div class="form-group">
-                <label for="parcel_category_id">Parcel Category ID:</label>
-                <input type="text" id="parcel_category_id" name="parcel_category_id" required>
+                <label for="parcel_category_id">Parcel Category:</label>
+                <select id="parcel_category_id" name="parcel_category_id" required>
+                    <option value="">Select Parcel Category</option>
+                    <% parcelCategories.forEach(function(category) { %>
+                        <option value="<%= category.parcel_category_id %>">
+                            <%= category.parcel_category_name %>
+                        </option>
+                    <% }); %>
+                </select>
             </div>
 
             <div class="form-group">
@@ -19,57 +28,57 @@
 
             <div class="form-group">
                 <label for="parcel_unit_price">Parcel Unit Price:</label>
-                <input type="decimal" id="parcel_unit_price" name="parcel_unit_price" step="0.01" required>
+                <input type="number" id="parcel_unit_price" name="parcel_unit_price" step="0.01" required>
             </div>
 
             <div class="form-group">
                 <label for="parcel_weight">Parcel Weight:</label>
-                <input type="decimal" id="parcel_weight" name="parcel_weight" required>
+                <input type="number" id="parcel_weight" name="parcel_weight" required>
             </div>
 
             <div class="form-group">
                 <label for="parcel_length">Parcel Length:</label>
-                <input type="decimal" id="parcel_length" name="parcel_length" required>
+                <input type="number" id="parcel_length" name="parcel_length" required>
             </div>
 
             <div class="form-group">
                 <label for="parcel_width">Parcel Width:</label>
-                <input type="decimal" id="parcel_width" name="parcel_width" required>
+                <input type="number" id="parcel_width" name="parcel_width" required>
             </div>
 
             <div class="form-group">
                 <label for="parcel_height">Parcel Height:</label>
-                <input type="decimal" id="parcel_height" name="parcel_height" required>
+                <input type="number" id="parcel_height" name="parcel_height" required>
             </div>
 
             <div class="form-group">
                 <label for="is_fragile">Fragile:</label>
-                <input type="checkbox" id="is_fragile" name="is_fragile"  value="false">
+                <input type="checkbox" id="is_fragile" name="is_fragile" value="true">
             </div>
 
             <div class="form-group">
                 <label for="is_perishable">Perishable:</label>
-                <input type="checkbox" id="is_perishable" name="is_perishable"  value="false">
+                <input type="checkbox" id="is_perishable" name="is_perishable" value="true">
             </div>
 
             <div class="form-group">
                 <label for="is_hazardous">Hazardous:</label>
-                <input type="checkbox" id="is_hazardous" name="is_hazardous"  value="false">
+                <input type="checkbox" id="is_hazardous" name="is_hazardous" value="true">
             </div>
 
             <div class="form-group">
                 <label for="is_oversized">Oversized:</label>
-                <input type="checkbox" id="is_oversized" name="is_oversized"  value="false">
+                <input type="checkbox" id="is_oversized" name="is_oversized" value="true">
             </div>
 
             <div class="form-group">
                 <label for="is_returnable">Returnable:</label>
-                <input type="checkbox" id="is_returnable" name="is_returnable"  value="false">
+                <input type="checkbox" id="is_returnable" name="is_returnable" value="true">
             </div>
 
             <div class="form-group">
                 <label for="is_temperature_sensitive">Temperature Sensitive:</label>
-                <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive" value="false">
+                <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive" value="true">
             </div>
 
             <div class="form-group">

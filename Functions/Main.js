@@ -52,12 +52,18 @@
         });
     });
 
-
-// Route to display the Add Employee form
-app.get('/add-employee', (req, res) => {
-    res.render('layout', { title: 'Add Employee', content: 'add-employee' }); // Render the layout with the add-warehouse content
-    //res.render('add-employee');  // Render the add-employee.ejs form
+// GET: Show form to add a new employee
+app.get('/add-employee', async (req, res) => {
+    try {
+        const roles = await employeeManagementToken.listAllJobRoles(); // Fetch all roles from the database
+        res.render('layout', { title: 'Add New Employee', content: 'add-employee', roles }); // Pass roles to the template
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        res.status(500).send('Error fetching roles.');
+    }
 });
+
+
 
 // Route to handle form submission for adding a new employee
 app.post('/add-employee', async (req, res) => {
@@ -210,7 +216,6 @@ app.post('/add-job-role', async (req, res) => {
             }
     
             // Fetch job roles and warehouses from the database
-            const [jobRoles] = await pool.query('SELECT employee_role_id, role_name FROM employee_roles');
             const [warehouses] = await pool.query('SELECT warehouse_id FROM warehouses');
     
             // Render the page with the current employee, job roles, and warehouses
@@ -218,7 +223,6 @@ app.post('/add-job-role', async (req, res) => {
                 title: 'Assign Employee',
                 content: 'assign-employee',
                 employee: employee[0],  // Send employee object
-                jobRoles,
                 warehouses,
                 message: null
             });
@@ -227,18 +231,45 @@ app.post('/add-job-role', async (req, res) => {
             res.status(500).send('Internal Server Error');
         }
     });
+
+
+
+    app.post('/unassign-employee/:employee_id', async (req, res) => {
+        const employee_id = req.params.employee_id;
+    
+        // Query to get the warehouse_id for the given employee_id
+        const [rows] = await pool.query(`SELECT warehouse_id FROM warehouse_employees WHERE employee_id = ?`, [employee_id]);
+    
+        if (rows.length > 0) {
+            const warehouse_id = rows[0].warehouse_id; // Extract the warehouse_id from the object
+            console.log('Warehouse ID:', warehouse_id); // Log the warehouse ID for debugging
+    
+            const result = await EmployeeService.removeEmployeeFromWarehouse(warehouse_id, employee_id);
+            
+            if (result) {
+                console.log('success_msg', `Employee ${employee_id} has been successfully unassigned from warehouse ${warehouse_id}.`);
+            } else {
+                console.log('error_msg', `Failed to unassign employee ${employee_id} from warehouse ${warehouse_id}.`);
+            }
+        } else {
+            console.log('error_msg', `No warehouse found for employee ${employee_id}.`);
+        }
+    
+        // Redirect back to the employee list or a relevant page
+        res.redirect('/employee-logs'); // Adjust the redirect URL as needed
+    });
+    
     app.post('/assign-employee/:id', async (req, res) => {
         const employeeId = req.params.id; // Get the employee ID from the URL
-        const { employee_role_id, warehouse_id } = req.body; // Extract form data
+        const {  warehouse_id } = req.body; // Extract form data
     
         try {
             // Assign job role and warehouse to the employee
-            const roleSuccess = await EmployeeService.assignJobRole(employee_role_id, employeeId);
             const warehouseSuccess = await EmployeeService.assignEmployeeToWarehouse(warehouse_id, employeeId);
     
             let message = 'Employee successfully assigned!';
-            if (!roleSuccess || !warehouseSuccess) {
-                message = 'Failed to assign employee to the job role or warehouse.';
+            if (!warehouseSuccess) {
+                message = 'Failed to assign employee to the warehouse.';
             }
     
             // Fetch updated employee details after assigning role and warehouse
@@ -250,7 +281,6 @@ app.post('/add-job-role', async (req, res) => {
             `, [employeeId]);
     
             // Fetch job roles and warehouses again to render the updated form
-            const [jobRoles] = await pool.query('SELECT employee_role_id, role_name FROM employee_roles');
             const [warehouses] = await pool.query('SELECT warehouse_id FROM warehouses');
     
             // Render the page again with updated employee details and a message
@@ -258,7 +288,6 @@ app.post('/add-job-role', async (req, res) => {
                 title: 'Assign Employee',
                 content: 'assign-employee',
                 employee: employee[0],  // Send the updated employee object
-                jobRoles,
                 warehouses,
                 message
             });
@@ -272,13 +301,20 @@ app.post('/add-job-role', async (req, res) => {
 
 
  // Route for updating an employee (form rendering)
+// GET: Show form to update an employee
 app.get('/update-employee/:id', async (req, res) => {
     const { id } = req.params; // Extract employee ID from the route parameters
     try {
         const employee = await employeeManagementToken.viewEmployee(id); // Fetch employee details by ID
+        const jobRoles = await employeeManagementToken.listAllJobRoles(); // Fetch all job roles for the dropdown
+
         if (employee) {
-            res.render('layout', { title: 'Update Employee', content: 'update-employee' , employee }); // Render the layout with the add-warehouse content
-            //res.render('update-employee', { employee }); // Render the update form
+            res.render('layout', { 
+                title: 'Update Employee', 
+                content: 'update-employee', 
+                employee, 
+                jobRoles // Pass the job roles to the view
+            }); // Render the layout with the update-employee content
         } else {
             res.status(404).send('Employee not found.');
         }
@@ -287,6 +323,7 @@ app.get('/update-employee/:id', async (req, res) => {
         res.status(500).send('Error fetching employee.');
     }
 });
+
 // Route to handle form submission for updating an employee
 app.post('/update-employee/:id', async (req, res) => {
     const { id } = req.params; // Extract employee ID from the route parameters
@@ -348,16 +385,20 @@ import EmployeeService from '../test_main/services/EmployeeService.js';
     
     
     // Route to render form for adding a new warehouse
-    app.get('/add-warehouse', (req, res) => {
-        //res.render('add-warehouse'); // Render the form for adding a new warehouse
-        res.render('layout', { title: 'Add Warehouse', content: 'add-warehouse' }); // Render the layout with the add-warehouse content
-
+    app.get('/add-warehouse', async (req, res) => {
+        try {
+        const [warehouseTypes] = await pool.query('SELECT warehouse_type_id, warehouse_type_name FROM warehouse_types');
+        res.render('layout', { title: 'Add Warehouse', content: 'add-warehouse' , warehouseTypes}); // Render the layout with the add-warehouse content
+        } catch (error) {
+        console.error('Error fetching warehouse types:', error);
+        res.status(500).send('Internal server error.');
+        }
     });
     
 
  // Handle form submission for adding a new warehouse
 app.post('/add-warehouse', async (req, res) => {
-    const { warehouse_id, warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
+    const { warehouse_address, capacity, warehouse_type_id } = req.body; // Extract the form fields
     try {
         // Log the inputs to debug
         console.log('Adding warehouse:', {warehouse_address, capacity, warehouse_type_id });
@@ -549,12 +590,16 @@ app.get('/inventories', async (req, res) => {
         res.status(500).send('Error retrieving inventory.');
     }
 });
+app.get('/add-parcel', async (req, res) => {
+    try {
+        const [parcelCategories] = await pool.query('SELECT parcel_category_id, parcel_category_name FROM parcel_categories');
+        res.render('layout', { title: 'Add Parcel', content: 'add-parcel', parcelCategories }); // Render the layout with the add-warehouse content
+    } catch (error) {
+        console.error('Error fetching parcel categories:', error);
+        res.status(500).send('Server Error');
+    }
+});
 
-    // Route for adding a new parcel (form rendering)
-    app.get('/add-parcel', (req, res) => {
-        res.render('layout', { title: 'Add Parcel', content: 'add-parcel' }); // Render the layout with the add-warehouse content
-        //res.render('add-parcel'); // Render the form for adding a new parcel
-    });
     app.post('/add-parcel', async (req, res) => {
         // Extract data from the form submission
         const {
@@ -875,12 +920,16 @@ app.post('/assign-product/:id', async (req, res) => {
     });
 });
 
-    
+app.get('/add-product', async (req, res) => {
+    try {
+        const [productCategories] = await pool.query('SELECT product_category_id, product_category_name FROM product_categories');
+        res.render('layout', { title: 'Add Product', content: 'add-product', productCategories }); // Render the layout with the add-warehouse content
+    } catch (error) {
+        console.error('Error fetching product categories:', error);
+        res.status(500).send('Server Error');
+    }
+});
 
-    app.get('/add-product', (req, res) => {
-        res.render('layout', { title: 'Add Product', content: 'add-product' }); // Render the layout with the add-warehouse content
-        //res.render('add-product'); // Render the form for adding a new product
-    });
 
     // Handle the form submission for adding a new product
     app.post('/add-product', async (req, res) => {
@@ -1445,13 +1494,20 @@ app.get('/manage-partner', async (req, res) => {
         res.status(500).send('Error fetching logistics partners.');
     }    
 });
+app.get('/add-partner', async (req, res) => {
+    try {
+        // Fetch the shipping services from the database
+        const [shippingServices] = await pool.query('SELECT shipping_service_id, shipping_service_name FROM shipping_services');
 
-
-// Route to display the Add Partner form
-app.get('/add-partner', (req, res) => {
-    res.render('layout', { title: 'Add Logistic Partner', content: 'add-partner' }); // Render the layout with the add-warehouse content
-   // res.render('add-partner'); // Renders the add-partner.ejs form
+        // Render the form and pass the fetched shipping services
+        res.render('layout', { title: 'Add Logistic Partner', content: 'add-partner', shippingServices }); // Render the layout with the add-warehouse content
+    } catch (error) {
+        console.error('Error fetching shipping services:', error);
+        res.status(500).send('Internal server error.');
+    }
 });
+
+
 
 // Route to handle form submission for adding a new partner
 app.post('/add-partner', async (req, res) => {
@@ -1508,7 +1564,7 @@ app.post('/delete-partner/:id', async (req, res) => {
 });
 app.get('/orders', async (req, res) => {
     try {
-        const orders = await OrderService.viewOrders(); //update this function when get order is created
+        const orders = await OrderService.getOrders(); //update this function when get order is created
         res.render('layout', {
             title: 'Order Management',
             content: 'orders', // Specify the content to include
@@ -2187,10 +2243,15 @@ app.get('/return-logs', async (req, res) => {
     }
 });
 
-
-// add order router
-app.get('/add-orders', (req, res) => {
-    res.render('layout', { title: 'Add Order', content: 'add-orders' });
+// GET: Show form to add a new order
+app.get('/add-orders', async (req, res) => {
+    try {
+        const [shippingServices] = await pool.query('SELECT shipping_service_id, shipping_service_name FROM shipping_services'); // Fetch all shipping services
+        res.render('layout', { title: 'Add New Order', content: 'add-orders', shippingServices }); // Pass shipping services to the template
+    } catch (error) {
+        console.error('Error fetching shipping services:', error);
+        res.status(500).send('Error fetching shipping services.');
+    }
 });
 
 // Route to handle form submission

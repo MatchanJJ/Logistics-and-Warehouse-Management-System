@@ -26,13 +26,7 @@
                         <th>Shipping Service ID</th>
                         <th>Delivery Address</th>
                         <th>Shipping Receiver</th>
-                        <th>Order Type ID</th>
                         <th>Order Total Amount</th>
-                        <th>Parcel ID</th>
-                        <th>Parcel Total Price</th>
-                        <th>Product ID</th>
-                        <th>Product Quantity</th>
-                        <th>Product Total Price</th>
                         <th>Shipping Service Name</th>
                     </tr>
                 </thead>
@@ -46,13 +40,7 @@
                             <td><%= order.shipping_service_id %></td>
                             <td><%= order.delivery_address %></td>
                             <td><%= order.shipping_receiver %></td>
-                            <td><%= order.order_type_id %></td>
                             <td><%= order.order_total_amount %></td>
-                            <td><%= order.parcel_id %></td>
-                            <td><%= order.postal_total_price %></td>
-                            <td><%= order.product_id %></td>
-                            <td><%= order.product_quantity %></td>
-                            <td><%= order.product_total_price %></td>
                             <td><%= order.shipping_service_name %></td>
                         </tr>
                     <% }) %>

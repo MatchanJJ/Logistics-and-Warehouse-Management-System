@@ -24,10 +24,17 @@
             <input type="text" id="contact_info" name="contact_info" value="<%= employee.contact_info %>">
         </div>
 
-        <!-- Role ID -->
+        <!-- Role ID (Dropdown) -->
         <div class="form-group">
-            <label for="employee_role_id">Role ID:</label>
-            <input type="text" id="employee_role_id" name="employee_role_id" value="<%= employee.employee_role_id %>">
+            <label for="employee_role_id">Role:</label>
+            <select id="employee_role_id" name="employee_role_id" required>
+                <option value="">Select Role</option>
+                <% jobRoles.forEach(function(role) { %>
+                    <option value="<%= role.employee_role_id %>" <%= employee.employee_role_id === role.employee_role_id ? 'selected' : '' %> >
+                        <%= role.role_name %>
+                    </option>
+                <% }); %>
+            </select>
         </div>
 
         <!-- Salary -->
