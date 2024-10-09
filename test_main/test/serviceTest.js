@@ -7,7 +7,7 @@ import ParcelService from '../services/ParcelService.js';
 import ProductService from '../services/ProductService.js';
 import WarehouseServices from '../services/WarehouseServices.js';
 import StatAndCatService from '../services/StatusAndCategoriesService.js';
-
+import OrderService from '../services/OrderService.js';
 //await ProductService.addProduct('PC1', 'A4 OPPO', 'OPPO', 'OPPO inc', 'Solid Phone stats etc', 12000, 0.1, 10, 10, 3, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'TRUE', 'FALSE');
 
 //await InventoryService.assignProduct('P002', )
@@ -24,5 +24,4 @@ import StatAndCatService from '../services/StatusAndCategoriesService.js';
 //await ParcelService.addParcel('PCT0000003', 'Box of Dildos', 600, 0.5, 10, 10, 10, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');
 
 
-await StatAndCatService.addParcelCategory('erotica');
-console.log(await StatAndCatService.getParcelCategories());
+await OrderService.addProductOrder('ORDVQydKko', 'PRDdGCPZ57', 50);

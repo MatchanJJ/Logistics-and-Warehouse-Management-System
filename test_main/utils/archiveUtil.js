@@ -131,11 +131,12 @@ async function archiveEmployee(employee_id) {
 // Archive a customer entry
 async function archiveCustomer(customer_id) {
     try {
-        const archiveID = await idGen.generateID('customer_archives', 'archive_id', 'CUSARCH');
+        const archiveID = await idGen.generateID('customer_archives', 'archive_id', 'CUA');
 
         const [result] = await db.query(`
-            INSERT INTO customer_archives (archive_id, customer_id, customer_first_name, customer_last_name, customer_email, customer_address)
-            SELECT ?, customer_id, customer_first_name, customer_last_name, customer_email, customer_address
+            INSERT INTO customer_archives 
+            (archive_id, customer_id, customer_first_name, customer_last_name, customer_email, customer_address, archived_at)
+            SELECT ?, customer_id, customer_first_name, customer_last_name, customer_email, customer_address, CURRENT_TIMESTAMP
             FROM customers
             WHERE customer_id = ?;
         `, [archiveID, customer_id]);
