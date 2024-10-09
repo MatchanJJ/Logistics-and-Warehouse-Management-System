@@ -13,11 +13,6 @@ CREATE TABLE shipment_status (
     shipment_status_name VARCHAR(75) NOT NULL  -- 'pending', 'in-transit', 'delivered'
 );
 
-CREATE TABLE order_types (
-    order_type_id VARCHAR(10) PRIMARY KEY,
-    order_type_name VARCHAR(75) NOT NULL  -- 'postal', 'e-commerce'
-);
-
 CREATE TABLE return_status (
     return_status_id VARCHAR(10) PRIMARY KEY,
     return_status_name VARCHAR(75) NOT NULL  -- 'pending', 'processed', 'returned'
@@ -141,12 +136,10 @@ CREATE TABLE orders (
     shipping_service_id VARCHAR(10),
     delivery_address TEXT NOT NULL,
     shipping_receiver VARCHAR(255),
-    order_type_id VARCHAR(10),
     order_total_amount DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
     FOREIGN KEY (order_status_id) REFERENCES order_status(order_status_id),
-    FOREIGN KEY (shipping_service_id) REFERENCES shipping_services(shipping_service_id),
-    FOREIGN KEY (order_type_id) REFERENCES order_types(order_type_id)
+    FOREIGN KEY (shipping_service_id) REFERENCES shipping_services(shipping_service_id)
 );
 
 CREATE TABLE product_orders (

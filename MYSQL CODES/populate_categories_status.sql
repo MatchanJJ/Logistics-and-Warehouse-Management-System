@@ -21,11 +21,6 @@ INSERT INTO shipment_status (shipment_status_id, shipment_status_name) VALUES
 ('SST0000004', 'failed'),
 ('SST0000005', 'returned');
 
--- Populating order_types
-INSERT INTO order_types (order_type_id, order_type_name) VALUES
-('OTY0000001', 'postal'),
-('OTY0000002', 'e-commerce');
-
 -- Populating return_status
 INSERT INTO return_status (return_status_id, return_status_name) VALUES
 ('RST0000001', 'pending'),
