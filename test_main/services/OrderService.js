@@ -470,7 +470,7 @@ async function listAllParcelOrders() {
 
 
 export default {
-    viewOrders,
+    getOrders,
     getOrderData,
     addPostalOrder,
     addProductOrder,

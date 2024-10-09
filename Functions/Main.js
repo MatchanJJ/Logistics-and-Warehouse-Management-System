@@ -1564,7 +1564,7 @@ app.post('/delete-partner/:id', async (req, res) => {
 });
 app.get('/orders', async (req, res) => {
     try {
-        const orders = await OrderService.viewOrders(); //update this function when get order is created
+        const orders = await OrderService.getOrders(); //update this function when get order is created
         res.render('layout', {
             title: 'Order Management',
             content: 'orders', // Specify the content to include
