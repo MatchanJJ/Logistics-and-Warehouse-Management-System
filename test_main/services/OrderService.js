@@ -428,7 +428,7 @@ async function cancelOrder(order_id) {
 
 
 // ship order 
-async function shipOrder(order_id, carrier_id, shipping_service_id) {
+async function shipOrder(order_id, carrier_id) {
     try {
         // Check if the order status is 'picked'
         const [order] = await db.query(`
@@ -448,7 +448,7 @@ async function shipOrder(order_id, carrier_id, shipping_service_id) {
         }
 
         // Try to add a shipment
-        const shipmentSuccess = await ShipmentService.addShipment(order_id, carrier_id, shipping_service_id);
+        const shipmentSuccess = await ShipmentService.addShipment(order_id, carrier_id);
         
         if (shipmentSuccess) {
             console.log(`Shipment for order ${order_id} created successfully.`);

@@ -62,8 +62,19 @@ async function getShipmentDetails(shipment_id) {
 };
 
 // add new shipment for order
-async function addShipment(order_id, carrier_id, shipping_service_id) {
+async function addShipment(order_id, carrier_id) {
     try {
+        // check if they have matching shipping services
+        const [order_carrier_ss] = await db.query(`
+            SELECT o.shipping_service_id 
+            FROM orders o 
+            JOIN carriers c ON o.shipping_service_id = c.shipping_service_id
+        `);
+        
+        if (order_carrier_ss.length < 1) {
+            console.log('Cannot assign order to carrier since both do not have the same shipping service.');
+            return false;
+        }        
         // Check if the order already has a shipment
         const [existingShipments] = await db.query(`
             SELECT COUNT(*) AS count
