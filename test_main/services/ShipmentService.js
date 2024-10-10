@@ -14,7 +14,7 @@ async function getShipments() {
                 o.order_id,
                 c.carrier_id,
                 s.current_location,
-                o.delivery_address,
+                o.delivery_address AS shipment_address,
                 s.shipment_date,
                 s.estimated_delivery_date,
                 ss.shipping_service_name AS shipping_service,
@@ -172,7 +172,7 @@ async function shipmentDelivered(shipment_id) {
             await logger.addShipmentLog(shipment_id, log_message);
 
             // Update the order status to 'delivered'
-            const orderUpdateSuccess = await OrderService.updateOrderStatus(order_id, 'delivered');
+            const orderUpdateSuccess = await OrderService.updateOrderStatus(order_id, 'OST0000005');
             if (!orderUpdateSuccess) {
                 console.error(`Failed to update order ${order_id} status.`);
             }
@@ -303,7 +303,7 @@ async function removeShipment(shipment_id) {
         const { shipment_status_id } = rows[0];
 
         // Only allow deletion if shipment is failed or returned
-        if (shipment_status_id === 'SST0000004' || shipment_status_id === 'SST0000005') {
+        if (shipment_status_id !== 'SST0000002') {
             if (await archiver.archiveShipment(shipment_id)) {
                 const [result] = await db.query(`
                     DELETE FROM shipments WHERE shipment_id = ?;
@@ -323,7 +323,7 @@ async function removeShipment(shipment_id) {
                 return false;
             }
         } else {
-            console.log('Cannot remove a shipment that is in transit or delivered.');
+            console.log('Cannot remove a shipment that is in transit.');
             return false;
         }
     } catch (error) {

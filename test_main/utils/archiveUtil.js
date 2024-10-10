@@ -5,15 +5,27 @@ import idGen from './idGenerator.js';
 async function archiveShipment(shipment_id) {
     try {
         // Generate new archive ID
-        const archiveID = await idGen.generateID('shipment_archives', 'archive_id', 'SHARCH');
-
+        const archiveID = await idGen.generateID('shipment_archives', 'archive_id', 'SHA');
         // Insert archived shipment
         const [result] = await db.query(`
-            INSERT INTO shipment_archives (archive_id, shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id)
-            SELECT ?, shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id
+            INSERT INTO shipment_archives (archive_id, shipment_id, order_id, carrier_id, shipping_service_id, shipment_date, estimated_delivery_date, shipment_status_id)
+            SELECT ?, shipment_id, order_id, carrier_id, shipping_service_id, shipment_date, estimated_delivery_date, shipment_status_id
             FROM shipments
             WHERE shipment_id = ?;
         `, [archiveID, shipment_id]);
+        // get shipment address
+        const [order] = await db.query(`SELECT order_id FROM shipments WHERE shipment_id = ?`, [shipment_id]);
+        const order_id = order[0].order_id;
+        // insert the shipping_address
+        const [result_2] = await db.query(`
+            UPDATE shipment_archives 
+            SET shipping_address = (
+                SELECT delivery_address 
+                FROM orders 
+                WHERE order_id = ?
+            )
+            WHERE archive_id = ?;
+        `, [order_id, archiveID]);
 
         if (result.affectedRows > 0) {
             console.log(`Shipment ${shipment_id} archived successfully.`);
@@ -31,7 +43,7 @@ async function archiveShipment(shipment_id) {
 // Archive a parcel entry
 async function archiveParcel(parcel_id) {
     try {
-        const archiveID = await idGen.generateID('parcel_archives', 'archive_id', 'PARARCH');
+        const archiveID = await idGen.generateID('parcel_archives', 'archive_id', 'PAA');
 
         const [result] = await db.query(`
             INSERT INTO parcel_archives (archive_id, parcel_id, parcel_category_id, parcel_weight, parcel_description)
@@ -56,7 +68,7 @@ async function archiveParcel(parcel_id) {
 // Archive a product entry
 async function archiveProduct(product_id) {
     try {
-        const archiveID = await idGen.generateID('product_archives', 'archive_id', 'PROARCH');
+        const archiveID = await idGen.generateID('product_archives', 'archive_id', 'PRA');
 
         const [result] = await db.query(`
             INSERT INTO product_archives (archive_id, product_id, product_name, product_category_id, product_weight, product_length, product_width, product_height, product_supplier, product_unit_price)
@@ -81,7 +93,7 @@ async function archiveProduct(product_id) {
 // Archive an order entry
 async function archiveOrder(order_id) {
     try {
-        const archiveID = await idGen.generateID('order_archives', 'archive_id', 'ORDARCH');
+        const archiveID = await idGen.generateID('order_archives', 'archive_id', 'ORA');
 
         const [result] = await db.query(`
             INSERT INTO order_archives (archive_id, order_id, customer_id, order_date_time, order_status_id, shipping_address, shipping_receiver, shipping_service_id, order_total_amount)
@@ -106,7 +118,7 @@ async function archiveOrder(order_id) {
 // Archive an employee entry
 async function archiveEmployee(employee_id) {
     try {
-        const archiveID = await idGen.generateID('employee_archives', 'archive_id', 'EMPARCH');
+        const archiveID = await idGen.generateID('employee_archives', 'archive_id', 'EMA');
 
         const [result] = await db.query(`
             INSERT INTO employee_archives (archive_id, employee_id, employee_first_name, employee_last_name, contact_info, employee_role_id, employee_salary)
@@ -157,7 +169,7 @@ async function archiveCustomer(customer_id) {
 // Archive a warehouse entry
 async function archiveWarehouse(warehouse_id) {
     try {
-        const archiveID = await idGen.generateID('warehouse_archives', 'archive_id', 'WARARCH');
+        const archiveID = await idGen.generateID('warehouse_archives', 'archive_id', 'WAA');
 
         const [result] = await db.query(`
             INSERT INTO warehouse_archives (archive_id, warehouse_id, warehouse_address, capacity, warehouse_type_id)

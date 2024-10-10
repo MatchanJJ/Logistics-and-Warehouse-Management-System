@@ -280,7 +280,6 @@ CREATE TABLE shipment_archives (
     order_id VARCHAR(10),
     carrier_id VARCHAR(10),
     shipping_service_id VARCHAR(10),
-    shipping_address TEXT,
     shipment_date TIMESTAMP,
     estimated_delivery_date DATE,
     shipment_status_id VARCHAR(10),

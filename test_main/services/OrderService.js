@@ -13,8 +13,8 @@ async function getOrders (order_id) {
                 o.order_id,
                 o.customer_id,
                 o.order_date_time,
-                o.order_status_id,
-                o.shipping_service_id,
+                os.order_status_name AS order_status_id,
+                s.shipping_service_name AS shipping_service_id,
                 o.delivery_address,
                 o.shipping_receiver,
                 o.order_total_amount,
@@ -22,7 +22,9 @@ async function getOrders (order_id) {
             FROM 
                 orders o
             LEFT JOIN 
-                shipping_services s ON o.shipping_service_id = s.shipping_service_id;
+                shipping_services s ON o.shipping_service_id = s.shipping_service_id
+            LEFT JOIN
+                order_status os ON o.order_status_id = os.order_status_id;
             `
         );
         return rows;
@@ -410,6 +412,14 @@ async function removeOrder(order_id) {
         // If order is not cancelled or delivered
         if (order_status_id !== 'OST0000006' && order_status_id !== 'OST0000005') {
             console.log('Order cannot be removed unless it is returned or delivered.');
+            return false;
+        }
+
+        // delete shipments associated with the order
+        const [shipment] = await db.query(`SELECT shipment_id FROM shipments WHERE order_id = ?;`, [order_id]);
+        const shipment_id = shipment[0].shipment_id;
+        if (!(await ShipmentService.removeShipment(shipment_id))) {
+            console.log(`Error removing shipment, order cannot be removed.`);
             return false;
         }
 
