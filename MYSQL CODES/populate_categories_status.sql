@@ -27,11 +27,11 @@ INSERT INTO return_status (return_status_id, return_status_name) VALUES
 ('RST0000002', 'processed'),
 ('RST0000003', 'returned'),
 ('RST0000004', 'cancelled');
-
+m,
 -- Populating employee_roles
 INSERT INTO employee_roles (employee_role_id, role_name) VALUES
 ('ERO0000001', 'picker'),
-('ERO0000002', 'packer'),
+('ERO0000002', 'packer'),+
 ('ERO0000003', 'security'),
 ('ERO0000004', 'management'),
 ('ERO0000005', 'driver'),
