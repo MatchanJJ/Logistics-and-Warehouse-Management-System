@@ -313,7 +313,6 @@ textarea {
 }
 .container {
     max-width: 800px;
-    max-height: 400px;
     margin: 0 auto;
     padding: 20px;
     border-radius: 8px;

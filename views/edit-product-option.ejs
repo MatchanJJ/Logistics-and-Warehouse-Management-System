@@ -3,13 +3,13 @@
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
-<h2>Update Product</h2>
+<h2 class="text-title">Update Product</h2>
 
 <div class="container">
     <div class="grid-container">
         <!-- Options to choose what to update -->
-        <a href="/edit-product/<%= product.product_id %>">Edit Product Information</a>
-        <a href="/update-product-location/<%= product.product_id %>">Update Product Location</a>
-        <a href="/update-product-stock-quantity/<%= product.product_id %>">Update Product Stock Quantity</a>
+        <a href="/edit-product/<%= product.product_id %>" class="btn btn-info btn-lg">Edit Product Information</a>
+        <a href="/update-product-location/<%= product.product_id %>" class="btn btn-info btn-lg">Update Product Location</a>
+        <a href="/update-product-stock-quantity/<%= product.product_id %>"class="btn btn-info btn-lg">Update Product Stock Quantity</a>
     </div>
 </div>
