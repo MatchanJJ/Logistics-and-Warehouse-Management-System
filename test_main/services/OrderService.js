@@ -77,9 +77,9 @@ async function addPostalOrder(order_id, parcel_id) {
         }
         
         const [inventory] = await db.query(`
-            SELECT parcel_id, warehouse_id
+            SELECT warehouse_id, quantity
             FROM parcel_inventories
-            WHERE parcel_id = ? AND quantity = 1;
+            WHERE parcel_id = ? AND quantity > 0;  
         `, [parcel_id]);
 
         if (!inventory.length) {
@@ -95,10 +95,18 @@ async function addPostalOrder(order_id, parcel_id) {
             VALUES (?, ?, ?);
         `, [order_id, parcel_id, total_price]);
 
-        if (insertResult.affectedRows > 0) {
+        const [order] = await db.query(`SELECT order_total_amount FROM orders WHERE order_id = ?;`, [order_id]);
+        if (!order.length) {
+            console.error('Order not found:', order_id);
+            return false;
+        }
 
-            await InventoryService.updateParcelStockQuantity(parcel_id, warehouse_id, 0); // Setting quantity to 0 after order
-            
+        const order_total_amount = order[0].order_total_amount;
+        const new_order_total_amount = (+order_total_amount + +total_price);
+
+        if (insertResult.affectedRows > 0) {
+            await InventoryService.updateParcelStockQuantity(parcel_id, warehouse_id, 0);
+            await updateOrderTotalAmount(order_id, new_order_total_amount);
             console.log(`Added new postal order for parcel_id: ${parcel_id}`);
             const log_message = `Added new postal order with parcel_id ${parcel_id}`;
             await logger.addOrderLog(order_id, log_message);
@@ -130,7 +138,7 @@ async function addProductOrder(order_id, product_id, product_quantity) {
         const [inventory] = await db.query(`
             SELECT warehouse_id, quantity
             FROM product_inventories
-            WHERE product_id = ? ORDER BY quantity DESC LIMIT 1; 
+            WHERE product_id = ? ORDER BY quantity DESC LIMIT 1;
         `, [product_id]);
 
         if (!inventory.length || inventory[0].quantity < product_quantity) {
@@ -147,9 +155,19 @@ async function addProductOrder(order_id, product_id, product_quantity) {
             VALUES (?, ?, ?, ?);
         `, [order_id, product_id, product_quantity, total_price]);
 
-        if (insertResult.affectedRows > 0) {
+        const [order] = await db.query(`SELECT order_total_amount FROM orders WHERE order_id = ?;`, [order_id]);
+        
+        if (!order.length) {
+            console.error('Order not found:', order_id);
+            return false;
+        }
 
+        const order_total_amount = order[0].order_total_amount;
+        const new_order_total_amount = (+order_total_amount + +total_price);
+
+        if (insertResult.affectedRows > 0) {
             await InventoryService.updateProductStockQuantity(product_id, warehouse_id, inventory[0].quantity - product_quantity);
+            await updateOrderTotalAmount(order_id, new_order_total_amount);
             console.log(`Added new product order for product_id: ${product_id}`);
             const log_message = `Added new product order with product_id ${product_id}`;
             await logger.addOrderLog(order_id, log_message);
@@ -168,20 +186,45 @@ async function addProductOrder(order_id, product_id, product_quantity) {
 // remove postal order -- just one to handle orders
 async function removePostalOrder(order_id, parcel_id) {
     try {
+        const [parcel] = await db.query(`
+            SELECT parcel_unit_price
+            FROM parcels
+            WHERE parcel_id = ?;
+        `, [parcel_id]);
+
+        if (!parcel.length) {
+            throw new Error('Parcel not found');
+        }
+
         const [inventory] = await db.query(`
             SELECT warehouse_id, quantity
             FROM parcel_inventories
             WHERE parcel_id = ? ORDER BY quantity DESC LIMIT 1;
-        `);
+        `, [parcel_id]);
+        
+        if (!inventory.length) {
+            throw new Error('Inventory not found');
+        }
 
         const warehouse_id = inventory[0].warehouse_id;
+
+        const [order] = await db.query(`SELECT order_total_amount FROM orders WHERE order_id = ?;`, [order_id]);
+        if (!order.length) {
+            throw new Error('Order not found');
+        }
+
+        const order_total_amount = order[0].order_total_amount;
+        const unit_price = parcel[0].parcel_unit_price;
+        const new_order_total_amount = (+order_total_amount - +unit_price);
 
         const [result] = await db.query(`
             DELETE FROM postal_orders WHERE order_id = ? AND parcel_id = ?;
         `, [order_id, parcel_id]);
+
         if (result.affectedRows > 0) {
-            await InventoryService.updateParcelStockQuantity(parcel_id, warehouse_id, 0);
-            console.log('Unassigned parcel to order.')
+            await InventoryService.updateParcelStockQuantity(parcel_id, warehouse_id, 1);
+            await updateOrderTotalAmount(order_id, new_order_total_amount);
+            console.log('Unassigned parcel to order.');
             const log_message = `Unassigned parcel ${parcel_id} from order ${order_id}.`;
             await logger.addOrderLog(order_id, log_message);
             return true;
@@ -197,25 +240,57 @@ async function removePostalOrder(order_id, parcel_id) {
 // remove product order -- just one to handle orders
 async function removeProductOrder(order_id, product_id) {
     try {
+        const [product] = await db.query(`
+            SELECT product_unit_price
+            FROM products
+            WHERE product_id = ?;
+        `, [product_id]);
+
+        if (!product.length) {
+            throw new Error('Product not found');
+        }
+
         const [inventory] = await db.query(`
             SELECT warehouse_id, quantity
             FROM product_inventories
             WHERE product_id = ? ORDER BY quantity DESC LIMIT 1;
-        `);
+        `, [product_id]);
+        
+        if (!inventory.length) {
+            throw new Error('Inventory not found');
+        }
+
         const [reserved] = await db.query(`
             SELECT product_quantity
             FROM product_orders
-            WHERE order_id = ? AND product_id = ?
-            `, [order_id, product_id]);
+            WHERE order_id = ? AND product_id = ?;
+        `, [order_id, product_id]);
+
+        if (!reserved.length) {
+            throw new Error('Reserved quantity not found');
+        }
+
         const warehouse_id = inventory[0].warehouse_id;
-        const reservedQuantity =  reserved[0].product_quantity;
+        const reservedQuantity = reserved[0].product_quantity;
+        const unit_price = product[0].product_unit_price;
+
+        const [order] = await db.query(`SELECT order_total_amount FROM orders WHERE order_id = ?;`, [order_id]);
+        if (!order.length) {
+            throw new Error('Order not found');
+        }
+
+        const order_total_amount = order[0].order_total_amount;
+        const total_price = unit_price * reservedQuantity;
+        const new_order_total_amount = (+order_total_amount - +total_price);
 
         const [result] = await db.query(`
             DELETE FROM product_orders WHERE order_id = ? AND product_id = ?;
         `, [order_id, product_id]);
+
         if (result.affectedRows > 0) {
-            await InventoryService.updateProductStockQuantity(product_id, warehouse_id, inventory.quantity + reservedQuantity);
-            console.log('Unassigned product to order.')
+            await InventoryService.updateProductStockQuantity(product_id, warehouse_id, inventory[0].quantity + reservedQuantity);
+            await updateOrderTotalAmount(order_id, new_order_total_amount);
+            console.log('Unassigned product from order.');
             const log_message = `Unassigned product ${product_id} from order ${order_id}.`;
             await logger.addOrderLog(order_id, log_message);
             return true;
@@ -235,8 +310,8 @@ async function addOrder(customer_id, shipping_service_id, shipping_address, ship
         const newID = await idGen.generateID('orders', 'order_id', 'ORD');
         const order_date_time = new Date();
         const [result] = await db.query(`
-            INSERT INTO orders (order_id, customer_id, order_date_time, order_status_id, shipping_service_id, delivery_address, shipping_receiver) 
-            VALUES (?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO orders (order_id, customer_id, order_date_time, order_status_id, shipping_service_id, delivery_address, shipping_receiver, order_total_amount) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 0.00);
         `, [newID, customer_id, order_date_time, order_status_id, shipping_service_id, shipping_address, shipping_receiver]);
         if (result.affectedRows > 0) {
             console.log('Added new order.')
@@ -276,6 +351,15 @@ async function updateOrderStatus(order_id, new_order_status_id) {
     }
 };
 
+// update order total amount
+async function updateOrderTotalAmount(order_id, new_total_amount) {
+    const [result] = await db.query(`
+        UPDATE orders SET order_total_amount = ? WHERE order_id = ?;
+    `, [new_total_amount, order_id]);
+    if (result.affectedRows > 0) {
+        console.log(`Total amount update successful: ${new_total_amount}.`);
+    }
+}
 
 // Remove all postal orders for a given order -- only used for removeOrders
 async function removeAllPostalOrders(order_id) {
@@ -285,7 +369,8 @@ async function removeAllPostalOrders(order_id) {
         `, [order_id]);
 
         for (const order of postalOrders) {
-            await removePostalOrder(order_id, order.parcel_id);
+            await db.query(`DELETE FROM postal_orders WHERE order_id = ? AND parcel_id = ?`, 
+                [order_id, order.parcel_id]);
         }
     } catch (error) {
         console.error('Error removing postal orders:', error);
@@ -300,7 +385,8 @@ async function removeAllProductOrders(order_id) {
         `, [order_id]);
 
         for (const order of productOrders) {
-            await removeProductOrder(order_id, order.product_id);
+            await db.query(`DELETE FROM product_orders WHERE order_id = ? AND product_id = ?`, 
+                [order_id, order.product_id]);
         }
     } catch (error) {
         console.error('Error removing product orders:', error);
@@ -328,16 +414,10 @@ async function removeOrder(order_id) {
         }
 
         if (await archiver.archiveOrder(order_id)) {
-            const [orderType] = await db.query(`
-                SELECT order_type_id FROM orders WHERE order_id = ?;
-            `, [order_id]);
-            const { order_type_id } = orderType[0];
 
-            // Remove associated product or postal orders
             await removeAllPostalOrders(order_id);
             await removeAllProductOrders(order_id);
 
-            // Remove the order itself
             const [result] = await db.query(`
                 DELETE FROM orders WHERE order_id = ?;
             `, [order_id]);
@@ -361,63 +441,6 @@ async function removeOrder(order_id) {
     }
 ;}
 
-//async function removeOrder(order_id) {
-//    try {
-//        // Check the order status
-//        const [rows] = await db.query(`
-//            SELECT order_status_id FROM orders WHERE order_id = ?;
-//        `, [order_id]);
-//
-//        if (rows.length === 0) {
-//            console.log('Order not found.');
-//            return false;
-//        }
-//
-//        const { order_status_id } = rows[0];
-//
-//        // if order is not cancelled or delivered
-//        if (order_status_id !== 'OST0000006' || order_status_id !== 'OST0000005') {
-//            console.log('Order cannot be removed unless it is returned or delivered.');
-//            return false;
-//        }
-//
-//        if (await archiver.archiveOrder(order_id)) {
-//            const [orderType] = await db.query(`
-//                SELECT order_type_id FROM orders WHERE order_id = ?;
-//            `, [order_id]);
-//            const { order_type_id } = orderType[0];
-//
-//            // Remove associated product or postal order
-//            if (order_type_id === 'postal') {
-//                await removePostalOrder(order_id);
-//            } else if (order_type_id === 'product') {
-//                await removeProductOrder(order_id);
-//            }
-//
-//            // Remove the order itself
-//            const [result] = await db.query(`
-//                DELETE FROM orders WHERE order_id = ?;
-//            `, [order_id]);
-//
-//            if (result.affectedRows > 0) {
-//                console.log(`Order ${order_id} successfully removed.`);
-//                const log_message = `Order ${order_id} removed and archived.`;
-//                await logger.addOrderLog(order_id, log_message);
-//                return true;
-//            } else {
-//                console.log('Error removing order.')
-//                return false;
-//            }
-//        } else {
-//            console.log('Error archiving order.')
-//            return false;
-//        }
-//    } catch (error) {
-//        console.error('Error removing order:', error);
-//        return false;
-//    }
-//};
-
 // cancel order
 async function cancelOrder(order_id) {
     try {
@@ -428,8 +451,8 @@ async function cancelOrder(order_id) {
             WHERE order_id = ?;
         `, [order_id]);
 
-        if (!order || order[0].order_status_id !== 'pending') {
-            console.error('Order cannot be canceled, it is not pending:', order_id);
+        if (order[0].order_status_id === 'OST0000004' || order[0].order_status_id === 'OST0000005') {
+            console.error('Order can no longer be canceled. It is already shipped.', order_id);
             return false; 
         }
 
@@ -449,7 +472,7 @@ async function cancelOrder(order_id) {
         `, [order_id, order_id]);
 
         // Update the order status to canceled
-        await updateOrderStatus(order_id, 'cancelled'); // change
+        await updateOrderStatus(order_id, 'OST0000006'); 
 
         // Update item inventories
         for (const itemOrder of itemOrders) {
@@ -510,7 +533,7 @@ async function shipOrder(order_id, carrier_id) {
 
         const order_status_id = order[0].order_status_id;
 
-        if (order_status_id !== 'STSlbMJ7yb') {
+        if (order_status_id !== 'OST0000003') {
             console.log(`Order ${order_id} is not packed. Cannot ship.`);
             return false;
         }
@@ -591,5 +614,6 @@ export default {
     cancelOrder,
     shipOrder,
     listAllParcelOrders,
-    listAllProductOrders
+    listAllProductOrders,
+    updateOrderTotalAmount
 };

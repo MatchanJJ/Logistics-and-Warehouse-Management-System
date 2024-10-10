@@ -23,5 +23,6 @@ import CustomerService from '../services/CustomerService.js';
 //console.log(WarehouseServices.isEmpty('WHR0DPvVDa'));
 //console.log(WarehouseServices.isEmpty('W001'));
 //await ParcelService.addParcel('PCT0000003', 'Box of Dildos', 600, 0.5, 10, 10, 10, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');
+await OrderService.addPostalOrder('ORDnvcJoXw', 'PAR8Q2kjep');
 
-await ParcelService.removeParcel('PARzk_fJgq');
+//OrderService.updateOrderTotalAmount('ORDnvcJoXw', 0);
