@@ -45,7 +45,7 @@
                     <td><%= warehouse.current_capacity_used %></td>
                     <td><%= warehouse.total_capacity - warehouse.current_capacity_used %></td>
                     <td><%= warehouse.warehouse_type_name %></td>
-                    <td></td>
+                    <td><%= warehouse.recentTime ? new Date(warehouse.recentTime).toLocaleString() : 'No Logs' %></td> <!-- TimeStamp -->
                     <td class="action buttons">
                         <a href="/update-warehouse/<%= warehouse.warehouse_id %>" class="btn btn-info">Update</a> 
                         <form action="/delete-warehouse/<%= warehouse.warehouse_id %>" method="POST" style="display:inline;">

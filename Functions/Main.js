@@ -18,6 +18,7 @@
     import CarrierService from './services/CarrierService.js';
     import InventoryService from './services/InventoryService.js';
     import ShipmentService from './services/ShipmentService.js';
+import logUtil from './utils/logUtil.js';
     
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
@@ -368,17 +369,28 @@ app.post('/update-employee/:id', async (req, res) => {
     // Warehouse route
     app.get('/warehouses', async (req, res) => {
         try {
-            const warehouses = await WarehouseServices.getWarehouses(); // Correct the variable name
+            // Fetch all warehouses
+            const warehouses = await WarehouseServices.getWarehouses(); 
+    
+            // Loop through each warehouse to get its most recent timestamp
+            for (const warehouse of warehouses) {
+                // Fetch the recent timestamp for the current warehouse using its ID
+                const timestamp = await logUtil.returnRecentTimeWarehouse(warehouse.warehouse_id);
+                warehouse.recentTime = timestamp;  // Attach timestamp to warehouse object
+            }
+    
+            // Render the view, passing the warehouses with timestamps
             res.render('layout', {
                 title: 'Warehouse List',
                 content: 'warehouses',  // Assuming you have a 'warehouses.ejs' file
-                warehouses
+                warehouses // Now contains recent timestamps
             });
         } catch (error) {
             console.error('Error fetching warehouses:', error);  // Log the error to the console
-            res.status(500).send('Error fetching warehouses.');  // Update error message
+            res.status(500).send('Error fetching warehouses.');  // Return an error message
         }
     });
+    
     
     
     // Route to render form for adding a new warehouse
