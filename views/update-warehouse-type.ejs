@@ -1,26 +1,32 @@
-<a href="/manage-warehouse-types">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-    <link rel="stylesheet" href="/styles.css"> <!-- Link to the external CSS -->
 
 <body>
-    <div class="form-container"> <!-- Wrapping the form in a container -->
-        <h2>Update Warehouse Type</h2>
-        <form action="/update-warehouse-type/<%= warehouseType.warehouse_type_id %>" method="POST">
+
+    <a href="/manage-warehouse-types" class="btn ">
+        <img class="back" src="/back-button.png" alt="back" class="back-button"> 
+    </a>
+
+    <div class="form-container">
+        <h2 class="text-white">Update Warehouse Type</h2>
+
+        <form action="/update-warehouse-type/<%= warehouseType.warehouse_type_id %>" method="POST" class="mt-3 p-4 border rounded ">
             <div class="form-group">
                 <label for="warehouse_type_id">Type ID:</label>
-                <input type="text" id="warehouse_type_id" name="warehouse_type_id" value="<%= warehouseType.warehouse_type_id %>" readonly>
+                <input type="text" id="warehouse_type_id" name="warehouse_type_id" value="<%= warehouseType.warehouse_type_id %>" class="form-control" readonly>
             </div>
 
             <div class="form-group">
                 <label for="warehouse_type_name">Type Name:</label>
-                <input type="text" id="warehouse_type_name" name="warehouse_type_name" value="<%= warehouseType.warehouse_type_name %>" required>
+                <input type="text" id="warehouse_type_name" name="warehouse_type_name" value="<%= warehouseType.warehouse_type_name %>" class="form-control" required>
             </div>
 
             <div class="form-group">
-                <button type="submit">Update Type</button>
+                <button type="submit" class="btn btn-primary">Update Type</button>
             </div>
         </form>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

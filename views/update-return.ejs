@@ -1,27 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Return Status</title>
-    <link rel="stylesheet" href="/styles.css"> <!-- Link to your styles if applicable -->
-</head>
 <body>
     <a href="/returns">
         <img class="back" src="/back-button.png" alt="back">
     </a>
-    <div class="container">
-        <h1>Update Return Status</h1>
+    <div class="form-container">
+        <h2 class="text-white">Update Return Status</h2>
 
         <form action="/update-return-status" method="POST">
             <div class="form-group">
                 <label for="return_id">Return ID:</label>
-                <input type="text" id="return_id" name="return_id" placeholder="Enter return ID" value="<%= returnData ? returnData.return_id : '' %>" required>
+                <input type="text" id="return_id" name="return_id" placeholder="Enter return ID" 
+                       value="<%= returnData ? returnData.return_id : '' %>" readonly required style="color: black;" class="form-control">
             </div>
 
             <div class="form-group">
-                <label for="new_status_id">New Status ID:</label>
-                <input type="text" id="new_status_id" name="new_status_id" placeholder="Enter new status ID" value="<%= returnData ? returnData.return_status_id : '' %>" required>
+                <label for="new_status_id">New Status:</label>
+                <select id="new_status_id" name="new_status_id" required class="form-select">
+                    <option value="" disabled selected>Select a status</option>
+                    <% if (statusList && statusList.length) { %>
+                        <% statusList.forEach(function(status) { %>
+                            <option value="<%= status.return_status_id %>"><%= status.return_status_name %></option>
+                        <% }); %>
+                    <% } %>
+                </select>
             </div>
 
             <button type="submit" class="btn btn-primary">Update Status</button>

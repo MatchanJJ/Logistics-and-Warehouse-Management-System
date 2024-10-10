@@ -1,21 +1,26 @@
 <!-- Back Button -->
-<a href="/manage-shipment-status">
-    <img class="back" src="/back-button.png" alt="back">
+<a href="/manage-shipment-status" class="btn ">
+    <img class="back" src="/back-button.png" alt="back" class="back-button"> 
 </a>
 
 <body>
-    <div class="container">
-        <h2>Edit Shipment Status</h2>
-
+    <div class="form-container ">
+        <h2 class="text-white">Edit Shipment Status</h2>
 
         <!-- Form to Edit Shipment Status -->
-        <form action="/update-shipment-status/<%= shipmentStatus.shipment_status_id %>" method="POST">
-            <label for="shipment_status_name">Shipment Status Name:</label>
-            <input type="text" id="shipment_status_name" name="shipment_status_name" value="<%= shipmentStatus.shipment_status_name %>" required>
-    
-            <button type="submit">Update Status</button>
+        <form action="/update-shipment-status/<%= shipmentStatus.shipment_status_id %>" method="POST" class="mt-3 p-4 border rounded ">
+            <div class="form-group">
+                <label for="shipment_status_name">Shipment Status Name:</label>
+                <input type="text" id="shipment_status_name" name="shipment_status_name" class="form-control" value="<%= shipmentStatus.shipment_status_name %>" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update Status</button>
+            </div>
         </form>
     </div>
     
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-

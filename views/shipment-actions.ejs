@@ -6,16 +6,15 @@
 
 <h2>Shipment Actions</h2>
 
-<div class="home-container">
+<div class="containerShip">
     <body>
     <main>
         <div class="grid-container">
-            <!-- Use the shipment_id in the URL parameters -->
-            <a href="/shipment-deliver/<%= shipment_id %>">Delivered</a>
-            <a href="/shipment-return/<%= shipment_id %>">Return</a>
-            <a href="/shipment-remove/<%= shipment_id %>">Remove</a>
-            <a href="/shipment-failed/<%= shipment_id %>">Failed</a>
-            <a href="/shipment-update-current-location/<%= shipment_id %>">Update Location</a>
+            <a href="/shipment-deliver/<%= shipment_id %>" class="btn btn-success btn-lg">Deliver</a>
+            <a href="/shipment-return/<%= shipment_id %>" class="btn btn-primary btn-lg">Return</a>
+            <a href="/shipment-remove/<%= shipment_id %>"class="btn btn-danger btn-lg">Remove</a>
+            <a href="/shipment-failed/<%= shipment_id %>"class="btn btn-primary btn-lg">Failed</a>
+            <a href="/shipment-update-current-location/<%= shipment_id %>" class="btn btn-primary btn-lg">Update Location</a>
         </div>
     </main>
     </body>

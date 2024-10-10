@@ -1,39 +1,48 @@
+<body>
+    <a href="/warehouses">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
+    <div class="form-container">
+        <!-- Back Button -->
 
-<div class="container">
+        <!-- Page Header -->
+        <h2 class="text-white">Update Warehouse Location</h2>
 
-    <body>
-        <a href="/warehouses">
-            <img class="back" src="/back-button.png" alt="back">
-        </a>
-        <h2>Update Warehouse Location</h2>
-        
+        <!-- Update Warehouse Location Form -->
         <form action="/update-warehouse-location/<%= warehouse_location_id %>" method="POST">
-            <div class="form-group">
-                <label for="section">New Section:</label>
-                <input type="text" id="section" name="section" required placeholder="Enter new section">
-            </div>
             
-            <div class="form-group">
-                <label for="aisle">New Aisle:</label>
-                <input type="text" id="aisle" name="aisle" required placeholder="Enter new aisle">
+            <!-- Section -->
+            <div class="mb-3">
+                <label for="section" class="form-label text-white">New Section:</label>
+                <input type="text" id="section" name="section" required placeholder="Enter new section" class="form-control">
             </div>
-            
-            <div class="form-group">
-                <label for="rack">New Rack:</label>
-                <input type="text" id="rack" name="rack" required placeholder="Enter new rack">
+
+            <!-- Aisle -->
+            <div class="mb-3">
+                <label for="aisle" class="form-label text-white">New Aisle:</label>
+                <input type="text" id="aisle" name="aisle" required placeholder="Enter new aisle" class="form-control">
             </div>
-            
-            <div class="form-group">
-                <label for="shelf">New Shelf:</label>
-                <input type="text" id="shelf" name="shelf" required placeholder="Enter new shelf">
+
+            <!-- Rack -->
+            <div class="mb-3">
+                <label for="rack" class="form-label text-white">New Rack:</label>
+                <input type="text" id="rack" name="rack" required placeholder="Enter new rack" class="form-control">
             </div>
-            
-            <div class="form-group">
-                <label for="bin">New Bin:</label>
-                <input type="text" id="bin" name="bin" required placeholder="Enter new bin">
+
+            <!-- Shelf -->
+            <div class="mb-3">
+                <label for="shelf" class="form-label text-white">New Shelf:</label>
+                <input type="text" id="shelf" name="shelf" required placeholder="Enter new shelf" class="form-control">
             </div>
-            
-            <button type="submit" class="btn">Update Location</button>
+
+            <!-- Bin -->
+            <div class="mb-3">
+                <label for="bin" class="form-label text-white">New Bin:</label>
+                <input type="text" id="bin" name="bin" required placeholder="Enter new bin" class="form-control">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Update Location</button>
         </form>
-    </body>
-</div>
+    </div>
+</body>

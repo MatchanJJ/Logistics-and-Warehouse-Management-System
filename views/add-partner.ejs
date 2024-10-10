@@ -1,20 +1,22 @@
 <a href="/manage-partner">
     <img class="back" src="/back-button.png" alt="back">
 </a>
-<h2>Add Logistics Partner</h2>
-<div class="form-wrapper"> <!-- Container for the form -->
+
+
+<div class="form-container"> <!-- Container for the form -->
+    <h2 class="text-white">Add Logistics Partner</h2>
     <form action="/add-partner" method="POST" class="form-container">
 
         <!-- Carrier Name -->
-        <div class="form-group">
-            <label for="carrier_name">Carrier Name:</label>
-            <input type="text" id="carrier_name" name="carrier_name" required>
+        <div class="mb-3">
+            <label for="carrier_name" class="form-label text-white">Carrier Name:</label>
+            <input type="text" id="carrier_name" name="carrier_name" required class="form-control">
         </div>
 
         <!-- Shipping Service ID -->
-        <div class="form-group">
-            <label for="shipping_service_id">Shipping Service:</label>
-            <select id="shipping_service_id" name="shipping_service_id" required>
+        <div class="mb-3">
+            <label for="shipping_service_id" class="form-label text-white">Shipping Service:</label>
+            <select id="shipping_service_id" name="shipping_service_id" required class="form-select">
                 <option value="">Select Shipping Service</option>
                 <% shippingServices.forEach(function(service) { %>
                     <option value="<%= service.shipping_service_id %>">
@@ -25,14 +27,12 @@
         </div>
 
         <!-- Contact Info -->
-        <div class="form-group">
-            <label for="carrier_contact_info">Contact Info:</label>
-            <input type="text" id="carrier_contact_info" name="carrier_contact_info" required>
+        <div class="mb-3">
+            <label for="carrier_contact_info" class="form-label text-white">Contact Info:</label>
+            <input type="text" id="carrier_contact_info" name="carrier_contact_info" required class="form-control">
         </div>
 
         <!-- Submit Button -->
-        <div class="form-group">
-            <button type="submit" class="btn">Add Partner</button>
-        </div>
+        <button type="submit" class="btn btn-primary">Add Partner</button>
     </form>
 </div>

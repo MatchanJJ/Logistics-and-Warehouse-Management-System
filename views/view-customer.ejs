@@ -6,7 +6,7 @@
 <body>
     <main>
         <!-- Container wrapping everything -->
-        <div class="container">
+        <div class="form-container">
             <h2>Details of <%= customer.customer_first_name %> <%= customer.customer_last_name %></h2>
             
             <table>
@@ -34,7 +34,7 @@
 
             <!-- Action buttons for editing and going back -->
             <div class="actions">
-                <a href="/update-customer/<%= customer.customer_id %>" class="btn">Edit Customer</a>
+                <a href="/update-customer/<%= customer.customer_id %>" class="btn btn-info">Edit Customer</a>
             </div>
         </div>
     </main>

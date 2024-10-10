@@ -26,11 +26,11 @@ async function addPostalOrders(postal_order_id, order_id, parcel_id, total_price
 }
 
 // UPDATE POSTAL ORDER
-async function updatePostalOrders(order_id, parcel_id, total_price, postal_order_id) {
+async function updatePostalOrders(order_id, parcel_id, total_price) {
     try {
         const [result] = await pool.query(
-            "UPDATE postal_orders SET order_id = ?, parcel_id = ?, total_price = ? WHERE postal_order_id = ?", 
-            [order_id, parcel_id, total_price, postal_order_id]
+            "UPDATE postal_orders SET  parcel_id = ?, total_price = ? WHERE order_id = ?", 
+            [, parcel_id, total_price,order_id]
         );
         if (result.affectedRows > 0) {
             console.log('Postal order updated.');
@@ -58,11 +58,11 @@ async function addProductOrders(product_order_id, order_id, product_id, product_
 }
 
 // UPDATE PRODUCT ORDER
-async function updateProductOrders(order_id, product_id, product_quantity, product_unit_price, total_price, product_order_id) {
+async function updateProductOrders(order_id, product_id, product_quantity, total_price) {
     try {
         const [result] = await pool.query(
-            "UPDATE product_orders SET order_id = ?, product_id = ?, product_quantity = ?, product_unit_price = ?, total_price = ? WHERE product_order_id = ?", 
-            [order_id, product_id, product_quantity, product_unit_price, total_price, product_order_id]
+            "UPDATE product_orders SET product_id = ?, product_quantity = ?, total_price = ? WHERE order_id = ?", 
+            [ product_id, product_quantity, total_price, order_id]
         );
         if (result.affectedRows > 0) {
             console.log('Product order updated.');
@@ -125,7 +125,7 @@ async function listAllPostalOrders() {
 // Function to view a postal order by ID
 async function viewPostalOrder(postal_order_id) {
     try {
-        const [rows] = await pool.query("SELECT * FROM postal_orders WHERE postal_order_id = ?", [postal_order_id]);
+        const [rows] = await pool.query("SELECT * FROM postal_orders WHERE parcel_id = ?", [postal_order_id]);
         return rows.length ? rows[0] : null; // Return the order if found, otherwise null
     } catch (error) {
         console.error('Error getting postal order by ID:', error);

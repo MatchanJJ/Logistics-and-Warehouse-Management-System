@@ -54,7 +54,7 @@ async function viewEmployee(employee_id) {
 // get employee data
 async function getEmployeeData(employeeId) {
     try {
-        const [rows] = await pool.query("SELECT * FROM employees WHERE employee_id = ?", [employeeId]);
+        const [rows] = await db.query("SELECT * FROM employees WHERE employee_id = ?", [employeeId]);
         return rows.length ? rows[0] : null; // Return the employee if found, otherwise null
     } catch (error) {
         console.error('Error getting employee by ID:', error);

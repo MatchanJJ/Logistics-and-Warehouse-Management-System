@@ -25,7 +25,7 @@ h1{
 
 
 } 
-h2 {
+/*h2 {
     width: fit-content;
     height: 50px;
     background-color: rgba(0, 0, 0, 0.515);
@@ -37,11 +37,8 @@ h2 {
     margin-bottom: 20px;
     font-family: Arial, sans-serif;
     border-radius: 10px;
-}
+}*/
 
-main {
-    background-color: rgba(0, 0, 0, 0.3);
-}
 
 li {
     font-family: "Montserrat", sans-serif;
@@ -207,7 +204,6 @@ div.error {
     max-width: 700px;
     margin: 0 auto;
     padding: 25px;
-    background-color: #000000;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -286,9 +282,19 @@ textarea {
 }
 .container {
     max-width: 800px;
+    max-height: 400px;
     margin: 0 auto;
     padding: 20px;
     border-radius: 8px;
+    background-color: #343a40; /* Optional: Set a dark background for better contrast */
+}
+.containerShip {
+    max-width: 800px;
+    max-height: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #343a40; /* Optional: Set a dark background for better contrast */
 }
 .grid-container {
     display: grid;
@@ -303,7 +309,6 @@ textarea {
     display: block;
     padding: 20px;
     text-align: center;
-    background-color: #007bff;
     color: white;
     text-decoration: none;
     font-size: 18px;
@@ -311,9 +316,7 @@ textarea {
     transition: background-color 0.3s;
 }
 
-.grid-container a:hover {
-    background-color: #0056b3;
-}
+
 
 @media (max-width: 768px) {
     .grid-container {
@@ -328,4 +331,34 @@ textarea {
     margin-right: 10px; /* Adds horizontal spacing between buttons */
     margin-bottom: 15px; /* Adds vertical spacing if they stack */
 }
+.form-container .form-label,
+.form-container .form-text,
+.form-container .form-check-label {
+    color: white; /* Change label text color to white */
+}
 
+.form-container {
+    background-color: #343a40; /* Optional: Set a dark background for better contrast */
+    padding: 20px; /* Optional: Add some padding */
+    border-radius: 5px; /* Optional: Add rounded corners */
+}
+
+.back {
+    filter: brightness(0) invert(1); /* Make back button image visible on dark background */
+}
+.text-white {
+    color: white;
+}
+
+.bg-transparent {
+    background-color: transparent !important;
+}
+
+body, h2, label, input, select, textarea, button, .form-group {
+    color: white;
+}
+.form-select {
+    color: black; /* Ensures text is black */
+    background-color: white; /* Background color */
+    border: 1px solid #ced4da; /* Border styling */
+}

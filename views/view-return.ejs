@@ -1,14 +1,13 @@
-
 <body>
     <a href="/returns">
         <img class="back" src="/back-button.png" alt="back">
     </a>
 
-    <div class="container">
+    <div class="container text-white"> <!-- Added 'text-white' for white text -->
         <h1>Return Details</h1>
 
         <% if (returnDetails) { %> 
-            <table class="return-details-table">
+            <table class="return-details-table table table-dark"> <!-- Bootstrap dark table for contrast -->
                 <tr>
                     <th>Return ID:</th>
                     <td><%= returnDetails.return_id %></td>
@@ -33,6 +32,9 @@
         <% } else { %>
             <p>No return found with the provided ID.</p>
         <% } %>
-            </div>
+    </div>
+
+    <!-- Optional: Include Bootstrap JS and CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </body>
 </html>

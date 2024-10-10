@@ -1,30 +1,45 @@
-<!-- views/update-product-location.ejs -->
-<a href="/product">
+<a href="/edit-product-option/<%= product.product_id %>">
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
-<h2>Update Product Location</h2>
 
-<div class="container">
-    <form action="/update-product-location/<%= product.product_id %>" method="POST">
-        <label for="warehouse_id">Warehouse ID:</label>
-        <input type="text" id="warehouse_id" name="warehouse_id" required>
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
-        <label for="section">Section:</label>
-        <input type="text" id="section" name="section" required>
+<div class="form-container">
+    <h2>Update Product Location</h2>
+    <form action="/update-product-location/<%= product.product_id %>" method="POST" class="form-container">
+        <div class="form-group">
+            <label for="warehouse_id">Warehouse ID:</label>
+            <input type="text" id="warehouse_id" name="warehouse_id" required>
+        </div>
 
-        <label for="aisle">Aisle:</label>
-        <input type="text" id="aisle" name="aisle" required>
+        <div class="form-group">
+            <label for="section">Section:</label>
+            <input type="text" id="section" name="section" required>
+        </div>
 
-        <label for="rack">Rack:</label>
-        <input type="text" id="rack" name="rack" required>
+        <div class="form-group">
+            <label for="aisle">Aisle:</label>
+            <input type="text" id="aisle" name="aisle" required>
+        </div>
 
-        <label for="shelf">Shelf:</label>
-        <input type="text" id="shelf" name="shelf" required>
+        <div class="form-group">
+            <label for="rack">Rack:</label>
+            <input type="text" id="rack" name="rack" required>
+        </div>
 
-        <label for="bin">Bin:</label>
-        <input type="text" id="bin" name="bin" required>
+        <div class="form-group">
+            <label for="shelf">Shelf:</label>
+            <input type="text" id="shelf" name="shelf" required>
+        </div>
 
-        <button type="submit">Update Location</button>
+        <div class="form-group">
+            <label for="bin">Bin:</label>
+            <input type="text" id="bin" name="bin" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-info">Update Location</button>
+        </div>
     </form>
 </div>

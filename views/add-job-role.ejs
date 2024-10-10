@@ -1,18 +1,28 @@
-<a href="/manage-job-roles">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-<h2>Add Job Role</h2>
-<div class="form-container">
-    <form action="/add-job-role" method="POST">
-        <div class="form-group">
-            <label for="role_name">Role Name:</label>
-            <input type="text" id="role_name" name="role_name" required>
-        </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn">Add Role</button>
-        </div>
-    </form>
-</div>
+<body>
+    <a href="/manage-job-roles" class="btn">
+        <img class="back" src="/back-button.png" alt="back"> 
+    </a>
+    
+    <div class="form-container">
+        <h2 class="text-white">Add Job Role</h2>
+        
+        <div class="form-container">
+            <form action="/add-job-role" method="POST">
+                <div class="mb-3">
+                    <label for="role_name" class="form-label text-white">Role Name:</label>
+                    <input type="text" id="role_name" name="role_name" class="form-control" required>
+                </div>
 
-<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+                <div>
+                    <button type="submit" class="btn btn-primary">Add Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

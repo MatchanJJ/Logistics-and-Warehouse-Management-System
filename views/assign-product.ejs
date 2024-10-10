@@ -2,46 +2,69 @@
 <a href="/product">
     <img class="back" src="/back-button.png" alt="back">
 </a>
-<div class="container">
-    
+
+<div class="form-container">
     <body>
-        
-        <h2>Assign <%= product.product_id %></h2>
-        
+
+        <h2 class="text-white">Assign Product: <%= product.product_id %></h2>
+
+        <!-- Success/Error Message -->
         <% if (message) { %>
-            <div>
+            <div class="alert alert-info">
                 <strong><%= message %></strong>
             </div>
         <% } %>
-    
+
+        <!-- Form for Assigning Product -->
         <form action="/assign-product/<%= product.product_id %>" method="POST">
+            
+            <!-- Warehouse ID -->
+            <div class="mb-3">
+                <label for="warehouse_id" class="form-label text-white">Warehouse ID:</label>
+                <input type="text" id="warehouse_id" name="warehouse_id" class="form-control" required>
+            </div>
 
-            
-            <label for="warehouse_id">Warehouse ID:</label>
-            <input type="text" id="warehouse_id" name="warehouse_id" required>
-            
-            <label for="section">Section:</label>
-            <input type="text" id="section" name="section" required>
-            
-            <label for="aisle">Aisle:</label>
-            <input type="text" id="aisle" name="aisle" required>
-            
-            <label for="rack">Rack:</label>
-            <input type="text" id="rack" name="rack" required>
-            
-            <label for="shelf">Shelf:</label>
-            <input type="text" id="shelf" name="shelf" required>
-            
-            <label for="bin">Bin:</label>
-            <input type="text" id="bin" name="bin" required>
-            
-            <label for="quantity">Quantity:</label>
-            <input type="text" id="quantity" name="quantity" required>
-            
-            <button type="submit">Assign Product</button>
+            <!-- Section -->
+            <div class="mb-3">
+                <label for="section" class="form-label text-white">Section:</label>
+                <input type="text" id="section" name="section" class="form-control" required>
+            </div>
+
+            <!-- Aisle -->
+            <div class="mb-3">
+                <label for="aisle" class="form-label text-white">Aisle:</label>
+                <input type="text" id="aisle" name="aisle" class="form-control" required>
+            </div>
+
+            <!-- Rack -->
+            <div class="mb-3">
+                <label for="rack" class="form-label text-white">Rack:</label>
+                <input type="text" id="rack" name="rack" class="form-control" required>
+            </div>
+
+            <!-- Shelf -->
+            <div class="mb-3">
+                <label for="shelf" class="form-label text-white">Shelf:</label>
+                <input type="text" id="shelf" name="shelf" class="form-control" required>
+            </div>
+
+            <!-- Bin -->
+            <div class="mb-3">
+                <label for="bin" class="form-label text-white">Bin:</label>
+                <input type="text" id="bin" name="bin" class="form-control" required>
+            </div>
+
+            <!-- Quantity -->
+            <div class="mb-3">
+                <label for="quantity" class="form-label text-white">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" required>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Assign Product</button>
+            </div>
         </form>
-        
-    </body>
-    
-</div>
 
+    </body>
+</div>

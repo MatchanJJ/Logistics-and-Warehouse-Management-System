@@ -1,34 +1,35 @@
-<a href="/postal-orders">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-    <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
-    <main>
-        <!-- Wrapping the form in one container for a clean layout -->
-        <div class="container">
-            <h2>Update Postal Order</h2>
+<body>
 
-            <form action="/update-postal-order/<%= postalOrder.postal_order_id %>" method="POST">
-                <div class="form-group">
-                    <label for="order_id">Order ID:</label>
-                    <input type="text" id="order_id" name="order_id" value="<%= postalOrder.order_id %>" required><br>
-                </div>
+    <a href="/postal-orders" class="btn" >
+        <img class="back" src="/back-button.png" alt="back" class="back-button"> 
+    </a>
 
-                <div class="form-group">
-                    <label for="parcel_id">Parcel ID:</label>
-                    <input type="text" id="parcel_id" name="parcel_id" value="<%= postalOrder.parcel_id %>" required><br>
-                </div>
+    <div class="form-container ">
+        <h2 class="text-white">Update Postal Order</h2>
 
-                <div class="form-group">
-                    <label for="total_price">Total Price:</label>
-                    <input type="text" id="total_price" name="total_price" value="<%= postalOrder.total_price %>" required><br>
-                </div>
+        <form action="/update-postal-order/<%= postalOrder.parcel_id %>" method="POST" class="mt-3 p-4 border rounded ">
+            <div class="form-group">
+                <label for="order_id">Order ID:</label>
+                <input type="text" id="order_id" name="order_id" value="<%= postalOrder.order_id %>" class="form-control" required >
+            </div>
 
-                <button type="submit" class="btn">Update Postal Order</button>
-            </form>
+            <div class="form-group">
+                <label for="parcel_id">Parcel ID:</label>
+                <input type="text" id="parcel_id" name="parcel_id" value="<%= postalOrder.parcel_id %>" class="form-control" required >
+            </div>
 
-        </div>
-    </main>
+            <div class="form-group">
+                <label for="total_price">Total Price:</label>
+                <input type="text" id="total_price" name="total_price" value="<%= postalOrder.total_price %>" class="form-control" required>
+            </div>
 
+            <button type="submit" class="btn btn-primary">Update Postal Order</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

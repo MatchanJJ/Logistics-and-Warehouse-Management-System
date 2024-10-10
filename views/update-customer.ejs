@@ -1,39 +1,38 @@
-<a href="/customers">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-<h2>Update Customer</h2>
-<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
-<div class="form-wrapper">
-    <form action="/customers/<%= customer.customer_id %>" method="POST" class="form-container">
-        <!-- First Name -->
-        <div class="form-group">
-            <label for="customer_first_name">First Name:</label>
-            <input type="text" id="customer_first_name" name="customer_first_name" value="<%= customer.customer_first_name %>" required>
-        </div>
+<body>
+    <a href="/customers" class="btn ">
+        <img class="back" src="/back-button.png" alt="back"> 
+    </a>
+    
+    <div class="form-container">
+        <h2 class="text-white">Update Customer</h2>
+        <form action="/customers/<%= customer.customer_id %>" method="POST" class="form-container">
+            <div class="mb-3">
+                <label for="customer_first_name" class="form-label text-white">First Name:</label>
+                <input type="text" id="customer_first_name" name="customer_first_name" class="form-control" value="<%= customer.customer_first_name %>" required>
+            </div>
 
-        <!-- Last Name -->
-        <div class="form-group">
-            <label for="customer_last_name">Last Name:</label>
-            <input type="text" id="customer_last_name" name="customer_last_name" value="<%= customer.customer_last_name %>">
-        </div>
+            <div class="mb-3">
+                <label for="customer_last_name" class="form-label text-white">Last Name:</label>
+                <input type="text" id="customer_last_name" name="customer_last_name" class="form-control" value="<%= customer.customer_last_name %>">
+            </div>
 
-        <!-- Email -->
-        <div class="form-group">
-            <label for="customer_email">Email:</label>
-            <input type="email" id="customer_email" name="customer_email" value="<%= customer.customer_email %>" required>
-        </div>
+            <div class="mb-3">
+                <label for="customer_email" class="form-label text-white">Email:</label>
+                <input type="email" id="customer_email" name="customer_email" class="form-control" value="<%= customer.customer_email %>" required>
+            </div>
 
-        <!-- Address -->
-        <div class="form-group">
-            <label for="customer_address">Address:</label>
-            <textarea id="customer_address" name="customer_address" required><%= customer.customer_address %></textarea>
-        </div>
+            <div class="mb-3">
+                <label for="customer_address" class="form-label text-white">Address:</label>
+                <textarea id="customer_address" name="customer_address" class="form-control" required><%= customer.customer_address %></textarea>
+            </div>
 
-        <!-- Submit Button -->
-        <div class="form-group">
-            <button type="submit" class="btn">Update Customer</button>
-        </div>
-    </form>
+            <button type="submit" class="btn btn-primary">Update Customer</button>
+        </form>
+    </div>
 
-</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

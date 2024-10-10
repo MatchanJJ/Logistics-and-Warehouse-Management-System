@@ -279,7 +279,7 @@ async function shipmentFailed(shipment_id) {
     try {
         // fail the shipment
         const [result] = await db.query(`
-            UPDATE shipments SET shipment_status = 'SST0000004' WHERE shipment_id = ?;
+            UPDATE shipments SET shipment_status_id = 'SST0000004' WHERE shipment_id = ?;
         `, [shipment_id]);
 
         if (result.affectedRows > 0) {

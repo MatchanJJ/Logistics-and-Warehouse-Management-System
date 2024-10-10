@@ -1,21 +1,29 @@
+<!-- Back Button -->
 <a href="/shipments">
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="/styles.css">
 
-<h2>Update Shipment Location</h2>
+<div class="container mt-4">
+    <h2 class="text-center">Update Shipment Location</h2>
 
-<div class="container">
-    <body>
-        <main>
-            <div class="form-container">
-                <form action="/shipment-update-current-location/<%= shipment_id %>" method="POST">
-                    <label for="new_current_location">New Current Location:</label>
-                    <input type="text" id="new_current_location" name="new_current_location" required>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-        </main>
-    </body>
+    <main>
+        <div class="form-container">
+            <form action="/shipment-update-current-location/<%= shipment_id %>" method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="new_current_location" class="form-label">New Current Location:</label>
+                    <input type="text" id="new_current_location" name="new_current_location" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </main>
 </div>
+
+<!-- Bootstrap JS (optional for additional functionalities) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

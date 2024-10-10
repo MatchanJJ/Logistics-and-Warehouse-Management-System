@@ -1,24 +1,38 @@
-<link rel="stylesheet" href="/styles.css">
-<a href="/customers">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-<div class="container">
-    <h2>Add New Customer</h2>
-<form action="/add-customer" method="POST">
-    <label for="customer_first_name">First Name:</label>
-    <input type="text" id="customer_first_name" name="customer_first_name" required><br>
 
-    <label for="customer_last_name">Last Name:</label>
-    <input type="text" id="customer_last_name" name="customer_last_name"><br>
+<body>
+    <a href="/customers" class="btn">
+        <img class="back" src="/back-button.png" alt="back"> 
+    </a>
+    
+    <div class="form-container">
+        <h2 class="text-white">Add New Customer</h2>
+        <form action="/add-customer" method="POST" class="form-container">
+            <div class="mb-3">
+                <label for="customer_first_name" class="form-label text-white">First Name:</label>
+                <input type="text" id="customer_first_name" name="customer_first_name" class="form-control" required>
+            </div>
 
-    <label for="customer_email">Email:</label>
-    <input type="email" id="customer_email" name="customer_email"><br>
+            <div class="mb-3">
+                <label for="customer_last_name" class="form-label text-white">Last Name:</label>
+                <input type="text" id="customer_last_name" name="customer_last_name" class="form-control">
+            </div>
 
-    <label for="customer_address">Address:</label>
-    <textarea id="customer_address" name="customer_address"></textarea><br>
+            <div class="mb-3">
+                <label for="customer_email" class="form-label text-white">Email:</label>
+                <input type="email" id="customer_email" name="customer_email" class="form-control">
+            </div>
 
-    <button type="submit">Add Customer</button>
-</form>
-<a href="/customers">Back to Customer List</a>
+            <div class="mb-3">
+                <label for="customer_address" class="form-label text-white">Address:</label>
+                <textarea id="customer_address" name="customer_address" class="form-control"></textarea>
+            </div>
 
-</div>
+            <button type="submit" class="btn btn-primary">Add Customer</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

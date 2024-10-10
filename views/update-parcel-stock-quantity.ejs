@@ -1,18 +1,27 @@
-<!-- views/update-parcel-stock-quantity.ejs -->
 <a href="/edit-parcel-prompt/<%= parcel.parcel_id %>">
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
-<h2>Update Parcel Stock Quantity</h2>
 
-<div class="container">
+<div class="form-container">
+    <h2 class="text-white">Update Parcel Stock Quantity</h2>
     <form action="/update-parcel-stock-quantity/<%= parcel.parcel_id %>" method="POST">
-        <label for="warehouse_id">Warehouse ID:</label>
-        <input type="text" id="warehouse_id" name="warehouse_id" required>
-        
-        <label for="new_quantity">New Stock Quantity:</label>
-        <input type="text" id="new_quantity" name="new_quantity" required>
 
-        <button type="submit">Update Stock Quantity</button>
+        <!-- Warehouse ID -->
+        <div class="mb-3">
+            <label for="warehouse_id" class="form-label text-white">Warehouse ID:</label>
+            <input type="text" id="warehouse_id" name="warehouse_id" class="form-control" required>
+        </div>
+
+        <!-- New Stock Quantity -->
+        <div class="mb-3">
+            <label for="new_quantity" class="form-label text-white">New Stock Quantity:</label>
+            <input type="number" id="new_quantity" name="new_quantity" class="form-control" required>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Update Stock Quantity</button>
+        </div>
     </form>
 </div>

@@ -1,10 +1,10 @@
 <a href="/edit-product-option/<%= product.product_id %>">
     <img class="back" src="/back-button.png" alt="back">
 </a>
-<h2>Edit Product</h2>
 <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
-<div class="form-wrapper">
+<div class="form-container">
+    <h2>Edit Product</h2>
     <form action="/edit-product/<%= product.product_id %>" method="POST" class="form-container">
         <!-- Product Category ID -->
         <div class="form-group">
@@ -66,7 +66,7 @@
 
         <div class="form-group">
             <label for="category_name">Category Name:</label>
-            <input type="text" step="0.01" id="category_name" name="category_name" value="<%= product.category_name %>" required>
+            <input type="text" id="category_name" name="category_name" value="<%= product.category_name %>" required>
         </div>
 
         <!-- Checkbox Group for Product Attributes -->
@@ -99,13 +99,10 @@
             <label for="is_temperature_sensitive">Temperature Sensitive:</label>
             <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive" value="true" <%= product.is_temperature_sensitive ? 'checked' : '' %>>
         </div>
-        
-        
-        
 
         <!-- Submit Button -->
         <div class="form-group">
-            <button type="submit" class="btn">Update Product</button>
+            <button type="submit" class="btn btn-info">Update Product</button>
         </div>
     </form>
 </div>

@@ -2,39 +2,52 @@
 <a href="/parcel">
     <img class="back" src="/back-button.png" alt="back">
 </a>
-<div class="container">    
+
+<div class="form-container">    
     <form method="POST" action="/assign-parcel/<%= parcel.parcel_id %>">
-        <h2>Assign <%= parcel.parcel_id %> </h2>
-    <div>
-        <label for="warehouse_id">Warehouse ID:</label>
-        <input type="text" name="warehouse_id" value="<%= parcel.warehouse_id || '' %>" required>
-    </div>
-    <div>
-        <label for="section">Section:</label>
-        <input type="text" name="section" value="<%= parcel.section || '' %>" required>
-    </div>
-    <div>
-        <label for="aisle">Aisle:</label>
-        <input type="text" name="aisle" value="<%= parcel.aisle || '' %>" required>
-    </div>
-    <div>
-        <label for="rack">Rack:</label>
-        <input type="text" name="rack" value="<%= parcel.rack || '' %>" required>
-    </div>
-    <div>
-        <label for="shelf">Shelf:</label>
-        <input type="text" name="shelf" value="<%= parcel.shelf || '' %>" required>
-    </div>
-    <div>
-        <label for="bin">Bin:</label>
-        <input type="text" name="bin" value="<%= parcel.bin || '' %>" required>
-    </div>
-    <button type="submit">Assign Parcel</button>
-</form>
-<% if (message) { %>
-    <p><%= message %></p>
-<% } %>
-
-
+        <h2 class="tezt-white">Assign <%= parcel.parcel_id %></h2>
+        
+        <!-- Warehouse ID -->
+        <div class="mb-3">
+            <label for="warehouse_id" class="form-label">Warehouse ID:</label>
+            <input type="text" name="warehouse_id" class="form-control" value="<%= parcel.warehouse_id || '' %>" required>
+        </div>
+        
+        <!-- Section -->
+        <div class="mb-3">
+            <label for="section" class="form-label">Section:</label>
+            <input type="text" name="section" class="form-control" value="<%= parcel.section || '' %>" required>
+        </div>
+        
+        <!-- Aisle -->
+        <div class="mb-3">
+            <label for="aisle" class="form-label">Aisle:</label>
+            <input type="text" name="aisle" class="form-control" value="<%= parcel.aisle || '' %>" required>
+        </div>
+        
+        <!-- Rack -->
+        <div class="mb-3">
+            <label for="rack" class="form-label">Rack:</label>
+            <input type="text" name="rack" class="form-control" value="<%= parcel.rack || '' %>" required>
+        </div>
+        
+        <!-- Shelf -->
+        <div class="mb-3">
+            <label for="shelf" class="form-label">Shelf:</label>
+            <input type="text" name="shelf" class="form-control" value="<%= parcel.shelf || '' %>" required>
+        </div>
+        
+        <!-- Bin -->
+        <div class="mb-3">
+            <label for="bin" class="form-label">Bin:</label>
+            <input type="text" name="bin" class="form-control" value="<%= parcel.bin || '' %>" required>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Assign Parcel</button>
+        
+        <% if (message) { %>
+            <p class="mt-3 text-success"><%= message %></p>
+        <% } %>
+    </form>
 </div>
-

@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Warehouse</title>
-    <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
-</head>
+
 <body>
     <a href="/warehouses">
         <img class="back" src="/back-button.png" alt="back">
@@ -13,9 +6,10 @@
     <div class="flexer">
 
         <h2>Update Warehouse</h2>
-    </div>
-    <p>Select an option to update:</p>
-    <div>
+    </div>  
+
+    <h2>Select an option to update:</h2>
+    <div class="grid-container">
         <a href="/update-warehouse-capacity/<%= warehouse_id %>" class="btn btn-warning">Update Warehouse Capacity</a>
         <a href="/update-warehouse-location/<%= warehouse_id %>" class="btn btn-warning">Update Warehouse Location</a>
     </div>

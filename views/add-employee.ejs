@@ -1,47 +1,55 @@
-<a href="/employees">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-<h2>Add New Employee</h2>
-<link rel="stylesheet" href="/styles.css"> 
-<div class="form-container">
-    <form action="/add-employee" method="POST">
+
+<body>
+    <a href="/employees">
+        <img class="back" src="/back-button.png" alt="back"> 
+    </a>
     
-        <div class="form-group">
-            <label for="employee_first_name">First Name:</label>
-            <input type="text" id="employee_first_name" name="employee_first_name" required>
-        </div>
+    <div class="form-container">
+        <h2 class="text-white">Add New Employee</h2>
+        
+        <div class="form-container">
+            <form action="/add-employee" method="POST">
+                <div class="mb-3">
+                    <label for="employee_first_name" class="form-label text-white">First Name:</label>
+                    <input type="text" id="employee_first_name" name="employee_first_name" class="form-control" required>
+                </div>
 
-        <div class="form-group">
-            <label for="employee_last_name">Last Name:</label>
-            <input type="text" id="employee_last_name" name="employee_last_name">
-        </div>
+                <div class="mb-3">
+                    <label for="employee_last_name" class="form-label text-white">Last Name:</label>
+                    <input type="text" id="employee_last_name" name="employee_last_name" class="form-control">
+                </div>
 
-        <div class="form-group">
-            <label for="contact_info">Contact Info:</label>
-            <input type="text" id="contact_info" name="contact_info">
-        </div>
+                <div class="mb-3">
+                    <label for="contact_info" class="form-label text-white">Contact Info:</label>
+                    <input type="text" id="contact_info" name="contact_info" class="form-control">
+                </div>
 
-        <div class="form-group">
-            <label for="employee_role_id">Role:</label>
-            <select id="employee_role_id" name="employee_role_id" required>
-                <option value="">Select Role</option>
-                <% roles.forEach(function(role) { %>
-                    <option value="<%= role.employee_role_id %>">
-                        <%= role.role_name %>
-                    </option>
-                <% }) %>
-            </select>
-        </div>
+                <div class="mb-3">
+                    <label for="employee_role_id" class="form-label text-white">Role:</label>
+                    <select id="employee_role_id" name="employee_role_id" class="form-select" required>
+                        <option value="">Select Role</option>
+                        <% roles.forEach(function(role) { %>
+                            <option value="<%= role.employee_role_id %>">
+                                <%= role.role_name %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label for="employee_salary">Salary:</label>
-            <input type="text" id="employee_salary" name="employee_salary" required>
-        </div>
+                <div class="mb-3">
+                    <label for="employee_salary" class="form-label text-white">Salary:</label>
+                    <input type="text" id="employee_salary" name="employee_salary" class="form-control" required>
+                </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn">Add Employee</button>
+                <div>
+                    <button type="submit" class="btn btn-primary">Add Employee</button>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+    </div>
 
-<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

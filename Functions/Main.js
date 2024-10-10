@@ -1006,7 +1006,7 @@ app.post('/update-product-location/:id', async (req, res) => {
     try {
         const updated = await InventoryService.updateProductLocation(product_id, warehouse_id, section, aisle, rack, shelf, bin);
         if (updated) {
-            res.redirect(`/product`);
+            res.redirect(`/manage-product-orders`);
         } else {
             res.status(404).send('Product or Warehouse not found.');
         }
@@ -1025,7 +1025,6 @@ app.get('/edit-product-option/:id', async (req, res) => {
         if (product) {
             res.render('layout', { title: 'Edit Product Option', content: 'edit-product-option',product }); // Render the layout with the add-warehouse content
 
-            //res.render('edit-product-option', { product });  // Render the prompt view with product data
         } else {
             res.status(404).send('Product not found.');
         }
@@ -1608,7 +1607,8 @@ app.post('/delete-postal-order/:id', async (req, res) => {
 app.get('/manage-product-orders', async (req, res) => {
     try {
         const productOrders = await orderTokens.listAllProductOrders(); // Get all product orders
-        res.render('manage-product-orders', { productOrders }); // Render the EJS file with product orders
+        res.render('layout', { title: 'Manage Product Order', content: 'manage-product-orders', productOrders});
+
     } catch (error) {
         console.error('Error fetching product orders:', error);
         res.status(500).send('Error fetching product orders.');
@@ -1617,12 +1617,11 @@ app.get('/manage-product-orders', async (req, res) => {
 
 // Route to update product order form
 app.get('/update-product-order/:id', async (req, res) => {
-    const product_order_id = req.params.id;
+    const product_id = req.params.id;
     try {
-        const [productOrders] = await pool.query("SELECT * FROM product_orders WHERE product_order_id = ?", [product_order_id]);
+        const [productOrders] = await pool.query("SELECT * FROM product_orders WHERE product_id = ?", [product_id]);
         if (productOrders.length > 0) {
             res.render('layout', { title: 'Update Product Order', content: 'update-product-order', productOrder: productOrders[0]});
-            //res.render('update-product-order', { productOrder: productOrders[0] }); // Pass the order details to the view
         } else {
             res.status(404).send('Product order not found.');
         }
@@ -1634,10 +1633,10 @@ app.get('/update-product-order/:id', async (req, res) => {
 
 // Handle POST request for updating product order
 app.post('/update-product-order/:id', async (req, res) => {
-    const { order_id, product_id, product_quantity, product_unit_price, total_price } = req.body;
-    const product_order_id = req.params.id;
+    const { order_id, product_id, product_quantity, total_price } = req.body;
+    console.log(order_id);
     try {
-        await orderTokens.updateProductOrders(order_id, product_id, product_quantity, product_unit_price, total_price, product_order_id);
+        await orderTokens.updateProductOrders(order_id, product_id, product_quantity, total_price);
         res.redirect('/manage-product-orders'); // Redirect to the product orders management page after update
     } catch (error) {
         console.error('Error updating product order:', error);
@@ -2379,20 +2378,23 @@ app.get('/update-return/:id', async (req, res) => {
     try {
         // Fetch return data by ID
         const returnData = await ReturnService.viewReturn(returnId);
+        // Fetch all status names
+        const statusList = await StatAndCatService.getReturnStatus(); // Adjust this according to your service method
 
         if (!returnData) {
             return res.render('layout', { 
                 title: 'Update Return Status', 
                 content: 'update-return', 
-                message: `Return with ID ${returnId} not found.`
+                message: `Return with ID ${returnId} not found.` 
             });
         }
 
-        // Render the form with return data
+        // Render the form with return data and status list
         res.render('layout', { 
             title: 'Update Return Status', 
             content: 'update-return', 
-            returnData 
+            returnData, 
+            statusList // Pass the status list to the EJS template
         });
     } catch (error) {
         console.error('Error fetching return data:', error);
@@ -2403,6 +2405,7 @@ app.get('/update-return/:id', async (req, res) => {
         });
     }
 });
+
 
 
 // POST route to update return status

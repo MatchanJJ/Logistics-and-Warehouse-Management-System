@@ -1,37 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Employee Job Role and Warehouse</title>
-</head>
-<a href="/employees">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-<div class="container">
-    <body>
-        
-        <h1>Assign Employee to Warehouse</h1>
+
+<body>
+    <a href="/employees">
+        <img class="back" src="/back-button.png" alt="back">
+    </a>
+    
+    <div class="container mt-4">
+        <h1 class="text-white">Assign Employee to Warehouse</h1>
     
         <% if (message) { %>
-            <div>
+            <div class="alert alert-info">
                 <strong><%= message %></strong>
             </div>
         <% } %>
     
         <!-- Show the current employee details -->
-        <div>
-            <p><strong>Employee:</strong> <%= employee.employee_name %> (ID: <%= employee.employee_id %>)</p>
+        <div class="mb-4">
+            <p class="text-white"><strong>Employee:</strong> <%= employee.employee_name %> (ID: <%= employee.employee_id %>)</p>
         </div>
     
         <!-- Form for assigning employee role and warehouse -->
         <form action="/assign-employee/<%= employee.employee_id %>" method="POST">
             <!-- Hidden input to include the employee_id in the POST request -->
             <input type="hidden" name="employee_id" value="<%= employee.employee_id %>">
-    
-            <div>
-                <label for="warehouse_id">Assign to Warehouse:</label>
-                <select id="warehouse_id" name="warehouse_id" required>
+
+            <div class="mb-3">
+                <label for="warehouse_id" class="form-label text-white">Assign to Warehouse:</label>
+                <select id="warehouse_id" name="warehouse_id" class="form-select" required>
                     <option value="">Select Warehouse</option>
                     <% warehouses.forEach(warehouse => { %>
                         <option value="<%= warehouse.warehouse_id %>">
@@ -41,12 +35,14 @@
                 </select>
             </div>
     
-            <button type="submit">Assign Employee</button>
-
+            <button type="submit" class="btn btn-primary">Assign Employee</button>
         </form>
-        <a href="/manage-employee/<%= employee.employee_id %>"><button>Transfer</button></a> 
 
-    </body>
-    
-</div>
+        <a href="/manage-employee/<%= employee.employee_id %>" class="btn btn-secondary mt-3">Transfer</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

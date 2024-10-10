@@ -1,36 +1,48 @@
-<a href="/orders">
-    <img class="back" src="/back-button.png" alt="back" class="back-button">
-</a>
-<link rel="stylesheet" href="/styles.css">
 
-<h2 class="order-title">Order Options</h2>
+<body>
 
-<div class="order-container">
-    <main class="order-options">
+    <a href="/orders" class="btn ">
+        <img class="back" src="/back-button.png" alt="back" class="back-button"> 
+    </a>
+    
+    <div class="form-container">
+        <h2 class="order-title text-white">Order Options</h2>
 
-        <!-- Update Order Status Container -->
-        <div class="container update-status-container">
-            <h3>Update Order Status</h3>
-            <a href="/edit-order-status/<%= orders.order_id %>">
-                <button class="btn update-status">Update Order Status</button>
-            </a>
+        <div class="order-container">
+            <main class="order-options">
+
+                <!-- Update Order Status Container -->
+                <div class="container update-status-container my-4 p-3 border rounded">
+                    <h3 class="text-white">Update Order Status</h3>
+                    <a href="/edit-order-status/<%= orders.order_id %>">
+                        <button class="btn btn-info">Update Order Status</button>
+                    </a>
+                </div>
+
+                <!-- Ship Order Container -->
+                <div class="container ship-order-container my-4 p-3 border rounded">
+                    <h3 class="text-white">Ship Order</h3>
+                    <form method="POST" action="/ship-order/<%= orders.order_id %>" class="ship-order-form">
+                        <input type="hidden" name="order_id" value="<%= orders.order_id %>">
+                        <div class="form-group">
+                            <label for="carrier_id" class="text-white">Select Carrier:</label>
+                            <select name="carrier_id" required class="form-control carrier-select">
+                                <option value="" disabled selected>Select a carrier</option>
+                                <% carriers.forEach(function(carrier) { %>
+                                    <option value="<%= carrier.carrier_id %>"><%= carrier.carrier_name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success ship-order">Ship Order</button>
+                    </form>
+                </div>
+
+            </main>
         </div>
+    </div>
 
-        <!-- Ship Order Container -->
-        <div class="container ship-order-container">
-            <h3>Ship Order</h3>
-            <form method="POST" action="/ship-order/<%= orders.order_id %>" class="ship-order-form">
-                <input type="hidden" name="order_id" value="<%= orders.order_id %>">
-                <label for="carrier_id">Select Carrier:</label>
-                <select name="carrier_id" required class="carrier-select">
-                    <option value="" disabled selected>Select a carrier</option>
-                    <% carriers.forEach(function(carrier) { %>
-                        <option value="<%= carrier.carrier_id %>"><%= carrier.carrier_name %></option>
-                    <% }); %>
-                </select>
-                <button type="submit" class="btn ship-order">Ship Order</button>
-            </form>
-        </div>
-
-    </main>
-</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

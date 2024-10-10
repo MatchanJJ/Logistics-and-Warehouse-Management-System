@@ -1,104 +1,105 @@
 <a href="/product">
     <img class="back" src="/back-button.png" alt="back">
 </a>
-<link rel="stylesheet" href="/styles.css">
-    <div class="form-wrapper">
-        <h2>Add Product</h2>
-        <form action="/add-product" method="POST" class="form-container">
+<link rel="stylesheet" href="/styles.css"> <!-- Link to your custom styles -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CDN -->
 
-            <!-- Product Category ID Dropdown -->
-            <div class="form-group">
-                <label for="product_category_id">Product Category:</label>
-                <select id="product_category_id" name="product_category_id" required>
-                    <option value="">Select Product Category</option>
-                    <% productCategories.forEach(function(category) { %>
-                        <option value="<%= category.product_category_id %>">
-                            <%= category.product_category_name %>
-                        </option>
-                    <% }); %>
-                </select>
-            </div>
+<div class="form-container">
+    <h2 class="text-white">Add Product</h2>
+    <form action="/add-product" method="POST" class="form-container">
 
-            <div class="form-group">
-                <label for="product_name">Product Name:</label>
-                <input type="text" id="product_name" name="product_name" required>
-            </div>
+        <!-- Product Category ID Dropdown -->
+        <div class="form-group">
+            <label for="product_category_id" class="form-label text-white">Product Category:</label>
+            <select id="product_category_id" name="product_category_id" class="form-control" required>
+                <option value="">Select Product Category</option>
+                <% productCategories.forEach(function(category) { %>
+                    <option value="<%= category.product_category_id %>">
+                        <%= category.product_category_name %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="product_brand">Product Brand:</label>
-                <input type="text" id="product_brand" name="product_brand" required>
-            </div>
+        <div class="form-group">
+            <label for="product_name" class="form-label text-white">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="product_supplier">Product Supplier:</label>
-                <input type="text" id="product_supplier" name="product_supplier" required>
-            </div>
+        <div class="form-group">
+            <label for="product_brand" class="form-label text-white">Product Brand:</label>
+            <input type="text" id="product_brand" name="product_brand" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="product_description">Product Description:</label>
-                <textarea id="product_description" name="product_description" required></textarea>
-            </div>
+        <div class="form-group">
+            <label for="product_supplier" class="form-label text-white">Product Supplier:</label>
+            <input type="text" id="product_supplier" name="product_supplier" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="product_unit_price">Product Unit Price:</label>
-                <input type="number" id="product_unit_price" step="0.01" name="product_unit_price" step="0.01" required>
-            </div>
+        <div class="form-group">
+            <label for="product_description" class="form-label text-white">Product Description:</label>
+            <textarea id="product_description" name="product_description" class="form-control" required></textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="product_weight">Product Weight:</label>
-                <input type="number" id="product_weight" step="0.01" name="product_weight" required>
-            </div>
+        <div class="form-group">
+            <label for="product_unit_price" class="form-label text-white">Product Unit Price:</label>
+            <input type="number" id="product_unit_price" step="0.01" name="product_unit_price" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="product_length">Product Length:</label>
-                <input type="number" id="product_length" step="0.01" name="product_length" required>
-            </div>
+        <div class="form-group">
+            <label for="product_weight" class="form-label text-white">Product Weight:</label>
+            <input type="number" id="product_weight" step="0.01" name="product_weight" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="product_width">Product Width:</label>
-                <input type="number" id="product_width" step="0.01" name="product_width" required>
-            </div>
+        <div class="form-group">
+            <label for="product_length" class="form-label text-white">Product Length:</label>
+            <input type="number" id="product_length" step="0.01" name="product_length" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="product_height">Product Height:</label>
-                <input type="number" id="product_height" step="0.01" name="product_height" required>
-            </div>
+        <div class="form-group">
+            <label for="product_width" class="form-label text-white">Product Width:</label>
+            <input type="number" id="product_width" step="0.01" name="product_width" class="form-control" required>
+        </div>
 
-            <!-- Checkbox fields -->
-            <div class="form-group">
-                <label for="is_fragile">Fragile:</label>
-                <input type="checkbox" id="is_fragile" name="is_fragile">
-            </div>
+        <div class="form-group">
+            <label for="product_height" class="form-label text-white">Product Height:</label>
+            <input type="number" id="product_height" step="0.01" name="product_height" class="form-control" required>
+        </div>
 
-            <div class="form-group">
-                <label for="is_perishable">Perishable:</label>
-                <input type="checkbox" id="is_perishable" name="is_perishable">
-            </div>
+        <!-- Checkbox fields -->
+        <div class="form-check">
+            <input type="checkbox" id="is_fragile" name="is_fragile" class="form-check-input">
+            <label class="form-check-label text-white" for="is_fragile">Fragile</label>
+        </div>
 
-            <div class="form-group">
-                <label for="is_hazardous">Hazardous:</label>
-                <input type="checkbox" id="is_hazardous" name="is_hazardous">
-            </div>
+        <div class="form-check">
+            <input type="checkbox" id="is_perishable" name="is_perishable" class="form-check-input">
+            <label class="form-check-label text-white" for="is_perishable">Perishable</label>
+        </div>
 
-            <div class="form-group">
-                <label for="is_oversized">Oversized:</label>
-                <input type="checkbox" id="is_oversized" name="is_oversized">
-            </div>
+        <div class="form-check">
+            <input type="checkbox" id="is_hazardous" name="is_hazardous" class="form-check-input">
+            <label class="form-check-label text-white" for="is_hazardous">Hazardous</label>
+        </div>
 
-            <div class="form-group">
-                <label for="is_returnable">Returnable:</label>
-                <input type="checkbox" id="is_returnable" name="is_returnable">
-            </div>
+        <div class="form-check">
+            <input type="checkbox" id="is_oversized" name="is_oversized" class="form-check-input">
+            <label class="form-check-label text-white" for="is_oversized">Oversized</label>
+        </div>
 
-            <div class="form-group">
-                <label for="is_temperature_sensitive">Temperature Sensitive:</label>
-                <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive">
-            </div>
+        <div class="form-check">
+            <input type="checkbox" id="is_returnable" name="is_returnable" class="form-check-input">
+            <label class="form-check-label text-white" for="is_returnable">Returnable</label>
+        </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn">Add Product</button>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
+        <div class="form-check">
+            <input type="checkbox" id="is_temperature_sensitive" name="is_temperature_sensitive" class="form-check-input">
+            <label class="form-check-label text-white" for="is_temperature_sensitive">Temperature Sensitive</label>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Add Product</button>
+        </div>
+    </form>
+</div>
+

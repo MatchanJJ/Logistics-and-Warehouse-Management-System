@@ -1,23 +1,35 @@
-<a href="/orders">
-    <img class="back" src="/back-button.png" alt="back">
-</a>
-<link rel="stylesheet" href="/styles.css">
 
-<h2>Update Order Status</h2>
+<body>
 
-<div class="home-container">
-    <main>
-        <form method="POST" action="/edit-order-status/<%= order.order_id %>" class="update-order-status-form">
-            <input type="hidden" name="order_id" value="<%= order.order_id %>">
-            <label for="new_order_status_id">Select New Status:</label>
-            <select name="new_order_status_id" required>
-                <option value="" disabled selected>Select a new status</option>
-                <!-- Dynamically render order status options -->
-                <% statuses.forEach(function(status) { %>
-                    <option value="<%= status.order_status_id %>"><%= status.order_status_name %></option>
-                <% }); %>
-            </select>
-            <button type="submit">Update Status</button>
-        </form>
-    </main>
-</div>
+    <a href="/orders" class="btn ">
+        <img class="back" src="/back-button.png" alt="back" class="back-button"> 
+    </a>
+    
+    <div class="form-container">
+        <h2 class="text-white">Update Order Status</h2>
+
+        <div class="home-container">
+            <main>
+                <form method="POST" action="/edit-order-status/<%= order.order_id %>" class="update-order-status-form my-4 p-3 border rounded">
+                    <input type="hidden" name="order_id" value="<%= order.order_id %>">
+                    <div class="form-group">
+                        <label for="new_order_status_id" class="text-white">Select New Status:</label>
+                        <select name="new_order_status_id" id="new_order_status_id" required class="form-control">
+                            <option value="" disabled selected>Select a new status</option>
+                            <!-- Dynamically render order status options -->
+                            <% statuses.forEach(function(status) { %>
+                                <option value="<%= status.order_status_id %>"><%= status.order_status_name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-info">Update Status</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
