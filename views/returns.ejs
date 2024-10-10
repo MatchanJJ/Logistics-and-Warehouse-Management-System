@@ -5,11 +5,14 @@
     <a href="/return-logs">
         <img class="home" src="/log.png" alt="log">
     </a>
-    <h2>All Returns</h2>
+    <div class="flexer">
+
+        <h2>All Returns</h2>
+    </div>
 
 
-        <table>
-            <thead>
+    <table class="table table-dark table-striped">
+        <thead>
                 <tr>
                     <th>Return ID</th>
                     <th>Order ID</th>
@@ -29,7 +32,7 @@
                         <td><%= returnItem.return_status_name %></td>
                         <td><%= returnItem.return_date %></td>
                         <td> 
-                            <a href="/update-return/<%= returnItem.return_id %>"><button>Update</button></a>
+                            <a href="/update-return/<%= returnItem.return_id %>" class="btn btn-info">Update</a>
                             </form>
                         </td>
                     </tr>

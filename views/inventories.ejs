@@ -1,13 +1,18 @@
 <a href="/">
     <img class="home" src="/home-button.png" alt="home">
 </a>
-<h2>Inventories</h2>
-        <a href="/parcel" class="btn">Manage Parcel</a>
-        <a href="/product" class="btn">Manage Product</a>
+<div class="flexer">
+
+    <h2>Inventories</h2>
+</div>
+<div class="button-group">
+    <a href="/parcel" class="btn btn-warning">Manage Parcel</a>
+    <a href="/product" class="btn btn-warning">Manage Product</a>
+</div>
     
 
         <% if (inventory && inventory.length > 0) { %>
-            <table border="1">
+            <table class="table table-dark table-striped">
                 <thead>
                     <tr>
                         <th>Inventory Type</th>

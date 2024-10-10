@@ -5,8 +5,11 @@
 <body>
     <div class="container">
         <h2>Manage Warehouse Types</h2>
-    <a href="/add-warehouse-type" class="btn">Add New Warehouse Type</a>
-    <table class="responsive-table">
+        <div class="button-group">
+            <a href="/add-warehouse-type" class="btn btn-warning">Add New Warehouse Type</a>
+
+        </div>
+    <table class="table table-dark table-striped">
         <thead>
             <tr>
                 <th>Type ID</th>
@@ -21,9 +24,9 @@
                         <td><%= type.warehouse_type_id %></td>
                         <td><%= type.warehouse_type_name %></td>
                         <td>
-                            <a href="/update-warehouse-type/<%= type.warehouse_type_id %>"><button>Update</button></a> 
+                            <a href="/update-warehouse-type/<%= type.warehouse_type_id %>" class="btn btn-info">Update</a> 
                             <form action="/delete-warehouse-type/<%= type.warehouse_type_id %>" method="POST" style="display:inline;">
-                                <button type="submit" onclick="return confirm('Are you sure you want to remove this warehouse type?')">Delete</button>
+                                <button type="submit" onclick="return confirm('Are you sure you want to remove this warehouse type?')" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

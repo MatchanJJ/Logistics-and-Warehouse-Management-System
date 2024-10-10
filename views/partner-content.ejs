@@ -2,15 +2,17 @@
     <img class="back" src="/back-button.png" alt="back">
 </a>
 <h2>Logistics Partners</h2>
-<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+<div class="button-group">
+    
+    <a href="/add-partner" type="button" class="btn btn-warning">Add New Partner</a>
+</div>
 
 <div>
     
-    <a href="/add-partner" class="btn">Add New Partner</a>
 </div>
-
 <% if (partners && partners.length > 0) { %>
-    <table border="1">
+    <table class="table table-dark table-striped">
         <thead>
             <tr>
                 <th>Carrier ID</th>
@@ -28,9 +30,9 @@
                 <td><%= partner.shipping_service_id %></td>
                 <td><%= partner.carrier_contact_info %></td>
                 <td>
-                    <a href="/update-partner/<%= partner.carrier_id %>" class="btn">Update</a>
+                    <a href="/update-partner/<%= partner.carrier_id %>" class="btn btn-info">Update</a>
                     <form action="/delete-partner/<%= partner.carrier_id %>" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Are you sure you want to remove this carrier?')"class="btn" style="background-color: red;">Delete</button>
+                        <button type="submit" onclick="return confirm('Are you sure you want to remove this carrier?')"class="btn btn-danger">Delete</button>
                     </form>
                 </td>
             </tr>

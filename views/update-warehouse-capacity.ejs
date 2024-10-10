@@ -1,13 +1,13 @@
 
 </body>
-<div class="container">
+<div class="mb-3">
     <body>
         <a href="/warehouses">
             <img class="back" src="/back-button.png" alt="back">
         </a>
         <h1>Update Warehouse Capacity</h1>
         <form action="/update-warehouse-capacity/<%= warehouse.warehouse_id %>" method="POST">
-            <label for="capacity">New Capacity:</label>
+            <label for="capacity" class="form-label">New Capacity:</label>
             <input type="number" id="capacity" name="new_capacity" required>
             <button type="submit" class="btn">Update Capacity</button>
         </form>

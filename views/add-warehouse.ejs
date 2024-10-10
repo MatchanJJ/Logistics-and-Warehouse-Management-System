@@ -1,24 +1,33 @@
+<!-- Back Button -->
 <a href="/warehouses">
     <img class="back" src="/back-button.png" alt="back">
 </a>
-<h2>Add Warehouse</h2>
+
+<div class="flexer">
+    <h2>Add Warehouse</h2>
+</div>
+
 <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
 
+<!-- Form Structure -->
 <div class="form-wrapper">
     <form action="/add-warehouse" method="POST" class="form-container">
 
-        <div class="form-group">
-            <label for="warehouse_address">Location:</label>
+        <!-- Location Field -->
+        <div class="mb-3">
+            <label for="warehouse_address" class="form-label">Location:</label>
             <input type="text" id="warehouse_address" name="warehouse_address" required class="form-control">
         </div>
 
-        <div class="form-group">
-            <label for="capacity">Capacity:</label>
+        <!-- Capacity Field -->
+        <div class="mb-3">
+            <label for="capacity" class="form-label">Capacity:</label>
             <input type="number" id="capacity" name="capacity" required class="form-control">
         </div>
 
-        <div class="form-group">
-            <label for="warehouse_type_id">Warehouse Type:</label>
+        <!-- Warehouse Type Dropdown -->
+        <div class="mb-3">
+            <label for="warehouse_type_id" class="form-label">Warehouse Type:</label>
             <select id="warehouse_type_id" name="warehouse_type_id" required class="form-control">
                 <option value="">Select Warehouse Type</option>
                 <% warehouseTypes.forEach(function(warehouseType) { %>
@@ -29,8 +38,10 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn">Add Warehouse</button>
+        <!-- Submit Button -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Add Warehouse</button>
         </div>
+        
     </form>
 </div>

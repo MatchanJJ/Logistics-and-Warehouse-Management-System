@@ -7,9 +7,14 @@
 <a href="/customer-archives">
     <img class="home" src="/inbox.png" alt="archives">
 </a>
-<h2>Customer List</h2>
-<a href="/add-customer"><button>Add Customer</button></a>
-<table>
+<div class="flexer">
+    <h2>Customer List</h2>
+</div>
+<div class="button-group">
+
+    <a href="/add-customer" class="btn btn-warning">Add Customer</a>
+</div>
+<table class="table table-dark table-striped">
     <thead>
         <tr>
             <th>Customer ID</th>
@@ -27,10 +32,10 @@
             <td><%= customer.email %></td>
             <td><%= customer.address %></td>
             <td> 
-                <a href="/update-customer/<%= customer.customer_id %>"><button>Update</button></a>
+                <a href="/update-customer/<%= customer.customer_id %>" class="btn btn-info">Update</a>
                 </form>
                 <form action="/delete-customer/<%= customer.customer_id %>" method="POST" style="display:inline;">
-                    <button type="submit"onclick="return confirm('Are you sure you want to remove this costumer?')">Delete</button>
+                    <button type="submit"onclick="return confirm('Are you sure you want to remove this costumer?')" class="btn btn-danger">Delete</button>
                 </form>
             </td>
         </tr>

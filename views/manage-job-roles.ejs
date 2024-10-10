@@ -5,12 +5,12 @@
 <body>
     <main>
         <h2>Job Roles List</h2>
-        <div>
-            <a href="/add-job-role" class="btn">Add New Job Role</a>
+        <div class="button-group">
+            <a href="/add-job-role" class="btn btn-warning">Add New Job Role</a>
         </div>
 
         <% if (jobRoles && jobRoles.length > 0) { %>
-            <table class="responsive-table">
+            <table class="table table-dark table-striped">
                 <thead>
                     <tr>
                         <th>Role ID</th>
@@ -24,9 +24,9 @@
                         <td><%= role.employee_role_id %></td>
                         <td><%= role.role_name %></td>
                         <td>
-                            <a href="/update-job-role/<%= role.employee_role_id %>" class="btn">Update</a>
+                            <a href="/update-job-role/<%= role.employee_role_id %>" class="btn btn-info">Update</a>
                             <form action="/delete-job-role/<%= role.employee_role_id %>" method="POST" style="display:inline;">
-                                <button type="submit" onclick="return confirm('Are you sure you want to remove this status?')" class="btn" style="background-color: red;">Delete</button>
+                                <button type="submit" onclick="return confirm('Are you sure you want to remove this status?')" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

@@ -10,11 +10,14 @@
     <a href="/warehouses">
         <img class="back" src="/back-button.png" alt="back">
     </a>
-    <h2>Update Warehouse</h2>
+    <div class="flexer">
+
+        <h2>Update Warehouse</h2>
+    </div>
     <p>Select an option to update:</p>
     <div>
-        <a href="/update-warehouse-capacity/<%= warehouse_id %>" class="btn">Update Warehouse Capacity</a>
-        <a href="/update-warehouse-location/<%= warehouse_id %>" class="btn">Update Warehouse Location</a>
+        <a href="/update-warehouse-capacity/<%= warehouse_id %>" class="btn btn-warning">Update Warehouse Capacity</a>
+        <a href="/update-warehouse-location/<%= warehouse_id %>" class="btn btn-warning">Update Warehouse Location</a>
     </div>
 </body>
 </html>

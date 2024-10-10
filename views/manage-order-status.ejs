@@ -3,10 +3,14 @@
 </a>
    <link rel="stylesheet" href="/styles.css">
     <body>
+       
         <div class="container">
             <h2>Manage Order Status</h2>
-        <a href="/add-order-status" class="btn">Add New Order Status</a>
-        <table class="responsive-table">
+            <div class="button-group">
+
+                <a href="/add-order-status" class="btn btn-warning">Add New Order Status</a>
+            </div>
+        <table class="table table-dark table-striped">
             <thead>
                 <tr>
                     <th>Status ID</th>
@@ -21,9 +25,9 @@
                             <td><%= status.order_status_id %></td>
                             <td><%= status.order_status_name %></td>
                             <td>
-                                <a href="/update-order-status/<%= status.order_status_id %>"><button>Update</button></a> 
+                                <a href="/update-order-status/<%= status.order_status_id %>" class="btn btn-info">Update</a> 
                                 <form action="/delete-order-status/<%= status.order_status_id %>" method="POST" style="display:inline;">
-                                    <button type="submit" onclick="return confirm('Are you sure you want to remove this order status?')">Delete</button>
+                                    <button type="submit" onclick="return confirm('Are you sure you want to remove this order status?')" class="btn btn-danger">Delete</button>
                                 </form>
                             </td>
                         </tr>
