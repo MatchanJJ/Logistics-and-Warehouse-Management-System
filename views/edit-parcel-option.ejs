@@ -3,14 +3,14 @@
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
-<h2>Update Parcel </h2>
+<h2 class="text-title">Update Parcel </h2>
 
 <div class="container">
     
     <div class="grid-container">
-        <a href="/edit-parcel/<%= parcel.parcel_id %>">Edit Parcel Information</a>
-        <a href="/update-parcel-location/<%= parcel.parcel_id %>">Update Parcel Location</a>
-        <a href="/update-parcel-stock-quantity/<%= parcel.parcel_id %>">Update Parcel Stock Quantity</a>
+        <a href="/edit-parcel/<%= parcel.parcel_id %>" class="btn btn-info btn-lg">Edit Parcel Information</a>
+        <a href="/update-parcel-location/<%= parcel.parcel_id %>" class="btn btn-info btn-lg">Update Parcel Location</a>
+        <a href="/update-parcel-stock-quantity/<%= parcel.parcel_id %>" class="btn btn-info btn-lg">Update Parcel Stock Quantity</a>
 
     </div>
 </div>
