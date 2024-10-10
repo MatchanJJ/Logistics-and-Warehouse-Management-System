@@ -1,4 +1,4 @@
-import pool from "./DBConnection.js";
+import pool from "../DBconnection/DBConnection.js";
 
 const orderTokens = {
     addPostalOrders,

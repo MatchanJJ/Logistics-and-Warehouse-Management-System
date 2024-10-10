@@ -1,24 +1,23 @@
     import path from 'path';
     import { fileURLToPath } from 'url';
-    import pool from './DBConnection.js';
+    import pool from './DBconnection/DBConnection.js';
     import express from 'express';
-    import EmployeeService from '../test_main/services/EmployeeService.js';
-    import warehouseManagementToken from './WarehouseManagement.js';
-    import parcelManagementToken from './ParcelManagement.js';
-    import customerManagementToken from './CustomerManagement.js';
-    import shipmentManagementToken from './ShipmentManagement.js';
-    import carrierPartnerTokens from './CarrierPartnerManagement.js';
-    import orderTokens from './OrderManagement.js';
-    import statusAndCategoriesManagementToken from './StatusAndCategoriesManagement.js';
-    import ProductServiceToken from "../test_main/services/ProductService.js";
-    import ParcelServiceToken from "../test_main/services/ParcelService.js";
-    import WarehouseServices from '../test_main/services/WarehouseServices.js';
-    import LogService from '../test_main/services/LogService.js';
-    import ArchiveService from '../test_main/services/ArchiveService.js';
-    import ReturnService from '../test_main/services/ReturnService.js';
-    import OrderService from '../test_main/services/OrderService.js';
-    import StatAndCatService from '../test_main/services/StatusAndCategoriesService.js';
-    
+    import EmployeeService from './services/EmployeeService.js';
+    import carrierPartnerTokens from './services/CarrierPartnerManagement.js';
+    import orderTokens from './services/OrderManagement.js';
+    import statusAndCategoriesManagementToken from './services/StatusAndCategoriesManagement.js';
+    import ProductServiceToken from "./services/ProductService.js";
+    import ParcelServiceToken from "./services/ParcelService.js";
+    import WarehouseServices from './services/WarehouseServices.js';
+    import LogService from './services/LogService.js';
+    import ArchiveService from './services/ArchiveService.js';
+    import ReturnService from './services/ReturnService.js';
+    import OrderService from './services/OrderService.js';
+    import StatAndCatService from './services/StatusAndCategoriesService.js';
+    import CustomerService from './services/CustomerService.js';
+    import CarrierService from './services/CarrierService.js';
+    import InventoryService from './services/InventoryService.js';
+    import ShipmentService from './services/ShipmentService.js';
     
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
@@ -445,20 +444,6 @@ app.get('/update-warehouse/:id', async (req, res) => {
     //res.render('update-warehouse', { warehouse_id });
 });
 
-
-// Handle form submission for updating a warehouse
-app.post('/update-warehouse/:id', async (req, res) => {
-    const { id } = req.params; // Extract warehouse ID from the route parameters
-    const { warehouse_address, capacity, warehouse_type_id } = req.body; // Extract all necessary fields from the form
-    try {
-        await warehouseManagementToken.updateWarehouseDetails(id, warehouse_address, capacity, warehouse_type_id); // Call the function to update the warehouse
-        res.redirect('/warehouses'); // Redirect to the warehouse list after updating
-    } catch (error) {
-        console.error('Error updating warehouse:', error);
-        res.status(500).send('Error updating warehouse.');
-    }
-});
-
 app.get('/update-warehouse-location/:warehouse_id', async (req, res) => {
     const warehouseId = req.params.warehouse_id;  // warehouse_id from the URL
     console.log("Warehouse ID:", warehouseId); // Debugging line to check the ID being passed
@@ -653,7 +638,7 @@ app.get('/view-parcel/:parcel_id', async (req, res) => {
     const parcelId = req.params.parcel_id;
 
     try {
-        const parcel = await parcelManagementToken.findParcel(parcelId); // Await the async function
+        const parcel = await ParcelServiceToken.findParcel(parcelId); // Await the async function
 
         if (parcel) {
             res.render('layout', { title: 'Parcel Details', content: 'view-parcel', parcel });
@@ -714,7 +699,7 @@ app.post('/assign-parcel/:id', async (req, res) => {
     app.get('/edit-parcel/:id', async (req, res) => {
         const parcel_id = req.params.id; // Extract parcel ID from the route parameters
         try {
-            const parcel = await parcelManagementToken.findParcel(parcel_id); // Fetch parcel details
+            const parcel = await ParcelServiceToken.findParcel(parcel_id); // Fetch parcel details
             if (parcel) {
                 res.render('layout', { title: 'Edit Parcel', content: 'edit-parcel' , parcel}); // Render the layout with the add-warehouse content
                 //res.render('edit-parcel', { parcel }); // Render the edit form with parcel data
@@ -732,7 +717,7 @@ app.get('/edit-parcel-prompt/:id', async (req, res) => {
 
     // Fetch parcel details if needed
     try {
-        const parcel = await parcelManagementToken.findParcel(parcel_id);
+        const parcel = await ParcelServiceToken.findParcel(parcel_id);
         res.render('layout', { title: 'Edit Parcel Option', content: 'edit-parcel-option' , parcel}); // Render the layout with the add-warehouse content
     } catch (error) {
         console.error('Error fetching parcel:', error);
@@ -745,7 +730,7 @@ app.get('/update-parcel-stock-quantity/:id', async (req, res) => {
     const parcel_id = req.params.id;
     
     try {
-        const parcel = await parcelManagementToken.findParcel(parcel_id);
+        const parcel = await ParcelServiceToken.findParcel(parcel_id);
         res.render('layout', { title: 'Update Parcel Stock Quantity', content: 'update-parcel-stock-quantity' , parcel}); // Render the layout with the add-warehouse content
     } catch (error) {
         console.error('Error fetching parcel details:', error);
@@ -776,7 +761,7 @@ app.get('/update-parcel-location/:id', async (req, res) => {
     const parcel_id = req.params.id;
     
     try {
-        const parcel = await parcelManagementToken.findParcel(parcel_id);  // Fetch parcel details if necessary
+        const parcel = await ParcelServiceToken.findParcel(parcel_id);  // Fetch parcel details if necessary
         res.render('layout', { title: 'Update Parcel Location', content: 'update-parcel-location' , parcel}); // Render the layout with the add-warehouse content
     } catch (error) {
         console.error('Error fetching parcel details:', error);
@@ -1173,7 +1158,7 @@ app.get('/customers', async (req, res) => {
 app.get('/customers/:id', async (req, res) => {
     const customer_id = req.params.id; // Extract customer ID from the route parameters
     try {
-        const customer = await customerManagementToken.findCustomerById(customer_id); // Fetch customer details
+        const customer = await CustomerService.viewCustomerInfo(customer_id); // Fetch customer details
         if (customer) {
             res.render('layout', {
                 title: 'Customer Details',
@@ -1191,13 +1176,11 @@ app.get('/customers/:id', async (req, res) => {
     }
 });
 
-
-
 // Route to render form for adding a new customer
 app.get('/add-customer', (req, res) => {
     res.render('layout', { title: 'Add Customer', content: 'add-customer' }); // Render the layout with the add-warehouse content
 });
-import CustomerService from '../test_main/services/CustomerService.js';
+
 // Handle form submission for adding a new customer
 app.post('/add-customer', async (req, res) => {
     const { customer_first_name, customer_last_name, customer_email, customer_address } = req.body;
@@ -1215,7 +1198,7 @@ app.post('/add-customer', async (req, res) => {
 app.get('/customer/:id', async (req, res) => {
     const customer_id = req.params.id; // Extract customer ID from the route parameters
     try {
-        const customer = await customerManagementToken.findCustomerById(customer_id); // Fetch customer details
+        const customer = await CustomerService.viewCustomerInfo(customer_id); // Fetch customer details
         if (customer) { 
             res.render('layout', { title: 'View Customer', content: 'view-customer', customer });
             //res.render('view-customer', { customer }); // Render the view-customer.ejs template
@@ -1233,7 +1216,7 @@ app.get('/customer/:id', async (req, res) => {
 app.get('/update-customer/:id', async (req, res) => {
     const { id } = req.params; // Extract customer ID from the route parameters
     try {
-        const customer = await customerManagementToken.findCustomerById(id); // Fetch customer details
+        const customer = await CustomerService.viewCustomerInfo(id); // Fetch customer details
         if (customer) {
             res.render('layout', { title: 'Update Customer', content: 'update-customer',customer });
             //res.render('update-customer', { customer }); // Render the update form
@@ -1269,7 +1252,7 @@ app.post('/update-customer/:id', async (req, res) => {
     const { id } = req.params; // Extract customer ID from the route parameters
     const { customer_first_name, customer_last_name, customer_email, customer_address } = req.body;
     try {
-        const updated = await customerManagementToken.updateCustomer(id, customer_first_name, customer_last_name, customer_email, customer_address);
+        const updated = await CustomerService.updateCustomer(id, customer_first_name, customer_last_name, customer_email, customer_address);
         if (updated) {
             res.redirect(`/customer/${id}`); // Redirect to the customer details page after updating
         } else {
@@ -1285,7 +1268,7 @@ app.post('/update-customer/:id', async (req, res) => {
 app.post('/delete-customer/:id', async (req, res) => {
     const { id } = req.params; // Extract customer ID from the route parameters
     try {
-        const deleted = await customerManagementToken.deleteCustomer(id); // Call the delete function
+        const deleted = await CustomerService.removeCustomer(id); // Call the delete function
         if (deleted) {
             res.redirect('/customers'); // Redirect to the customer list after deletion
         } else {
@@ -1313,22 +1296,6 @@ app.get('/shipments', async (req, res) => {
     }
 });
 
-// Route to view a specific shipment by ID
-//app.get('/shipment/:id', async (req, res) => {
-//    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
-//    try {
-//        const shipment = await shipmentManagementToken.findShipmentById(shipment_id); // Fetch shipment details
-//        if (shipment) {
-//            res.render('layout', { title: 'Shipment Details', content: 'view-shipment', shipment });
-//            //res.render('view-shipment', { shipment }); // Render the view-shipment.ejs template
-//        } else {
-//            res.status(404).send('Shipment not found.');
-//        }
-//    } catch (error) {
-//        console.error('Error fetching shipment:', error);
-//        res.status(500).send('Error fetching shipment.');
-//    }
-//});
 app.get('/shipment-actions/:id', async (req, res) => {
     const shipment_id = req.params.id; // Extract shipment ID from the route parameters
 
@@ -1437,7 +1404,7 @@ app.post('/add-shipment', async (req, res) => {
 app.get('/update-shipment/:id', async (req, res) => {
     const shipment_id = req.params.id; // Extract shipment ID from the route parameters
     try {
-        const shipment = await shipmentManagementToken.findShipmentById(shipment_id); // Fetch shipment details
+        const shipment = await ShipmentService.findShipmentById(shipment_id); // Fetch shipment details
         if (shipment) {
             res.render('layout', { title: 'Update Shipment', content: 'update-shipment', shipment });
             //res.render('update-shipment', { shipment }); // Render the update form
@@ -1447,19 +1414,6 @@ app.get('/update-shipment/:id', async (req, res) => {
     } catch (error) {
         console.error('Error fetching shipment for update:', error);
         res.status(500).send('Error fetching shipment.');
-    }
-});
-
-// Handle form submission for updating a shipment
-app.post('/update-shipment/:id', async (req, res) => {
-    const shipment_id = req.params.id; // Extract shipment ID from the route parameters
-    const { order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id } = req.body;
-    try {
-        await shipmentManagementToken.updateShipment(shipment_id, order_id, carrier_id, shipping_service_id, shipping_address, shipment_date, estimated_delivery_date, shipment_status_id);
-        res.redirect(`/shipment/${shipment_id}`); // Redirect to the shipment details page after updating
-    } catch (error) {
-        console.error('Error updating shipment:', error);
-        res.status(500).send('Error updating shipment.');
     }
 });
 
@@ -1547,9 +1501,7 @@ app.post('/update-partner/:id', async (req, res) => {
         res.status(500).send('Error updating partner.');
     }
 });
-import CarrierService from '../test_main/services/CarrierService.js';
-import InventoryService from '../test_main/services/InventoryService.js';
-import ShipmentService from '../test_main/services/ShipmentService.js';
+
 // DELETE A PARTNER
 app.post('/delete-partner/:id', async (req, res) => {
     try {

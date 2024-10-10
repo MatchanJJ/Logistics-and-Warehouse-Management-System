@@ -362,6 +362,7 @@ async function getWarehouseLocationId(warehouse_id) {
         return null; // Return null in case of error
     }
 };
+
 export default {
     addWarehouseLocation,
     updateWarehouseLocation,

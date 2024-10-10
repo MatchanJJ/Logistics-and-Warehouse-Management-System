@@ -61,6 +61,16 @@ async function getShipmentDetails(shipment_id) {
     }
 };
 
+// get shipment raw attributes
+async function findShipmentById(shipment_id) {
+    try {
+        const [rows] = await db.query("SELECT * FROM shipments WHERE shipment_id = ?", [shipment_id]);
+        return rows.length > 0 ? rows[0] : null; // Return the shipment if found, else null
+    } catch (error) {
+        console.error("Error finding shipment by ID:", error);
+    }
+};
+
 // add new shipment for order
 async function addShipment(order_id, carrier_id) {
     try {
@@ -340,5 +350,6 @@ export default {
     returnShipment,
     shipmentFailed,
     updateShipmentCurrentLocation,
-    removeShipment
+    removeShipment,
+    findShipmentById
 };

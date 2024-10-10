@@ -20,7 +20,6 @@ async function getParcels () {
             FROM parcels p
             JOIN parcel_categories pc ON p.parcel_category_id = pc.parcel_category_id;
         `);
-        console.log(rows);
         return rows;
     } catch (error) {
         console.error('Error fetching parcels:', error);
@@ -55,6 +54,17 @@ async function viewParcel (parcel_id) {
     } catch (error) {
         console.error('Error finding parcel:', error);
         return null;
+    }
+};
+
+// find parcel
+async function findParcel(parcel_id) {                    
+    try {
+        const [rows] = await db.query("SELECT * FROM parcels WHERE parcel_id = ?", [parcel_id]);
+        return rows[0];  // return the found parcel
+    } catch (error) {
+        console.error(error);
+        throw error; // Rethrow the error for calling context handling
     }
 };
 
@@ -169,7 +179,8 @@ const ParcelServiceToken = {
     viewParcel,
     addParcel,
     updateParcel,
-    removeParcel
+    removeParcel,
+    findParcel
 };
 
 export default ParcelServiceToken;
