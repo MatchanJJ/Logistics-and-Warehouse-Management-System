@@ -2,9 +2,8 @@
     import { fileURLToPath } from 'url';
     import pool from './DBConnection.js';
     import express from 'express';
-    import employeeManagementToken from './EmployeeManagement.js';
+    import EmployeeService from '../test_main/services/EmployeeService.js';
     import warehouseManagementToken from './WarehouseManagement.js';
-    import productManagementToken from './ProductManagement.js';
     import parcelManagementToken from './ParcelManagement.js';
     import customerManagementToken from './CustomerManagement.js';
     import shipmentManagementToken from './ShipmentManagement.js';
@@ -19,7 +18,8 @@
     import ReturnService from '../test_main/services/ReturnService.js';
     import OrderService from '../test_main/services/OrderService.js';
     import StatAndCatService from '../test_main/services/StatusAndCategoriesService.js';
-    import logUtil from '../test_main/utils/logUtil.js';
+    
+    
     // Get __filename and __dirname in ES modules
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -55,7 +55,7 @@
 // GET: Show form to add a new employee
 app.get('/add-employee', async (req, res) => {
     try {
-        const roles = await employeeManagementToken.listAllJobRoles(); // Fetch all roles from the database
+        const roles = await EmployeeService.listAllJobRoles(); // Fetch all roles from the database
         res.render('layout', { title: 'Add New Employee', content: 'add-employee', roles }); // Pass roles to the template
     } catch (error) {
         console.error('Error fetching roles:', error);
@@ -79,7 +79,7 @@ app.post('/add-employee', async (req, res) => {
 // GET: List all job roles
 app.get('/manage-job-roles', async (req, res) => {
     try {
-        const jobRoles = await employeeManagementToken.listAllJobRoles(); // Fetch job roles from the database
+        const jobRoles = await EmployeeService.listAllJobRoles(); // Fetch job roles from the database
         res.render('layout', { title: 'Manage Job Roles', content: 'manage-job-roles', jobRoles});
         //res.render('manage-job-roles', { jobRoles }); // Render the view and pass job roles
     } catch (error) {
@@ -110,7 +110,7 @@ app.post('/add-job-role', async (req, res) => {
 app.get('/update-job-role/:id', async (req, res) => {
     const { id } = req.params; // Extract the job role ID from the URL
     try {
-        const jobRole = await employeeManagementToken.viewJobRole(id); // Fetch the job role by ID
+        const jobRole = await EmployeeService.viewJobRole(id); // Fetch the job role by ID
         if (jobRole) {
             res.render('layout', { title: 'Update Job Role', content: 'update-job-role',jobRole });
             //res.render('update-job-role', { jobRole }); // Render the update form with the job role details
@@ -128,7 +128,7 @@ app.post('/update-job-role/:id', async (req, res) => {
     const { id } = req.params; // Extract the job role ID from the URL
     const { role_name } = req.body; // Extract the new role name from the request body
     try {
-        await employeeManagementToken.updateJobRole(id, role_name); // Update the job role
+        await EmployeeService.updateJobRole(id, role_name); // Update the job role
         res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful update
     } catch (error) {
         console.error('Error updating job role:', error);
@@ -140,7 +140,7 @@ app.post('/update-job-role/:id', async (req, res) => {
 app.post('/delete-job-role/:id', async (req, res) => {
     const { id } = req.params; // Extract the job role ID from the URL
     try {
-        await employeeManagementToken.removeJobRole(id); // Remove the job role
+        await EmployeeService.removeJobRole(id); // Remove the job role
         res.redirect('/manage-job-roles'); // Redirect to the job roles list after successful deletion
     } catch (error) {
         console.error('Error deleting job role:', error);
@@ -157,7 +157,7 @@ app.get('/add-job-role', (req, res) => {
 app.post('/add-job-role', async (req, res) => {
     const { employee_role_id, role_name } = req.body; // Extract form fields
     try {
-        await employeeManagementToken.addJobRole(employee_role_id, role_name); // Add the new job role
+        await EmployeeService.addJobRole(employee_role_id, role_name); // Add the new job role
         res.redirect('/employees'); // Redirect to employee list after successful addition
     } catch (error) {
         console.error('Error adding new job role:', error);
@@ -185,7 +185,7 @@ app.post('/add-job-role', async (req, res) => {
     app.get('/employee/:id', async (req, res) => {
         const { id } = req.params; // Extract employee ID from the route parameters
         try {
-            const employee = await employeeManagementToken.viewEmployee(id); // Fetch employee details by ID
+            const employee = await EmployeeService.viewEmployee(id); // Fetch employee details by ID
             if (employee) {
                 res.render('layout', { title: 'View Employee', content: 'view-employee', employee }); // Render the layout with the add-warehouse content
                 //res.render('view-employee', { employee }); // Render the employee details page
@@ -305,8 +305,8 @@ app.post('/add-job-role', async (req, res) => {
 app.get('/update-employee/:id', async (req, res) => {
     const { id } = req.params; // Extract employee ID from the route parameters
     try {
-        const employee = await employeeManagementToken.viewEmployee(id); // Fetch employee details by ID
-        const jobRoles = await employeeManagementToken.listAllJobRoles(); // Fetch all job roles for the dropdown
+        const employee = await EmployeeService.getEmployeeData(id); // Fetch employee details by ID
+        const jobRoles = await EmployeeService.listAllJobRoles(); // Fetch all job roles for the dropdown
 
         if (employee) {
             res.render('layout', { 
@@ -346,8 +346,6 @@ app.post('/update-employee/:id', async (req, res) => {
         res.status(500).send('Error updating employee.');
     }
 });
-
-import EmployeeService from '../test_main/services/EmployeeService.js';
 
     app.post('/delete-employee/:id', async (req, res) => {
         try {

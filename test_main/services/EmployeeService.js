@@ -23,7 +23,7 @@ async function getEmployees () {
     }
 };
 
-// get specific employee data
+// view employee data
 async function viewEmployee(employee_id) {
     try {
         const [rows] = await db.query(
@@ -48,6 +48,17 @@ async function viewEmployee(employee_id) {
     } catch (error) {
         console.error('Error retrieving employee:', error);
         return [];
+    }
+};
+
+// get employee data
+async function getEmployeeData(employeeId) {
+    try {
+        const [rows] = await pool.query("SELECT * FROM employees WHERE employee_id = ?", [employeeId]);
+        return rows.length ? rows[0] : null; // Return the employee if found, otherwise null
+    } catch (error) {
+        console.error('Error getting employee by ID:', error);
+        throw error; // Rethrow to handle in the route
     }
 };
 
@@ -243,14 +254,84 @@ async function removeEmployeeFromWarehouse(warehouse_id, employee_id) {
     }
 };
 
+// list all job roles
+async function listAllJobRoles() {
+    try {
+        const [rows] = await db.query("SELECT * FROM employee_roles");
+        return rows; 
+    } catch (error) {
+        console.error('Error listing job roles:', error);
+        return [];
+    }
+};
+
+// view job role
+async function viewJobRole(employee_role_id) {
+    try {
+        const [rows] = await db.query("SELECT * FROM employee_roles WHERE employee_role_id = ?", [employee_role_id]);
+        return rows.length ? rows[0] : null;
+    } catch (error) {
+        console.error('Error fetching job role:', error);
+        return [];
+    }
+};
+
+// add job role
+async function addJobRole(employee_role_id, role_name) {
+    try {
+        const [result] = await db.query(
+            "INSERT INTO employee_roles (employee_role_id, role_name) VALUES (?, ?)", 
+            [employee_role_id, role_name]
+        );
+        return result.insertId; 
+    } catch (error) {
+        console.error('Error adding job role:', error);
+        return null;
+    }
+};
+
+// update job role
+async function updateJobRole(employee_role_id, role_name) {
+    try {
+        const [result] = await db.query(
+            "UPDATE employee_roles SET role_name = ? WHERE employee_role_id = ?",
+            [role_name, employee_role_id]
+        );
+        return result.affectedRows > 0;
+    } catch (error) {
+        console.error('Error updating job role:', error);
+        return false;
+    }
+};
+
+// remove job role
+async function removeJobRole(employee_role_id) {
+    try {
+        const [result] = await db.query(
+            "DELETE FROM employee_roles WHERE employee_role_id = ?", 
+            [employee_role_id]
+        );
+        return result.affectedRows > 0; // Return true if removal was successful
+    } catch (error) {
+        console.error('Error removing job role:', error);
+        return false;
+    }
+};
+
 export default {
     getEmployees,
     viewEmployee,
+    getEmployeeData,
     addEmployee,
     assignJobRole,
     updateEmployee,
     removeEmployee,
     assignEmployeeToWarehouse,
     updateEmployeeWarehouse,
-    removeEmployeeFromWarehouse
+    removeEmployeeFromWarehouse,
+    listAllJobRoles,
+    addJobRole,
+    viewJobRole,
+    updateJobRole,
+    removeJobRole
 };
