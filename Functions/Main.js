@@ -870,7 +870,7 @@ app.post('/update-parcel-location/:id', async (req, res) => {
     app.post('/delete-parcel/:id', async (req, res) => {
         const parcel_id = req.params.id; // Extract parcel ID from the route parameters
         try {
-            await ParcelServiceToken.removeParcel()
+            await ParcelServiceToken.removeParcel(parcel_id)
             res.redirect('/parcel'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting parcel.');
