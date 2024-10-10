@@ -24,4 +24,4 @@ import CustomerService from '../services/CustomerService.js';
 //console.log(WarehouseServices.isEmpty('W001'));
 //await ParcelService.addParcel('PCT0000003', 'Box of Dildos', 600, 0.5, 10, 10, 10, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');
 
-await OrderService.addProductOrder('ORDxCPQXui', 'PRDOAmiF3z', 50);
+await ParcelService.removeParcel('PARzk_fJgq');
