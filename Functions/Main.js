@@ -357,17 +357,37 @@ app.post('/update-employee/:id', async (req, res) => {
             res.status(500).send('Error deleting employee.');
         }
     });
-    app.post('/delete-warehouse/:id', async (req, res) => {
-        const warehouse_id = req.params.id;
-        console.log(`Received request to delete warehouse with ID: ${warehouse_id}`); // Added log
+    app.post('/delete-warehouse/:warehouse_id', async (req, res) => {
+        const warehouse_id = req.params.warehouse_id;
+        
         try {
-            await WarehouseServices.removeWarehouse(warehouse_id);
-            res.redirect('/warehouses');
+            console.log(`Received request to remove warehouse with ID: ${warehouse_id}`);
+    
+            // Call the removeWarehouse function and pass the warehouse_id
+            const success = await removeWarehouse(warehouse_id);
+    
+            // Handle the response based on the success of the operation
+            if (success) {
+                res.status(200).json({ message: `Warehouse ${warehouse_id} removed successfully.` });
+            } else {
+                res.status(400).json({ message: `Warehouse ${warehouse_id} could not be removed.` });
+            }
         } catch (error) {
-            console.error('Error in deletion route:', error);
-            res.status(500).send('Error deleting warehouse.');
+            console.error(`Error occurred while removing warehouse ${warehouse_id}:`, error);
+            res.status(500).json({ message: 'An internal server error occurred.' });
         }
-    });
+    }); 
+    //app.post('/delete-warehouse/:id', async (req, res) => {
+    //    const warehouse_id = req.params.id;
+    //    console.log(`Received request to delete warehouse with ID: ${warehouse_id}`); // Added log
+    //    try {
+    //        await WarehouseServices.removeWarehouse(warehouse_id);
+    //        res.redirect('/warehouses');
+    //    } catch (error) {
+    //        console.error('Error in deletion route:', error);
+    //        res.status(500).send('Error deleting warehouse.');
+    //    }
+    //});
     
 
     // Warehouse route
@@ -1983,16 +2003,16 @@ app.post('/update-warehouse-type/:id', async (req, res) => {
 });
 
 // Route to handle the deletion of a warehouse type
-app.post('/delete-warehouse-type/:id', async (req, res) => {
-    const warehouse_type_id = req.params.id;
-    try {
-        await StatAndCatService.removeWarehouseType(warehouse_type_id);
-        res.redirect('/manage-warehouse-types');
-    } catch (error) {
-        console.error('Error deleting warehouse type:', error);
-        res.status(500).send('Error deleting warehouse type.');
-    }
-});
+//app.post('/delete-warehouse-type/:id', async (req, res) => {
+//    const warehouse_type_id = req.params.id;
+//    try {
+//        await StatAndCatService.removeWarehouseType(warehouse_type_id);
+//        res.redirect('/manage-warehouse-types');
+//    } catch (error) {
+//        console.error('Error deleting warehouse type:', error);
+//        res.status(500).send('Error deleting warehouse type.');
+//    }
+//});
 
 //PRODUCT CATEGORIES
 
@@ -2741,3 +2761,29 @@ app.post('/cancel-order/:order_id', async (req, res) => {
         res.status(500).send('Error canceling order'); // Send error response if cancellation failed
     }
 });
+
+app.get('/delete-warehouse', async (req, res) => {
+    try {
+        // Fetch all warehouses to populate the dropdown
+        const warehouses = await WarehouseServices.getWarehouses();
+
+        res.render('layout', { title: 'Delete Warehouse ', content: 'delete-warehouse', warehouses });
+    } catch (error) {
+        console.error('Error fetching warehouses:', error);
+        res.status(500).send('Internal Server Error'); // Handle errors appropriately
+    }
+});
+app.post('/remove-warehouse', async (req, res) => {
+    const { warehouse_id } = req.body; // Get the warehouse_id from the request body
+
+    // Call the removeWarehouse function to delete the warehouse
+    const success = await WarehouseServices.removeWarehouse(warehouse_id);
+
+    if (success) {
+        res.redirect('/warehouses'); // Redirect to the warehouse list after successful deletion
+    } else {
+        res.render('layout', {title: 'Delete Warehouse', content: 'delete-warehouse', warehouses: await WarehouseServices.getWarehouses(), 
+        });         // Redirect to the warehouse list after successful deletion
+
+    }
+})
