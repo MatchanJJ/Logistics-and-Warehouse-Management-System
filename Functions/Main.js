@@ -1550,7 +1550,7 @@ app.get('/manage-orders', (req, res) => {
 // Route to manage postal orders
 app.get('/postal-orders', async (req, res) => {
     try {
-        const postalOrders = await orderTokens.listAllPostalOrders(); // Make sure this function exists
+        const postalOrders = await OrderService.listAllParcelOrders(); // Make sure this function exists
         res.render('layout', { title: 'Manage Postal Orders', content: 'manage-postal-orders', postalOrders }); // Render the layout with the add-warehouse content
         //res.render('manage-postal-orders', { postalOrders });
     } catch (error) {
@@ -1605,21 +1605,21 @@ app.post('/update-postal-order/:id', async (req, res) => {
     }
 });
 // Delete Postal Order Route
-app.post('/delete-postal-order/:id', async (req, res) => {
-    const postal_order_id = req.params.id;
-    try {
-        const result = await deletePostalOrder(postal_order_id); // Ensure you have this function to handle deletion
-        if (result) {
-            res.redirect('/manage-postal-orders'); // Redirect to postal orders management after deletion
-        } else {
-            res.status(404).send('Postal order not found.');
-        }
-    } catch (error) {
-        console.error('Error deleting postal order:', error);
-        res.status(500).send('Error deleting postal order.');
-    }
-});
-
+//app.post('/delete-postal-order/:id', async (req, res) => {
+//    const postal_order_id = req.params.id;
+//    try {
+//        const result = await OrderService.removePostalOrder(postal_order_id); // Ensure you have this function to handle deletion
+//        if (result) {
+//            res.redirect('/manage-postal-orders'); // Redirect to postal orders management after deletion
+//        } else {
+//            res.status(404).send('Postal order not found.');
+//        }
+//    } catch (error) {
+//        console.error('Error deleting postal order:', error);
+//        res.status(500).send('Error deleting postal order.');
+//    }
+//});
+//
 
 app.get('/manage-product-orders', async (req, res) => {
     try {
@@ -2544,7 +2544,7 @@ app.post('/update-shipment-status/:id', async (req, res) => {
     }
 });
 
-app.post('/delete-postal-order', async (req, res) => {
+app.post('/delete-postal-order/:id', async (req, res) => {
     const { order_id, parcel_id } = req.body;
 
     // Check if both order_id and parcel_id are provided

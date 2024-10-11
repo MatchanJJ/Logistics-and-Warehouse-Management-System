@@ -13,7 +13,7 @@
             ],
             "program": "${workspaceFolder}\\Functions\\Main.js"
             //"program": "${workspaceFolder}\\test_main\\app.js"
-            //"program": "${workspaceFolder}\\test_main\\test\\serviceTest.js"
+            //"program": "${workspaceFolder}\\Functions\\test\\serviceTest.js"
         }
     ]
 }

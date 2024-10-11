@@ -571,7 +571,7 @@ async function shipOrder(order_id, carrier_id) {
 // list all product orders
 async function listAllProductOrders() {
     try {
-        const [productOrders] = await pool.query(`
+        const [productOrders] = await db.query(`
             SELECT 
                 po.order_id,
                 po.product_id,
@@ -593,17 +593,18 @@ async function listAllProductOrders() {
 // list all parcel orders
 async function listAllParcelOrders() {
     try {
-        const [parcelOrders] = await pool.query(`
+        const [parcelOrders] = await db.query(`
             SELECT 
                 po.order_id,
                 po.parcel_id,
-                p.parcel_unit_price,
+                p.parcel_unit_price AS unit_price,
                 po.total_price
             FROM 
                 postal_orders po
             JOIN 
                 parcels p ON po.parcel_id = p.parcel_id;
             `);
+        return parcelOrders;
     } catch (error) {
         console.error('Error fetching parcel orders:', error);
         return [];

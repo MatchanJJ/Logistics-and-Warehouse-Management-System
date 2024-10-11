@@ -9,6 +9,7 @@ import WarehouseServices from '../services/WarehouseServices.js';
 import StatAndCatService from '../services/StatusAndCategoriesService.js';
 import OrderService from '../services/OrderService.js';
 import CustomerService from '../services/CustomerService.js';
+import EmployeeService from '../services/EmployeeService.js';
 //await ProductService.addProduct('PC1', 'A4 OPPO', 'OPPO', 'OPPO inc', 'Solid Phone stats etc', 12000, 0.1, 10, 10, 3, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'TRUE', 'FALSE');
 
 //await InventoryService.assignProduct('P002', )
@@ -23,6 +24,6 @@ import CustomerService from '../services/CustomerService.js';
 //console.log(WarehouseServices.isEmpty('WHR0DPvVDa'));
 //console.log(WarehouseServices.isEmpty('W001'));
 //await ParcelService.addParcel('PCT0000003', 'Box of Dildos', 600, 0.5, 10, 10, 10, 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');
-await OrderService.addPostalOrder('ORDnvcJoXw', 'PAR8Q2kjep');
+await EmployeeService.removeEmployee('EMP9YLWUv0');
 
 //OrderService.updateOrderTotalAmount('ORDnvcJoXw', 0);
