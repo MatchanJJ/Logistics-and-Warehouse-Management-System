@@ -41,9 +41,6 @@
                 <a href="/assign-employee/<%= employee.employee_id %>" class="btn btn-primary">Assign</a> 
                 <form action="/unassign-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
                     <button type="submit" onclick="return confirm('Are you sure you want to unassign this employee?')" class="btn btn-secondary">Unassign</button>
-                <form action="/delete-employee/<%= employee.employee_id %>" method="POST" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Are you sure you want to remove this employee?')" class="btn btn-danger">Delete</button>
-                </form>
             </td>
         </tr>
         <% }) %>

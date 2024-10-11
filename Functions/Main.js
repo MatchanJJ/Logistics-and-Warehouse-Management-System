@@ -348,8 +348,9 @@ app.post('/update-employee/:id', async (req, res) => {
 });
 
     app.post('/delete-employee/:id', async (req, res) => {
+        const {id} = req.params;
         try {
-            await EmployeeService.removeEmployee(req.params.id);
+            await EmployeeService.removeEmployee(id);
             res.redirect('/employees'); // Redirect back to the employee list after deletion
         } catch (error) {
             console.error('Error deleting employee:', error);
@@ -357,14 +358,17 @@ app.post('/update-employee/:id', async (req, res) => {
         }
     });
     app.post('/delete-warehouse/:id', async (req, res) => {
-        const warehouse_id = req.params.id; // Extract parcel ID from the route parameters
+        const warehouse_id = req.params.id;
+        console.log(`Received request to delete warehouse with ID: ${warehouse_id}`); // Added log
         try {
-            await WarehouseServices.removeWarehouse(warehouse_id); // Call the delete function
-            res.redirect('/warehouses'); // Redirect to the home page after deletion
+            await WarehouseServices.removeWarehouse(warehouse_id);
+            res.redirect('/warehouses');
         } catch (error) {
-            res.status(500).send('Error deleting parcel.');
+            console.error('Error in deletion route:', error);
+            res.status(500).send('Error deleting warehouse.');
         }
     });
+    
 
     // Warehouse route
     app.get('/warehouses', async (req, res) => {
@@ -2480,7 +2484,7 @@ app.get('/delete-product-order/:id', async (req, res) => {
     res.render('layout', { title: 'Add Shipment Status', content: 'add-shipment-status' }); // Render the layout with the add-warehouse content
 });
 
-app.post('/delete-product-order', async (req, res) => {
+app.post('/delete-product-order/:id', async (req, res) => {
     const { order_id, product_id } = req.body;
 
     // Check if both order_id and product_id are provided
@@ -2490,7 +2494,7 @@ app.post('/delete-product-order', async (req, res) => {
 
     try {
         // Call the removeProductOrder function
-        const success = await removeProductOrder(order_id, product_id);
+        const success = await OrderService.removeProductOrder(order_id, product_id);
 
         if (success) {
             return res.status(200).json({ message: 'Product successfully unassigned from order.' });

@@ -144,18 +144,18 @@ async function viewWarehouse (warehouse_id) {
 
 // is warehouse empty
 async function isEmpty(warehouse_id) {
+    console.log(`Checking if warehouse ${warehouse_id} is empty.`);
+    
     try {
         const query = `
             SELECT 
                 (
                     CASE 
                         WHEN COALESCE(SUM(
-                            -- Calculate the volume of products
                             CASE WHEN pi.product_id IS NOT NULL THEN 
                                 pi.quantity * (p.product_length * p.product_width * p.product_height)
                             ELSE 0 END
                             +
-                            -- Calculate the volume of parcels
                             CASE WHEN pari.parcel_id IS NOT NULL THEN 
                                 pari.quantity * (par.parcel_length * par.parcel_width * par.parcel_height)
                             ELSE 0 END
@@ -172,13 +172,25 @@ async function isEmpty(warehouse_id) {
             WHERE w.warehouse_id = ? 
             GROUP BY w.warehouse_id;
         `;
+
         const [result] = await db.query(query, [warehouse_id]);
-        return result[0].isEmpty;
+
+        // Log the result to debug
+        console.log('Result from isEmpty query:', result);
+
+        if (result.length > 0) {
+            const isEmpty = result[0].isEmpty;
+            console.log(`Warehouse ${warehouse_id} empty status: ${isEmpty}`);  // Log the empty status
+            return isEmpty;
+        } else {
+            console.log(`No warehouse found with ID ${warehouse_id}.`);
+            return false;
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error checking if warehouse is empty:', error);
         return false;
     }
-};
+}
 
 // is warehouse full
 async function isFull(warehouse_id) {
@@ -276,33 +288,43 @@ async function updateWarehouseCapacity(warehouse_id, new_capacity) {
 // remove warehouse
 async function removeWarehouse(warehouse_id) {
     try {
-        if (await isEmpty(warehouse_id)) {
+        console.log(`Initiating removal process for warehouse ${warehouse_id}`);
+        
+        const isEmptyResult = await isEmpty(warehouse_id);  // Capture return value
+        console.log(`isEmpty result for warehouse ${warehouse_id}: ${isEmptyResult}`);
+        
+        if (isEmptyResult) {
+            console.log(`Warehouse ${warehouse_id} is empty. Proceeding with archiving.`);
+            
             if (await archiver.archiveWarehouse(warehouse_id)) {
-                const [result] = await db.query(
-                    "DELETE FROM warehouses WHERE warehouse_id = ?",
-                    [warehouse_id]
-                );
+                console.log(`Warehouse ${warehouse_id} archived successfully.`);
+                const [result] = await db.query("DELETE FROM warehouses WHERE warehouse_id = ?", [warehouse_id]);
+                console.log('Delete result:', result);
+                
                 if (result.affectedRows > 0) {
-                    console.log('Warehouse deleted.');
+                    console.log(`Warehouse ${warehouse_id} deleted successfully.`);
                     const log_message = `Warehouse with ID ${warehouse_id} removed.`;
-                    logger.addWarehouseLog(warehouse_id, log_message);
+                    await logger.addWarehouseLog(warehouse_id, log_message);
+                    return true;
                 } else {
-                    console.log('No warehouse found with the given ID.');
+                    console.log(`No warehouse found with ID ${warehouse_id}.`);
                     return false;
                 }
             } else {
-                console.log('Error archiving warehouse.');
+                console.log(`Error archiving warehouse with ID ${warehouse_id}.`);
                 return false;
             }
         } else {
-            console.log('Warehouse is not empty. Cannot delete.');
+            console.log(`Warehouse ${warehouse_id} is not empty. Cannot delete.`);
             return false;
         }
     } catch (error) {
-        console.error('Error deleting warehouse:', error);
+        console.error(`Error deleting warehouse ${warehouse_id}:`, error);
         return false;
     }
-};
+}
+
+
 async function getWarehouseById(warehouse_id) {
     try {
         const [rows] = await db.query(`

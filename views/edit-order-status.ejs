@@ -1,6 +1,4 @@
-
 <body>
-
     <a href="/orders" class="btn ">
         <img class="back" src="/back-button.png" alt="back" class="back-button"> 
     </a>
@@ -16,10 +14,10 @@
                         <label for="new_order_status_id" class="text-white">Select New Status:</label>
                         <select name="new_order_status_id" id="new_order_status_id" required class="form-control">
                             <option value="" disabled selected>Select a new status</option>
-                            <!-- Dynamically render order status options -->
-                            <% statuses.forEach(function(status) { %>
-                                <option value="<%= status.order_status_id %>"><%= status.order_status_name %></option>
-                            <% }); %>
+                            <!-- Manually add the three options -->
+                            <option value="OST0000001">pending</option>
+                            <option value="OST0000002">picked</option>
+                            <option value="OST0000003">packed</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-info">Update Status</button>
@@ -32,4 +30,3 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-</html>
