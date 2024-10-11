@@ -67,6 +67,17 @@ async function getOrderData(order_id) {
 // add postal order
 async function addPostalOrder(order_id, parcel_id) {
     try {
+        const [order_s] = await db.query(`
+            SELECT order_status_id
+            FROM orders
+            WHERE order_id = ?;
+        `, [order_id]);
+
+        if (order_s[0].order_status_id === 'OST0000004') {
+            console.error('Cannot assign product to order. It is already shipped.', order_id);
+            return false; 
+        }
+        
         const [parcel] = await db.query(`
             SELECT parcel_unit_price
             FROM parcels
@@ -126,6 +137,17 @@ async function addPostalOrder(order_id, parcel_id) {
 // add product order
 async function addProductOrder(order_id, product_id, product_quantity) {
     try {
+        const [order_s] = await db.query(`
+            SELECT order_status_id
+            FROM orders
+            WHERE order_id = ?;
+        `, [order_id]);
+
+        if (order_s[0].order_status_id === 'OST0000004') {
+            console.error('Cannot assign product to order. It is already shipped.', order_id);
+            return false; 
+        }
+
         const [product] = await db.query(`
             SELECT product_unit_price
             FROM products
