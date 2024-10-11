@@ -5,12 +5,20 @@
 
 <div class="form-container">    
     <form method="POST" action="/assign-parcel/<%= parcel.parcel_id %>">
-        <h2 class="tezt-white">Assign <%= parcel.parcel_id %></h2>
+        <h2 class="text-white">Assign <%= parcel.parcel_id %></h2>
         
         <!-- Warehouse ID -->
         <div class="mb-3">
             <label for="warehouse_id" class="form-label">Warehouse ID:</label>
-            <input type="text" name="warehouse_id" class="form-control" value="<%= parcel.warehouse_id || '' %>" required>
+            <select name="warehouse_id" class="form-control" required>
+                <option value="" disabled selected>Select a warehouse</option>
+                <% warehouses.forEach(warehouse => { %>
+                    <option value="<%= warehouse.id %>">
+                        <%= warehouse.id %> - <%= warehouse.typeName %> <!-- Displaying only needed values -->
+                    </option>
+                <% }) %>
+            </select>
+            
         </div>
         
         <!-- Section -->

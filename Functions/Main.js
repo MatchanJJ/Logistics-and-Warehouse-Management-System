@@ -687,8 +687,27 @@ app.get('/assign-parcel/:id', async (req, res) => {
             return res.status(404).send('Parcel not found'); // Handle case where parcel is not found
         }
 
-        res.render('layout', { title: 'Assign Parcel', content: 'assign-parcel' , message: null, parcel: parcel[0]}); // Render the layout with the add-warehouse content
-       // res.render('assign-parcel', { message: null, parcel: parcel[0] });
+        // Fetch all warehouses and their types
+        const [warehouses] = await pool.query(`
+            SELECT w.warehouse_id, wt.warehouse_type_name 
+            FROM warehouses w
+            JOIN warehouse_types wt ON w.warehouse_type_id = wt.warehouse_type_id;
+        `);
+
+        // Create a simplified warehouses array with only required fields
+        const simplifiedWarehouses = warehouses.map(warehouse => ({
+            id: warehouse.warehouse_id,
+            typeName: warehouse.warehouse_type_name
+        }));
+        console.log(simplifiedWarehouses);
+        // Pass the simplified warehouses variable to the template
+        res.render('layout', {
+            title: 'Assign Parcel',
+            content: 'assign-parcel', // The content to include
+            message: null,
+            parcel: parcel[0],
+            warehouses: simplifiedWarehouses // Pass the simplified list of warehouses
+        });
     } catch (error) {
         console.error('Error fetching parcel details:', error);
         res.status(500).send('Internal Server Error');
@@ -704,13 +723,10 @@ app.post('/assign-parcel/:id', async (req, res) => {
     const success = await InventoryService.assignParcel(parcelId, warehouse_id, section, aisle, rack, shelf, bin);
     const message = success ? 'Parcel successfully assigned.' : 'Failed to assign parcel. Please check your inputs.';
 
-    // Render the 'layout' template, injecting 'assign-parcel' content
-    res.render('layout', { 
-        title: 'Assign Parcel', 
-        content: 'assign-parcel', // This is the view/partial to be rendered inside layout
-        message, 
-        parcel: { parcel_id: parcelId, ...req.body } 
-    });
+    if (success) {
+        res.redirect('/parcel');  // Redirect to the parcel listing page after a successful update
+
+    }
 });
 
 
@@ -882,29 +898,43 @@ app.post('/update-parcel-location/:id', async (req, res) => {
     });
 
     // Route to fetch product details and render the assignment form
-app.get('/assign-product/:id', async (req, res) => {
-    const productId = req.params.id;
-
-    try {
-        // Fetch current product details from the database
-        const [product] = await pool.query(`
-            SELECT product_id, product_length, product_width, product_height, product_description 
-            FROM products 
-            WHERE product_id = ?;
-        `, [productId]);
-
-        if (product.length === 0) {
-            return res.status(404).send('Product not found'); // Handle case where product is not found
+    app.get('/assign-product/:id', async (req, res) => {
+        const productId = req.params.id;
+    
+        try {
+            // Fetch current product details from the database
+            const [product] = await pool.query(`
+                SELECT product_id, product_length, product_width, product_height, product_description 
+                FROM products 
+                WHERE product_id = ?;
+            `, [productId]);
+    
+            // Handle case where product is not found
+            if (product.length === 0) {
+                return res.status(404).send('Product not found');
+            }
+    
+            // Fetch list of warehouses
+            const [warehouses] = await pool.query(`
+                SELECT w.warehouse_id, wt.warehouse_type_name 
+                FROM warehouses w
+                JOIN warehouse_types wt ON w.warehouse_type_id = wt.warehouse_type_id;
+            `);
+    
+            // Render the layout with the assign-product content and warehouse list
+            res.render('layout', { 
+                title: 'Assign Product', 
+                content: 'assign-product', 
+                message: null, 
+                product: product[0], 
+                warehouses // Pass the warehouses to the view
+            });
+        } catch (error) {
+            console.error('Error fetching product details:', error);
+            res.status(500).send('Internal Server Error');
         }
-
-        res.render('layout', { title: 'Assign Product', content: 'assign-product' , message: null, product: product[0]}); // Render the layout with the add-warehouse content
-        //res.render('assign-product', { message: null, product: product[0] });
-    } catch (error) {
-        console.error('Error fetching product details:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
+    });
+    
 // Route to handle the form submission for product assignment
 app.post('/assign-product/:id', async (req, res) => {
     const productId = req.params.id; // Get the product ID from the URL
@@ -915,13 +945,6 @@ app.post('/assign-product/:id', async (req, res) => {
 
     const message = success ? 'Product successfully assigned.' : 'Failed to assign product. Please check your inputs.';
 
-    // Render the 'layout' template, injecting 'assign-product' content
-    res.render('layout', { 
-        title: 'Assign Product', 
-        content: 'assign-product', // This is the view/partial to be rendered inside layout
-        message, 
-        product: { product_id: productId, ...req.body } 
-    });
 });
 
 app.get('/add-product', async (req, res) => {

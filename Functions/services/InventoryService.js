@@ -232,51 +232,52 @@ async function removeProductWarehouseLocation(product_id, warehouse_id) {
 };
 
 // assign parcel to warehouse and warehouse location
+const WAREHOUSE_TYPE_ECOMMERCE = 'WTY0000002'; // Constant for warehouse type
+
 async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf, bin) {
     try {
+        // Fetch warehouse type
         const [warehouse] = await db.query(`SELECT warehouse_type_id FROM warehouses WHERE warehouse_id = ?`, [warehouse_id]);
 
-            if (!warehouse || warehouse.length === 0) {
-                console.log('Warehouse not found.');
-                return false;
-            }
+        if (!warehouse || warehouse.length === 0) {
+            console.log('Warehouse not found.');
+            return false;
+        }
 
-            const { warehouse_type_id } = warehouse[0];
+        const { warehouse_type_id } = warehouse[0];
 
-            if (warehouse_type_id === 'WTY0000002') {
-                console.log('Cannot assign parcel to e-commerce warehouse.');
-                return false;
-            }
-            
-        const [rows] = await db.query (`SELECT * FROM parcel_inventories WHERE parcel_id = ?;`,[parcel_id]);
+        if (warehouse_type_id === WAREHOUSE_TYPE_ECOMMERCE) {
+            console.log('Cannot assign parcel to e-commerce warehouse.');
+            return false;
+        }
+
+        // Check if parcel is already assigned
+        const [rows] = await db.query(`SELECT * FROM parcel_inventories WHERE parcel_id = ?;`, [parcel_id]);
         if (rows.length > 0) {
             console.log(`Parcel ${parcel_id} is already assigned to a warehouse.`);
             return false;
         }
+
+        // Check if warehouse is full
         if (await whs.isFull(warehouse_id)) {
-            console.log(`Warehouse:${warehouse_id} is full. Cannot proceed to assignment.`)
+            console.log(`Warehouse:${warehouse_id} is full. Cannot proceed to assignment.`);
             return false;
         }
-        // Fetch parcel dimensions from the parcels table
-        const [parcel] = await db.query(`
-            SELECT parcel_length, parcel_width, parcel_height 
-            FROM parcels 
-            WHERE parcel_id = ?;
-        `, [parcel_id]);
 
+        // Fetch parcel dimensions
+        const [parcel] = await db.query(`SELECT parcel_length, parcel_width, parcel_height FROM parcels WHERE parcel_id = ?;`, [parcel_id]);
         if (parcel.length === 0) {
             console.error('Parcel not found');
-            return false;  // Return or handle the case when the parcel doesn't exist
+            return false;  // Handle case when the parcel doesn't exist
         }
 
+        const { parcel_length, parcel_width, parcel_height } = parcel[0];
         const quantity = 1;
 
-        const { parcel_length, parcel_width, parcel_height } = parcel[0];
-        
-        // Calculate total volume (length * width * height) * quantity
+        // Calculate total volume
         const total_volume = (parcel_length * parcel_width * parcel_height) * quantity;
 
-        // Get assign to warehouse location and get ID
+        // Assign to warehouse location and get ID
         const warehouse_location_id = await whs.addWarehouseLocation(warehouse_id, section, aisle, rack, shelf, bin);
 
         // Insert into parcel_inventories
@@ -288,12 +289,12 @@ async function assignParcel(parcel_id, warehouse_id, section, aisle, rack, shelf
         console.log('Parcel assigned to warehouse:', warehouse_id);
         const log_message = `Parcel:${parcel_id} assigned to warehouse:${warehouse_id}, located at warehouse_location:${warehouse_location_id}`;
         logger.addParcelInventoryLog(parcel_id, warehouse_id, log_message);
-        return true;  // Return the result of the insert operation
+        return true;  // Return true if the operation was successful
     } catch (error) {
         console.error('Error assigning parcel:', error);
-        return false;
+        throw error; // Optionally throw the error for higher-level handling
     }
-};
+}
 
 // update parcel stock quantity -- usually either 1 or 0
 async function updateParcelStockQuantity(parcel_id, warehouse_id, new_quantity) {

@@ -5,7 +5,6 @@
 
 <div class="form-container">
     <body>
-
         <h2 class="text-white">Assign Product: <%= product.product_id %></h2>
 
         <!-- Success/Error Message -->
@@ -18,10 +17,17 @@
         <!-- Form for Assigning Product -->
         <form action="/assign-product/<%= product.product_id %>" method="POST">
             
-            <!-- Warehouse ID -->
+            <!-- Warehouse ID Dropdown -->
             <div class="mb-3">
-                <label for="warehouse_id" class="form-label text-white">Warehouse ID:</label>
-                <input type="text" id="warehouse_id" name="warehouse_id" class="form-control" required>
+                <label for="warehouse_id" class="form-label text-white">Warehouse:</label>
+                <select id="warehouse_id" name="warehouse_id" class="form-control" required>
+                    <option value="" disabled selected>Select a warehouse</option>
+                    <% warehouses.forEach(warehouse => { %>
+                        <option value="<%= warehouse.warehouse_id %>">
+                            <%= warehouse.warehouse_type_name %> - <%= warehouse.warehouse_id %>
+                        </option>
+                    <% }) %>
+                </select>
             </div>
 
             <!-- Section -->
@@ -65,6 +71,5 @@
                 <button type="submit" class="btn btn-primary">Assign Product</button>
             </div>
         </form>
-
     </body>
 </div>
