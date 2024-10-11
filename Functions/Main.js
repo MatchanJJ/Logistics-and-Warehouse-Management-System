@@ -367,7 +367,7 @@ app.post('/update-employee/:id', async (req, res) => {
             console.error('Error in deletion route:', error);
             res.status(500).send('Error deleting warehouse.');
         }
-    });
+});
     
 
     // Warehouse route

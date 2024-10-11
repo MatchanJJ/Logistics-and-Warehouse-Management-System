@@ -49,7 +49,7 @@
                     <td class="action buttons">
                         <a href="/update-warehouse-capacity/<%= warehouse.warehouse_id %>" class="btn btn-info">Update</a> 
                         <form action="/delete-warehouse/<%= warehouse.warehouse_id %>" method="POST" style="display:inline;">
-                            <button type="button" onclick="return confirm('Are you sure you want to remove this warehouse?')" class="btn btn-danger">Delete</button>
+                            <button type="submit" onclick="return confirm('Are you sure you want to remove this warehouse?')" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
                 </tr>
