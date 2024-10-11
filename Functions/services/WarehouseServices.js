@@ -344,6 +344,7 @@ async function getWarehouseById(warehouse_id) {
 }
 
 async function getWarehouseLocationId(warehouse_id) {
+    console.log("passed:",warehouse_id);
     try {
         const [rows] = await db.query(`
             SELECT warehouse_location_id
@@ -352,6 +353,7 @@ async function getWarehouseLocationId(warehouse_id) {
         `, [warehouse_id]);
 
         if (rows.length > 0) {
+            console.log(rows[0].warehouse_location_id);
             return rows[0].warehouse_location_id; // Return the first matching warehouse location ID
         } else {
             console.log('No warehouse location found with the given details.');
