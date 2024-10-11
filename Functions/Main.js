@@ -370,13 +370,16 @@ app.post('/update-employee/:id', async (req, res) => {
     app.get('/warehouses', async (req, res) => {
         try {
             // Fetch all warehouses
-            const warehouses = await WarehouseServices.getWarehouses(); 
+            const warehouses = await WarehouseServices.getWarehouses();
+    
+            // Log the fetched warehouses to see the initial data
+            console.log('Fetched warehouses:', warehouses);
     
             // Loop through each warehouse to get its most recent timestamp
             for (const warehouse of warehouses) {
-                // Fetch the recent timestamp for the current warehouse using its ID
-                const timestamp = await logUtil.returnRecentTimeWarehouse(warehouse.warehouse_id);
+                const timestamp = await logUtil.returnRecentTimeWarehouse(warehouse.warehouse_id); // Fetch timestamp
                 warehouse.recentTime = timestamp;  // Attach timestamp to warehouse object
+                console.log(`Warehouse ID: ${warehouse.warehouse_id}, Recent Time: ${timestamp}`); // Log the timestamp for each warehouse
             }
     
             // Render the view, passing the warehouses with timestamps
@@ -390,6 +393,8 @@ app.post('/update-employee/:id', async (req, res) => {
             res.status(500).send('Error fetching warehouses.');  // Return an error message
         }
     });
+    
+    
     
     
     
@@ -2390,6 +2395,7 @@ app.get('/update-return/:id', async (req, res) => {
     try {
         // Fetch return data by ID
         const returnData = await ReturnService.viewReturn(returnId);
+        console.log(returnData);
         // Fetch all status names
         const statusList = await StatAndCatService.getReturnStatus(); // Adjust this according to your service method
 

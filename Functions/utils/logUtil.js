@@ -263,18 +263,21 @@ async function returnRecentTimeWarehouse (warehouse_id) {
             'SELECT date_time FROM warehouse_logs WHERE warehouse_id = ? ORDER BY date_time DESC LIMIT 1',
             [warehouse_id]
         );
+        console.log(`Result for warehouse_id ${warehouse_id}:`, result); // Add logging here
+
         if (result.length > 0) {
-            console.log(result);
+            console.log(`Recent timestamp for warehouse ${warehouse_id}:`, result[0].date_time);
             return result[0].date_time;
         } else {
-            console.log(`No entries found for the given warehouse: ${warehouse_id}`);
+            console.log(`No logs found for warehouse ${warehouse_id}`);
             return null;
         }
     } catch (error) {
-        console.error('Error fetching recent time:', error);
+        console.error(`Error fetching recent time for warehouse ${warehouse_id}:`, error);
         return null;
     }
 };
+
 
 export default {
     addCustomerLog,
