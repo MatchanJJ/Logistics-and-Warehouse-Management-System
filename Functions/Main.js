@@ -359,7 +359,7 @@ app.post('/update-employee/:id', async (req, res) => {
     app.post('/delete-warehouse/:id', async (req, res) => {
         const warehouse_id = req.params.id; // Extract parcel ID from the route parameters
         try {
-            await WarehouseServices.removeWarehouse(warehouse_id) // Call the delete function
+            await WarehouseServices.removeWarehouse(warehouse_id); // Call the delete function
             res.redirect('/warehouses'); // Redirect to the home page after deletion
         } catch (error) {
             res.status(500).send('Error deleting parcel.');
