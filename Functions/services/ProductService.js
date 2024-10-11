@@ -4,6 +4,15 @@ import archiver from '../utils/archiveUtil.js';
 import logger from '../utils/logUtil.js';
 import inServ from './InventoryService.js';
 
+async function findProduct(product_id) {                    
+    try {
+        const [rows] = await db.query("SELECT * FROM products WHERE product_id = ?", [product_id]);
+        return rows[0];  // return the found parcel
+    } catch (error) {
+        console.error(error);
+        throw error; // Rethrow the error for calling context handling
+    }
+};
 // get all products record list
 async function getProducts () {
     try {
@@ -90,6 +99,7 @@ async function addProduct (product_category_id, product_name, product_brand, pro
 
 // update product details
 async function updateProduct(product_category_id, product_name, product_brand, product_supplier, product_description, product_unit_price, product_weight, product_length, product_width, product_height, is_fragile, is_perishable, is_hazardous, is_oversized, is_returnable, is_temperature_sensitive, product_id) {
+    
     try {
 
         const [result] = await db.query(
@@ -176,6 +186,7 @@ const ProductServiceToken = {
     viewProduct,
     addProduct,
     updateProduct,
-    removeProduct
+    removeProduct,
+    findProduct
 };
 export default  ProductServiceToken;

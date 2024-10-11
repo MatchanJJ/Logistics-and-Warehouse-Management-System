@@ -156,6 +156,7 @@ async function updateProductStockQuantity(product_id, warehouse_id, new_quantity
 };
 // update product location
 async function updateProductLocation (product_id, warehouse_id, new_section, new_aisle, new_rack, new_shelf, new_bin) {
+    console.log(warehouse_id,product_id);
     try {
         const [warehouse] = await db.query(`
             SELECT warehouse_location_id

@@ -72,7 +72,7 @@ async function findShipmentById(shipment_id) {
 };
 
 // add new shipment for order
-async function addShipment(order_id, carrier_id) {
+async function  addShipment(order_id, carrier_id) {
     try {
         // Fetch the shipping service id that matches both order and carrier
         const [order_carrier_ss] = await db.query(`

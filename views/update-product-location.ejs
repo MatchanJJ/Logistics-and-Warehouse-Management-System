@@ -2,44 +2,54 @@
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
-
-<link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
-
 <div class="form-container">
-    <h2>Update Product Location</h2>
-    <form action="/update-product-location/<%= product.product_id %>" method="POST" class="form-container">
-        <div class="form-group">
-            <label for="warehouse_id">Warehouse ID:</label>
-            <input type="text" id="warehouse_id" name="warehouse_id" required>
+    <h2 class="text-white">Update Product Location</h2>
+    <form action="/update-product-location/<%= product.product_id %>" method="POST">
+
+        <!-- Warehouse ID Dropdown -->
+        <div class="mb-3">
+            <label for="warehouse_id" class="form-label text-white">Warehouse:</label>
+            <select id="warehouse_id" name="warehouse_id" class="form-select" required>
+                <option value="">Select Warehouse</option>
+                <% warehouses.forEach(warehouse => { %>
+                    <option value="<%= warehouse.warehouse_id %>"><%= warehouse.warehouse_id %> - <%= warehouse.warehouse_type_name %></option>
+                <% }) %>
+            </select>
         </div>
 
-        <div class="form-group">
-            <label for="section">Section:</label>
-            <input type="text" id="section" name="section" required>
+        <!-- Section -->
+        <div class="mb-3">
+            <label for="section" class="form-label text-white">Section:</label>
+            <input type="text" id="section" name="section" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="aisle">Aisle:</label>
-            <input type="text" id="aisle" name="aisle" required>
+        <!-- Aisle -->
+        <div class="mb-3">
+            <label for="aisle" class="form-label text-white">Aisle:</label>
+            <input type="text" id="aisle" name="aisle" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="rack">Rack:</label>
-            <input type="text" id="rack" name="rack" required>
+        <!-- Rack -->
+        <div class="mb-3">
+            <label for="rack" class="form-label text-white">Rack:</label>
+            <input type="text" id="rack" name="rack" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="shelf">Shelf:</label>
-            <input type="text" id="shelf" name="shelf" required>
+        <!-- Shelf -->
+        <div class="mb-3">
+            <label for="shelf" class="form-label text-white">Shelf:</label>
+            <input type="text" id="shelf" name="shelf" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="bin">Bin:</label>
-            <input type="text" id="bin" name="bin" required>
+        <!-- Bin -->
+        <div class="mb-3">
+            <label for="bin" class="form-label text-white">Bin:</label>
+            <input type="text" id="bin" name="bin" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-info">Update Location</button>
+        <!-- Submit Button -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Update Product Location</button>
         </div>
     </form>
 </div>

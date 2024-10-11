@@ -778,8 +778,10 @@ app.get('/update-parcel-stock-quantity/:id', async (req, res) => {
 // POST route to handle updating parcel stock quantity
 app.post('/update-parcel-stock-quantity/:id', async (req, res) => {
     const parcel_id = req.params.id;
-    const { warehouse_id, new_quantity } = req.body;
-
+    const { new_quantity } = req.body;
+    const [result] = await pool.query('SELECT warehouse_id FROM parcel_inventories WHERE parcel_id = ?' ,[parcel_id])
+    const warehouse_id = result[0].warehouse_id;
+    console.log(warehouse_id);
     try {
         const updated = await InventoryService.updateParcelStockQuantity(parcel_id, warehouse_id, new_quantity);
         if (updated) {
@@ -796,15 +798,30 @@ app.post('/update-parcel-stock-quantity/:id', async (req, res) => {
 // GET route to display the update parcel location form
 app.get('/update-parcel-location/:id', async (req, res) => {
     const parcel_id = req.params.id;
-    
+
     try {
-        const parcel = await ParcelServiceToken.findParcel(parcel_id);  // Fetch parcel details if necessary
-        res.render('layout', { title: 'Update Parcel Location', content: 'update-parcel-location' , parcel}); // Render the layout with the add-warehouse content
+        // Fetch parcel details
+        const parcel = await ParcelServiceToken.findParcel(parcel_id);
+
+        // Fetch list of warehouses
+        const [warehouses] = await pool.query(`
+            SELECT w.warehouse_id, wt.warehouse_type_name 
+            FROM warehouses w
+            JOIN warehouse_types wt ON w.warehouse_type_id = wt.warehouse_type_id;
+        `);
+
+        res.render('layout', { 
+            title: 'Update Parcel Location', 
+            content: 'update-parcel-location', 
+            parcel, 
+            warehouses // Pass the warehouses to the view
+        });
     } catch (error) {
         console.error('Error fetching parcel details:', error);
         res.status(500).send('Error fetching parcel details.');
     }
 });
+
 
 // POST route to handle updating parcel location
 app.post('/update-parcel-location/:id', async (req, res) => {
@@ -995,7 +1012,7 @@ app.get('/add-product', async (req, res) => {
 app.get('/update-product-stock-quantity/:id', async (req, res) => {
     const product_id = req.params.id;
     try {
-        const product = await ProductServiceToken.viewProduct(product_id);
+        const product = await ProductServiceToken.findProduct(product_id);
         if (product) {
             res.render('layout', { title: 'Update Product Stock Quantity', content: 'update-product-stock-quantity',product }); // Render the layout with the add-warehouse content
         } else {
@@ -1010,8 +1027,10 @@ app.get('/update-product-stock-quantity/:id', async (req, res) => {
 // POST route to handle stock quantity update form submission
 app.post('/update-product-stock-quantity/:id', async (req, res) => {
     const product_id = req.params.id;
-    const { warehouse_id, new_quantity } = req.body;
-
+    const {  new_quantity } = req.body;
+    const [result] = await pool.query('SELECT warehouse_id FROM product_inventories WHERE product_id = ?' ,[product_id])
+    const warehouse_id = result[0].warehouse_id;
+    console.log(warehouse_id);
     try {
         const updated = await InventoryService.updateProductStockQuantity(product_id, warehouse_id, new_quantity);
         if (updated) {
@@ -1029,13 +1048,16 @@ app.post('/update-product-stock-quantity/:id', async (req, res) => {
 app.get('/update-product-location/:id', async (req, res) => {
     const product_id = req.params.id;
     try {
-        const product = await ProductServiceToken.viewProduct(product_id);
-        if (product) {
-            res.render('layout', { title: 'Edit Product Location', content: 'update-product-location',product }); // Render the layout with the add-warehouse content
+        const product = await ProductServiceToken.findProduct(product_id);
+        const [warehouses] = await pool.query(`
+            SELECT w.warehouse_id, wt.warehouse_type_name 
+            FROM warehouses w
+            JOIN warehouse_types wt ON w.warehouse_type_id = wt.warehouse_type_id;
+        `);
+        
+            res.render('layout', { title: 'Edit Product Location', content: 'update-product-location',product, warehouses }); // Render the layout with the add-warehouse content
            // res.render('update-product-location', { product });
-        } else {
-            res.status(404).send('Product not found.');
-        }
+       
     } catch (error) {
         console.error('Error fetching product for location update:', error);
         res.status(500).send('Error fetching product.');
@@ -1083,10 +1105,14 @@ app.get('/edit-product-option/:id', async (req, res) => {
     app.get('/edit-product/:id', async (req, res) => {
         const product_id = req.params.id; // Extract product ID from the route parameters
         try {
-            const product = await ProductServiceToken.viewProduct(product_id); // Fetch product details
+            const product = await ProductServiceToken.findProduct(product_id); // Fetch product details
+    
             if (product) {
-                res.render('layout', { title: 'Edit Product', content: 'edit-product',product }); // Render the layout with the add-warehouse content
-                //res.render('edit-product', { product }); // Render the edit form with product data
+                res.render('layout', {
+                    title: 'Edit Product',
+                    content: 'edit-product',
+                    product,
+                });
             } else {
                 res.status(404).send('Product not found.');
             }
@@ -1094,7 +1120,7 @@ app.get('/edit-product-option/:id', async (req, res) => {
             res.status(500).send('Error retrieving product for editing.');
         }
     });
-
+    
     // Handle the form submission for updating a product
     app.post('/edit-product/:id', async (req, res) => {
         const product_id = req.params.id; 

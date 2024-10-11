@@ -2,15 +2,19 @@
     <img class="back" src="/back-button.png" alt="back">
 </a>
 
-
 <div class="form-container">
     <h2 class="text-white">Update Parcel Location</h2>
     <form action="/update-parcel-location/<%= parcel.parcel_id %>" method="POST">
 
-        <!-- Warehouse ID -->
+        <!-- Warehouse ID Dropdown -->
         <div class="mb-3">
-            <label for="warehouse_id" class="form-label text-white">Warehouse ID:</label>
-            <input type="text" id="warehouse_id" name="warehouse_id" class="form-control" required>
+            <label for="warehouse_id" class="form-label text-white">Warehouse:</label>
+            <select id="warehouse_id" name="warehouse_id" class="form-select" required>
+                <option value="">Select Warehouse</option>
+                <% warehouses.forEach(warehouse => { %>
+                    <option value="<%= warehouse.warehouse_id %>"><%= warehouse.warehouse_id %> - <%= warehouse.warehouse_type_name %></option>
+                <% }) %>
+            </select>
         </div>
 
         <!-- Section -->
