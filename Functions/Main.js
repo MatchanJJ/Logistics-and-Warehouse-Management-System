@@ -2395,6 +2395,7 @@ app.get('/update-return/:id', async (req, res) => {
     try {
         // Fetch return data by ID
         const returnData = await ReturnService.viewReturn(returnId);
+        console.log(returnData);
         // Fetch all status names
         const statusList = await StatAndCatService.getReturnStatus(); // Adjust this according to your service method
 
