@@ -20,6 +20,7 @@
         <a  class="btn btn-warning" href="/add-warehouse" role="button">Add Warehouse</a>
         <a href="/manage-partner" class="btn btn-warning">Manage Logistics Partner</a>
         <a href="/check-availability" class="btn btn-warning">Check Warehouse Availability</a>
+        <a href="/delete-warehouse" class="btn btn-warning">Remove A Warehouse</a>
     </div>
     
     <% if (warehouses && warehouses.length > 0) { %>
@@ -48,9 +49,12 @@
                     <td><%= warehouse.recentTime ? new Date(warehouse.recentTime).toLocaleString() : 'No Logs' %></td> <!-- TimeStamp -->
                     <td class="action buttons">
                         <a href="/update-warehouse-capacity/<%= warehouse.warehouse_id %>" class="btn btn-info">Update</a> 
+<<<<<<< HEAD
                         <form action="/delete-warehouse/<%= warehouse.warehouse_id %>" method="POST" style="display:inline;">
                             <button type="submit" onclick="return confirm('Are you sure you want to remove this warehouse?')" class="btn btn-danger">Delete</button>
                         </form>
+=======
+>>>>>>> 58e5f64768c53c4507530df00bfb264d26de7eae
                     </td>
                 </tr>
                 <% }) %>

@@ -291,15 +291,19 @@ async function removeWarehouse(warehouse_id) {
         console.log(`Initiating removal process for warehouse ${warehouse_id}`);
         
         const isEmptyResult = await isEmpty(warehouse_id);  // Capture return value
-        console.log(`isEmpty result for warehouse ${warehouse_id}: ${isEmptyResult}`);
+        console.log(`isEmpty result for warehouse ${warehouse_id}:`, isEmptyResult, `Type: ${typeof isEmptyResult}`);
         
-        if (isEmptyResult) {
+        if (isEmptyResult === 1) {
             console.log(`Warehouse ${warehouse_id} is empty. Proceeding with archiving.`);
             
-            if (await archiver.archiveWarehouse(warehouse_id)) {
+            const archiveResult = await archiver.archiveWarehouse(warehouse_id);
+            console.log(`Archiving warehouse result for ${warehouse_id}:`, archiveResult);
+            
+            if (archiveResult) {
                 console.log(`Warehouse ${warehouse_id} archived successfully.`);
+                
                 const [result] = await db.query("DELETE FROM warehouses WHERE warehouse_id = ?", [warehouse_id]);
-                console.log('Delete result:', result);
+                console.log(`Delete result for warehouse ${warehouse_id}:`, result);
                 
                 if (result.affectedRows > 0) {
                     console.log(`Warehouse ${warehouse_id} deleted successfully.`);
@@ -307,15 +311,18 @@ async function removeWarehouse(warehouse_id) {
                     await logger.addWarehouseLog(warehouse_id, log_message);
                     return true;
                 } else {
-                    console.log(`No warehouse found with ID ${warehouse_id}.`);
+                    console.error(`No warehouse found with ID ${warehouse_id}.`);
                     return false;
                 }
             } else {
-                console.log(`Error archiving warehouse with ID ${warehouse_id}.`);
+                console.error(`Error archiving warehouse with ID ${warehouse_id}.`);
                 return false;
             }
-        } else {
+        } else if (isEmptyResult === false) {
             console.log(`Warehouse ${warehouse_id} is not empty. Cannot delete.`);
+            return false;
+        } else {
+            console.error(`Unexpected isEmpty result for warehouse ${warehouse_id}:`, isEmptyResult);
             return false;
         }
     } catch (error) {
@@ -323,6 +330,7 @@ async function removeWarehouse(warehouse_id) {
         return false;
     }
 }
+
 
 
 async function getWarehouseById(warehouse_id) {
